@@ -1,7 +1,7 @@
 <template>
   <view class="index-bg">
-    <view class="index-bg-show" :style="{ width: screenWidth + 'px', height: 186 + statusHeight + 'rpx' }">
-      <image src="/static/image/home/index_nav_bg.png" :style="{ width: screenWidth + 'px', height: 186 + statusHeight + 'rpx' }" />
+    <view class="index-bg-show" :style="{ width: screenWidth + 'px', height: 188 + 750/screenWidth*statusHeight + 'rpx' }">
+      <image src="/static/image/home/index_nav_bg.png" :style="{ width: screenWidth + 'px', height: 188 + 750/screenWidth*statusHeight + 'rpx', verticalAlign: 'top' }" />
     </view>
     <view class="index-nav" :style="{ width: screenWidth + 'px', marginTop: statusHeight + 'px' }">
       <view class="index-nav-left">
@@ -45,6 +45,7 @@ export default {
     async init() {
       this.screenWidth = ala.screenWidth()
       this.statusHeight = ala.statusHeight()
+	  console.log(this.statusHeight)
       uni.$on('user_recent_city', () => {
         this.address = ala.localGet('user_recent_city')
       })
@@ -65,6 +66,7 @@ export default {
 
 <style lang="scss">
 .index-nav {
+  // box-sizing: border-box;
   height: 120rpx;
   padding: 35rpx 28rpx;
   display: flex;
@@ -161,7 +163,7 @@ export default {
 }
 
 .index-nav-ul {
-  height: 26rpx;
+  height: 30rpx;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -169,11 +171,11 @@ export default {
 }
 
 .index-nav-list {
-  height: 54rpx;
+  height: 30rpx;
   position: relative;
 
   &-text {
-    line-height: 40px;
+    line-height: 30rpx;
     color: #ffffff;
     font-size: 30rpx;
   }
@@ -190,6 +192,14 @@ export default {
     background-color: #ffffff;
   }
 }
+
+// @media screen and (min-width: 350px) {
+//     .index-bg-show {
+//         margin: 0;
+//     }
+// }
+
+
 .index-bg {
   position: relative;
   /* #ifndef APP-NVUE */

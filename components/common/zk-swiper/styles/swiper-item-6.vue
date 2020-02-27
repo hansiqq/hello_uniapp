@@ -49,15 +49,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+// @media screen and (max-width: 350px) {
+//     .swiper-item-6 {
+//         position: relative;
+// 		top: -10px;
+//     }
+// }
+
 .swiper-item-6 {
-  height: 160px;
-  // margin: 10px 0;
-  padding: 0 10px;
+  height: 288rpx;
+  margin-top: -10px;
+  padding: 0 28rpx;
   // background-image: linear-gradient(to right, #F62E1B, #D42965);
 }
 
 .swiper-item-6-cont-ul {
-  height: 160px;
+  height: 288rpx;
   //padding: 0upx 28upx 0upx;
 }
 
