@@ -1,0 +1,142 @@
+<template>
+  <view class="x-cell" v-if="async">
+    <view v-if="isArray">
+      <view class="x-cell-list" @click="linkTo(item)" :style="{ width: screenWidth - 10 + 'px', height: !item.remark ? 44 : 62 + 'px' }" v-for="(item, index) in viewModel" :key="index">
+        <view class="x-cell-list-left" v-if="item.icon">
+          <!-- #ifndef APP-PLUS-NVUE -->
+          <view class="x-cell-list-left-icon">
+            <x-icon :name="item.icon.name" :size="item.icon.size" color="#999"></x-icon>
+          </view>
+          <!-- #endif -->
+          <view class="x-cell-list-left-cont">
+            <text class="x-cell-list-left-cont-title">{{ item.link.name }}</text>
+            <text class="x-cell-list-left-cont-tips" v-if="item.remark">{{ item.remark }}</text>
+          </view>
+        </view>
+        <view class="x-cell-list-right-img">
+          <!-- #ifdef APP-PLUS-NVUE -->
+          <text style="font-family:iconfont5;font-size:15px;color: #999999;">&#xe861;</text>
+          <!-- #endif -->
+          <!-- #ifndef APP-PLUS-NVUE -->
+          <x-icon name="icon-jiantou" size="16" color="#999"></x-icon>
+          <!-- #endif -->
+        </view>
+      </view>
+    </view>
+    <view v-if="!isArray">
+      <view class="x-cell-list" :style="{ width: screenWidth - 10 + 'px' }">
+        <view class="x-cell-list-left">
+          <image v-if="isLink" src="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png" class="x-cell-list-left-icon" />
+          <view class="x-cell-list-left-cont">
+            <text class="x-cell-list-left-cont-title">{{ title }}</text>
+            <!-- <text class="x-cell-list-left-cont-tips">详细信息</text> -->
+          </view>
+        </view>
+        <view class="x-cell-list-right-img">
+          <!-- #ifdef APP-PLUS-NVUE -->
+          <text style="font-family:iconfont5;font-size:15px;color: #999999;">&#xe836;</text>
+          <!-- #endif -->
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  name: 'x-cell',
+  props: {
+    widget: {},
+    icon: {},
+    elementData: {},
+    value: {},
+    title: {},
+    XClass: {},
+    isLink: {
+      type: Boolean,
+      default: false
+    },
+    link: {}
+  },
+  data() {
+    return {
+      async: false,
+      viewModel: '',
+      isArray: false,
+      delestu: false,
+      iconcode: '&#xe836;',
+      screenWidth: ''
+    }
+  },
+  onLoad() {
+    this.init()
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.async = false
+      this.screenWidth = ala.screenWidth()
+      if (this.elementData !== undefined) {
+        this.isArray = true
+        this.viewModel = this.elementData
+      }
+      this.async = true
+    },
+    onClick(url) {
+      this.$emit('click')
+      if (url !== undefined) {
+        ala.to(url)
+      }
+    },
+    linkTo(item) {
+      ala.to(item.link.url)
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.x-cell {
+  &-list {
+    border-bottom-color: #e4e3e6;
+    border-bottom-width: 1px;
+    width: 100%;
+    // height: 62px;
+    height: 44px;
+    padding-right: 15px;
+    margin-left: 8px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    &-left {
+      width: 200px;
+      padding-left: 5px;
+      flex-direction: row;
+      align-items: center;
+      &-icon {
+        width: 27px;
+        height: 27px;
+        margin-right: 10px;
+      }
+      &-cont {
+        &-title {
+          font-size: 14px;
+          color: #3b4144;
+        }
+        &-tips {
+          font-size: 12px;
+          color: #999999;
+          margin-top: 2px;
+        }
+      }
+    }
+    &-right-img {
+      width: 15px;
+      height: 15px;
+    }
+  }
+}
+</style>

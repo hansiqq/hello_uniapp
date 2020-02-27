@@ -1,0 +1,209 @@
+<template>
+  <view class="index-bg">
+    <view class="index-bg-show" :style="{ width: screenWidth + 'px', height: 186 + statusHeight + 'rpx' }">
+      <image src="/static/image/home/index_nav_bg.png" :style="{ width: screenWidth + 'px', height: 186 + statusHeight + 'rpx' }" />
+    </view>
+    <view class="index-nav" :style="{ width: screenWidth + 'px', marginTop: statusHeight + 'px' }">
+      <view class="index-nav-left">
+        <image src="/static/image/home/address.png" class="index-nav-left-icon" />
+        <text class="index-nav-left-text" @click="addressClick">安徽省{{ address }}</text>
+        <view class="index-nav-left-content" :style="{ width: 360 + 'rpx' }">
+          <image src="/static/image/home/share.png" class="index-nav-left-content-image" />
+          <text class="index-nav-left-search-text">搜索商品红包优惠券</text>
+        </view>
+      </view>
+      <view class="index-nav-right">
+        <image src="/static/image/home/hongbao.png" class="index-nav-right-left" />
+        <image src="/static/image/home/msg.png" class="index-nav-right-right" />
+      </view>
+    </view>
+    <view class="index-nav-ul">
+      <view v-for="(item, index) in list" :key="index" @click="tabClick(item, index)" class="index-nav-list">
+        <text class="index-nav-list-text" :class="{ 'index-nav-list-active': tabIndex === index }">{{ item }}</text>
+        <view class="index-nav-list-bottom" v-if="tabIndex === index"></view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      screenWidth: 0,
+      statusHeight: 0,
+      list: ['推荐', '招商', '直播', '体验', '培训', '采集'],
+      tabIndex: 0,
+      address: ''
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screenWidth = ala.screenWidth()
+      this.statusHeight = ala.statusHeight()
+      uni.$on('user_recent_city', () => {
+        this.address = ala.localGet('user_recent_city')
+      })
+      this.address = ala.localGet('user_recent_city')
+      // #ifdef APP-NVUE
+      this.address = await ala.addressLocation()
+      // #endif
+    },
+    addressClick() {
+      ala.to('/pages/address/index')
+    },
+    tabClick(item, index) {
+      this.tabIndex = index
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.index-nav {
+  height: 120rpx;
+  padding: 35rpx 28rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  &-left {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    //flex-shrink: 0;
+
+    &-icon {
+      width: 38rpx;
+      height: 38rpx;
+    }
+
+    &-text {
+      width: 72rpx;
+      height: 38rpx;
+      line-height: 38rpx;
+	  text-align: center;
+	  //text-indent: 5px;
+	  //margin-left: 3px;
+      font-size: 28rpx;
+      font-weight: 600;
+      color: #ffffff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      /* #ifdef APP-PLUS-NVUE */
+      lines: 1;
+      /* #endif */
+      /* #ifdef MP || H5 */
+      // white-space: nowrap;
+      /* #endif */
+    }
+
+    &-content {
+      height: 52rpx;
+      padding-left: 22rpx;
+      margin-left: 12rpx;
+      //min-width: 160px;
+      background-color: #ffffff;
+      border-radius: 30rpx;
+      flex-direction: row;
+      align-items: center;
+      &-image {
+        width: 32rpx;
+        height: 32rpx;
+      }
+    }
+
+    &-search {
+      width: 20px;
+      height: 20px;
+
+      &-text {
+        font-size: 22rpx;
+		text-indent: 16rpx;
+        margin-left: 5px;
+        color: #a3a3a3;
+      }
+    }
+  }
+
+  &-right {
+    flex: 1;
+    //width: 80px;
+    //height: 30px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    &-left {
+      height: 64rpx;
+      width: 60rpx;
+      margin-left: 56rpx;
+    }
+
+    &-right {
+      height: 44rpx;
+      width: 44rpx;
+	  margin-right: 5rpx;
+     // margin: 0 4px;
+    }
+
+    &-icon {
+      width: 25px;
+      height: 25px;
+    }
+  }
+}
+
+.index-nav-ul {
+  height: 26rpx;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 38rpx;
+}
+
+.index-nav-list {
+  height: 54rpx;
+  position: relative;
+
+  &-text {
+    line-height: 40px;
+    color: #ffffff;
+    font-size: 30rpx;
+  }
+  &-active {
+    font-weight: 700;
+  }
+  &-bottom {
+    // position: absolute;
+    // bottom: 3px;
+	margin: 14rpx 9rpx 0;
+    width: 44rpx;
+    height: 6rpx;
+    border-radius: 3rpx;
+    background-color: #ffffff;
+  }
+}
+.index-bg {
+  position: relative;
+  /* #ifndef APP-NVUE */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  /* #endif */
+
+  // background-image: url('/static/image/home/index_nav_bg.png');
+  &-show {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+</style>

@@ -1,0 +1,30 @@
+<template>
+  <x-widget :option="option" ref="xWidget"></x-widget>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      option: null
+    }
+  },
+  onShow() {
+    this.$nextTick(() => {
+      if (this.$refs.xWidget) {
+        this.$refs.xWidget.$refs.scrollItem.init()
+      }
+    })
+  },
+  onLoad(option) {
+    this.option = option
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {}
+  }
+}
+</script>

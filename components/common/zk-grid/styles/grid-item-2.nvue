@@ -1,0 +1,84 @@
+<template>
+  <!-- <view class="grid-item-2">
+    <view class="ul">
+      <view class="list" :style="'width:' + (screenWidth / gridModel.gridCount - 1) + 'px;'" v-for="(item, index) in list" @click="linkTo(item)" :key="index">
+        <img v-if="item.image" :src="item.image" class="image" alt="" />
+        <view class="test">{{ item.link.name }}</view>
+      </view>
+    </view>
+  </view> -->
+  <view class="grid-item-2" :style="{width:screenWidth + 'px'}">
+	  <view class="grid-item-2-ul">
+		  <view class="grid-item-2-list" :style="{width: (screenWidth-40) / gridModel.gridCount + 'px'}" v-for="(item, index) in list" :key="index">
+			  <image :src="item.image" class="grid-item-2-list-image" />
+			  <text class="grid-item-2-list-text">{{item.link.name}}</text>
+		  </view>
+	  </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  props: {
+    gridList: {},
+    gridModel: {}
+  },
+  data() {
+    return {
+      count: 3,
+      list: [],
+      screenWidth: 0
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.list = this.gridList
+      this.screenWidth = ala.screenWidth()
+      if (this.gridList) {
+        var remainder = this.gridList.length % this.gridModel.gridCount
+        var num = remainder === 0 ? 0 : this.gridModel.gridCount - remainder
+        if (num > 0) {
+          for (let i = 0; i < num; i++) {
+            this.list.push({ link: {} })
+          }
+        }
+      }
+    },
+    linkTo(item) {
+      ala.to(item.link.url)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+	.grid-item-2{
+		padding: 0 10px;
+		&-ul{
+			background-color: #FFFFFF;
+			box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.1);
+			flex-direction: row;
+			flex-wrap: wrap;
+			padding: 10px;
+			border-radius: 5px;
+		}
+		&-list{
+			height: 90px;
+			justify-content: center;
+			align-items: center;
+			&-image{
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+			}
+			&-text{
+				margin-top: 3px;
+				font-size: 12px;
+			}
+		}
+	}
+</style>

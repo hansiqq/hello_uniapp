@@ -1,0 +1,165 @@
+<template>
+  <view class="">
+    <view v-if="addList">
+      <view class="add-list" :style="{ width: screenWidth + 'px' }" v-for="(item, index) in addList" :key="index">
+        <text class="add-list-left" @click="selectClick(item)">{{ item.name.substr(0, 1) }}</text>
+        <view class="add-list-center" :style="{ width: screenWidth - 105 + 'px' }" @click="selectClick(item)">
+          <view class="add-list-center-title">
+            <text class="add-list-center-title-name">{{ item.name }}</text>
+            <text class="add-list-center-title-phone">{{ item.mobile }}</text>
+            <text class="add-list-center-title-defualt" v-if="item.isDefault">默认</text>
+          </view>
+          <text class="add-list-center-bottom" :style="{ width: screenWidth - 115 + 'px' }">{{ item.addressDescription }} {{ item.address }}</text>
+        </view>
+        <view class="add-list-right" @click="add(item)">
+          <x-icon name="icon-right" size="20" color="#777777"></x-icon>
+        </view>
+      </view>
+    </view>
+    <view class="button" :style="{ width: screenWidth - 60 + 'px' }">
+      <text class="button-cont" @click="add()">添加地址</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import api from '@/service/api'
+export default {
+  data() {
+    return {
+      addList: null,
+      screenWidth: 0,
+      addressType: 'admin' // 地址模式，选择时为select
+    }
+  },
+  methods: {
+    async init(addressType) {
+      this.addressType = addressType
+      this.screenWidth = ala.screenWidth()
+      this.addList = await api.addressUser()
+      if (this.addList && this.addList.length === 0) {
+        ala.toast('暂无地址,请添加')
+        this.add()
+      }
+    },
+    // 选择地址操作,管理地址时不生效
+    selectClick(item) {
+      if (this.addressType === 'select') {
+        ala.localSet('shop_order_select_address', item)
+        uni.$emit('global_select_address')
+        uni.navigateBack({
+          delta: 1
+        })
+      }
+    },
+    add(data) {
+      this.$emit('add', data)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color:rgba(255, 255, 255, .5);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 107, 168, 0.8);
+  border-radius: 2;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color:rgba(128, 107, 168, 1);
+}
+.button {
+  position: fixed;
+  margin: 0 30px;
+  height: 40px;
+  bottom: 40px;
+  left: 0;
+  background-color: $gl-themeColor;
+  &-cont {
+    font-size: 16px;
+    color: #ffffff;
+    line-height: 40px;
+    text-align: center;
+  }
+}
+
+.add-list {
+  padding: 10px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  &-left {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 30px;
+    font-size: 17px;
+    color: #ffffff;
+    background-image: linear-gradient(to right, #ccc, #aaa);
+  }
+
+  &-center {
+    padding-left: 10px;
+    &-title {
+      flex-direction: row;
+      align-items: center;
+
+      &-name {
+        font-size: 17px;
+      }
+
+      &-phone {
+        margin-left: 5px;
+        font-size: 12px;
+        color: #777777;
+      }
+
+      &-defualt {
+        font-size: 11px;
+        background-color: #f06c7a;
+        color: #fff;
+        padding: 0 9px;
+        border-radius: 12px;
+        margin-left: 10px;
+      }
+    }
+
+    &-bottom {
+      width: 100%;
+      font-size: 12px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      /* #ifdef APP-PLUS-NVUE */
+      lines: 2;
+      /* #endif */
+      /* #ifndef APP-PLUS-NVUE */
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      /* #endif */
+      color: #777;
+    }
+  }
+
+  &-right {
+    width: 40px;
+    height: 30px;
+    border-left-width: 1px;
+    border-left-color: #aaaaaa;
+    border-left-style: solid;
+  }
+}
+</style>

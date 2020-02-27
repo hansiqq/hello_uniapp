@@ -1,0 +1,242 @@
+<template>
+  <view class="product-item-5" v-if="async">
+    <view v-for="(item, index) in viewModel" :key="index">
+      <view class="product-item-5-head-show" :style="{ width: screenWidth - 20 + 'px' }">
+        <image :src="item.areaInfo.image" :style="{ width: screenWidth - 20 + 'px' }" class="product-item-5-head-image" />
+      </view>
+      <view class="product-item-5-head" :style="{ width: screenWidth - 20 + 'px;' }">
+        <view class="product-item-5-head-cont" :style="{ width: screenWidth / 2 + 'px;' }">
+          <text class="product-item-5-head-cont-test">{{ text }}</text>
+          <view class="product-item-5-head-cont-bottom"><text class="product-item-5-head-cont-bottom-t">查看更多</text></view>
+        </view>
+      </view>
+      <view v-for="(productItem, productIndex) in item.productItems" :key="productIndex" class="product-item-5-list" :style="{ width: screenWidth - 20 + 'px;' }" @click="linkTo(productItem)">
+        <x-image :src="productItem.thumbnailUrl" class="product-item-5-cont-image"></x-image>
+        <view class="product-item-5-list-cont" :style="{ width: screenWidth - 190 + 'px' }">
+          <view class="product-item-5-list-title">
+            <text class="product-item-5-list-title-name">{{ productItem.name }}</text>
+            <text class="product-item-5-list-title-intro">超级秒杀! 直降69元!</text>
+            <view class="product-item-5-list-title-coupon">
+              <text class="product-item-5-list-title-coupon-test">10元抵扣劵</text>
+              <text class="product-item-5-list-title-coupon-price">获利 ￥8.88</text>
+            </view>
+          </view>
+          <view class="product-item-5-list-bottom" :style="{ width: screenWidth - 190 + 'px' }">
+            <view class="product-item-5-list-bottom-left">
+              <text class="product-item-5-list-bottom-left-retail">零售价￥{{ productItem.marketPrice }}</text>
+              <view class="product-item-5-list-bottom-left-price">
+                <text class="product-item-5-price-name">群团价</text>
+                <text class="product-item-5-price-test">￥{{ productItem.price }}</text>
+              </view>
+            </view>
+            <text class="product-item-5-list-bottom-right">发起拼团</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import api from '@/service/api'
+export default {
+  props: {
+    text: ''
+  },
+  data() {
+    return {
+      screenWidth: '',
+      viewModel: {},
+      async: false
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screenWidth = ala.screenWidth()
+      this.viewModel = await api.shopareaIndexBottom()
+      console.info('this.view', this.viewModel)
+      this.async = true
+    },
+    linkTo(item) {
+      ala.to(`/product/show?id=${item.id}`)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.product-item-5 {
+  position: relative;
+  padding: 5px 10px;
+  height: 265px;
+  background-color: #f9f8fd;
+  //border-radius: 10px;
+  //box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.1);
+}
+.product-item-5-head {
+  height: 92px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  position: relative;
+}
+.product-item-5-head-show {
+  height: 92px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  //background-color: #ea341f;
+}
+.product-item-5-head-image {
+  height: 92px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.product-item-5-head-cont {
+  margin-left: 20px;
+  height: 95px;
+  justify-content: center;
+}
+.product-item-5-head-cont-test {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+}
+.product-item-5-head-cont-bottom {
+  margin-top: 10px;
+  width: 60px;
+  height: 18px;
+  border-radius: 30px;
+  background-color: #f9e586;
+  position: absolute;
+  left: 0;
+  bottom: 24px;
+}
+.product-item-5-head-cont-bottom-t {
+  color: #e6281c;
+  font-size: 12px;
+  text-align: center;
+  line-height: 18px;
+}
+.product-item-5-list {
+  height: 163px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 20px 10px 0px;
+  flex-direction: row;
+  margin-bottom: 10px;
+  position: relative;
+  top: -5px;
+  z-index: 1;
+}
+.product-item-5-cont-image {
+  width: 128px !important;
+  height: 128px !important;
+  margin-right: 14px;
+  border-radius: 5px;
+}
+.product-item-5-list-cont {
+  height: 128px;
+  justify-content: space-between;
+}
+.product-item-5-list-title-name {
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* #ifdef APP-PLUS-NVUE */
+  lines: 2;
+  /* #endif */
+  /* #ifdef H5 || MP */
+  white-space: nowrap;
+  /* #endif */
+}
+.product-item-5-list-title-intro {
+  color: #999999;
+  font-size: 12px;
+  margin: 5px 0;
+}
+.product-item-5-list-title-coupon {
+  height: 18px;
+  flex-direction: row;
+}
+.product-item-5-list-title-coupon-price,
+.product-item-5-list-title-coupon-test {
+  line-height: 18px;
+  color: #ffffff;
+  font-size: 11px;
+  width: 60px;
+  border-radius: 3px;
+  //background-color: #ff0619;
+  text-align: center;
+}
+.product-item-5-list-title-coupon-test{
+  font-weight: 200;
+  background-image: url("http://img.baoduoduo.club/home/prodist02.png");
+  background-repeat: no-repeat;
+  background-size: 100% 18px;
+  // width: 74px;
+  padding: 0 5px;
+  width: fit-content;
+  position: relative;
+  top: 1px;
+}
+
+.product-item-5-list-title-coupon-price {
+  margin-left: 10px;
+  width: 65px;
+  color: #ff4150;
+  text-align: center;
+  background-color: #ffefef;
+}
+.product-item-5-list-bottom {
+  height: 40px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.product-item-5-list-bottom-right {
+  margin-top: 13px;
+  width: 80px;
+  height: 25px;
+  font-size: 14px;
+  line-height: 25px;
+  color: #ffffff;
+  text-align: center;
+  border-radius: 30px;
+  /* background-color: #f42c1c; */
+  /* background-color: line-through; */
+  background-image: linear-gradient(to right, #f42e15, #ff8602);
+  position: absolute;
+  bottom: 0px;
+  right: -10px;
+  
+}
+.product-item-5-list-bottom-left {
+	position: relative;
+	top: -7px;
+}
+.product-item-5-list-bottom-left-retail {
+  font-size: 14px;
+  color: #999999;
+  text-decoration: line-through;
+}
+.product-item-5-list-bottom-left-price {
+  margin-top: 8px;
+  height: 30px;
+  flex-direction: row;
+}
+.product-item-5-price-test {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ff061a;
+}
+.product-item-5-price-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #030303;
+}
+</style>

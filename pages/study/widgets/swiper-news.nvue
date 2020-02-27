@@ -1,0 +1,71 @@
+<template>
+	<view class="swiper-news">
+		<view class="swiper-news-show">
+			<image src="http://img.baoduoduo.club/study/show-title.png" :style="{width: screenWidth + 'px'}" class="swiper-news-show-image" />
+		</view>
+		<view class="swiper-news-cont">
+			<text class="swiper-news-cont-left">动态</text>
+			<view class="swiper-news-cont-right" :style="{width: screenWidth - 100 + 'px'}">
+				<text class="swiper-news-cont-right-text">这里是社交内容发现送...</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.swiper-news{
+		padding: 10px;
+		padding-bottom: 0;
+		margin-bottom: 10px;
+		position: relative;
+		&-show {
+			top: 0;
+			left: 0;
+			position: absolute;
+			&-image{
+				height: 70px;
+			}
+		}
+		&-cont{
+			border-radius: 5px;
+			height: 50px;
+			// background-color: #E8313A;
+			flex-direction: row;
+			&-left{
+				color: #FFD66B;
+				font-size: 14px;
+				font-weight: 700;
+				width: 70px;
+				text-align: center;
+				line-height: 50px;
+			}
+			&-right {
+				height: 50px;
+				&-text{
+					line-height: 50px;
+					color: #FFF999;
+					font-size: 14px;
+				}
+			}
+		}
+	}
+</style>

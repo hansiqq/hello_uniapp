@@ -1,0 +1,44 @@
+<template>
+  <view class="x-button" @click="submint" :style="{width: screenWidth-30+'px'}">
+    <view class="x-button-icon" v-if="loading"></view>
+    <text class="x-button-text">{{ btnText }}</text>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  props: {
+    loading: {
+      default: false
+    }, // 是否使用加载中,默认为false不使用
+    btnText: {},
+    bgColor: {
+      default: '#C81432'
+    }
+  },
+  data() {
+    return {
+      isLoading: true,
+	  screenWidth: ''
+    }
+  },
+  mounted() {
+	  this.init()
+  },
+  methods: {
+    init() {
+		this.screenWidth = ala.screenWidth()
+	},
+	submint() {
+      if (this.loading === false) {
+        this.$emit('change')
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss" >
+@import './var.scss';
+</style>

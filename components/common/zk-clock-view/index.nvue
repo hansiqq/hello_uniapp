@@ -1,0 +1,38 @@
+<template>
+	<view>
+		<clockTop></clockTop>
+		<view style="background-color: #F9F9FB;">
+			<studyList v-for="(item, index) in studyList.study" :key="index" :viewModel="item"></studyList>
+			<rankList v-for="(item, index) in studyList.rank" :key="index+2" :viewModel="item"></rankList>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	import clockTop from './styles/top'
+	import studyList from './styles/study-list'
+	import rankList from './styles/rank-list'
+	import studyJosn from './json/study.json'
+	export default {
+		components: {
+			clockTop,
+			studyList,
+			rankList
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				studyList: studyJosn
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>

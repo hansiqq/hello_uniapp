@@ -1,0 +1,130 @@
+<template>
+  <view class="two-nav" :style="{ width: screenWidth + 'px', paddingTop: statusHeight + 'px', height: statusHeight + 45 + 'px' }">
+    <text class="two-nav-left">圈落</text>
+	<view class="two-nav-center" :style="{ width: screenWidth - 85 + 'px', paddingLeft: 17 + 'px' }">
+	  <view class="two-nav-center-list" :style="{ width: (screenWidth - 150) / 3 + 'px' }" v-for="(item, index) in navArr" :key="index" @click="clickTab(index, item)">
+	    <text class="two-nav-center-text" :class="{ 'two-nav-center-active': index == tabSelect.index }">{{ item.title }}</text>
+		<!-- #ifdef APP-NVUE -->
+		<view class="two-nav-center-list-show" v-if="index == tabSelect.index" :style="{ width: ((screenWidth - 180) / 3) * 0.3 + 'px', marginLeft: '-' + (((screenWidth - 180) / 6) * 0.3) / 2 + 'px' }"></view>
+		<!-- #endif -->
+		<!-- #ifndef APP-NVUE -->
+		<view class="two-nav-center-list-show" v-if="index == tabSelect.index" :style="{ width: ((screenWidth - 180) / 3) * 0.3 + 'px', marginLeft: '-' + (((screenWidth - 180) / 6) * 0.7) / 2 + 'px' }"></view>
+		<!-- #endif -->
+	  </view>
+	</view>
+    <view class="two-nav-right">
+	 <!-- <image src="/static/image/notify.jpg" class="two-nav-right-img" /> -->
+      <x-icon name="icon-qrcode" size="18" color="#ffffff"></x-icon>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala.js'
+import api from '@/service/api.js'
+export default {
+  data() {
+    return {
+      navArr: [
+        {
+          title: '热点推荐',
+          type: 'GoodsMaterialRelation'
+        },
+        {
+          title: '商学院',
+          type: 'CourseColumnRelation'
+        },
+        {
+          title: '发圈素材',
+          type: 'HairCircleRelation'
+        }
+      ],
+      tabSelect: {
+        index: 0,
+        type: 'GoodsMaterialRelation'
+      },
+      itemWidth: '50px',
+      screenWidth: 0,
+      statusHeight: 0,
+      relationList: []
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+      this.statusHeight = ala.statusHeight()
+      this.clickTab(0, this.tabSelect)
+    },
+    back() {
+      uni.navigateBack()
+    },
+    async clickTab(index, item) {
+      this.relationList = await api.relationGet(item.type)
+      this.tabSelect.index = index
+      var data = {
+        type: item.type,
+        result: this.relationList
+      }
+      uni.$emit('global_material_tab_click', data)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.two-nav {
+  /* #ifdef H5 */
+  position: fixed;
+  z-index: 10;
+  background-image: linear-gradient(to right, rgba(244, 46, 20, 1), rgba(208, 40, 29, 1));
+  // top: 45px;
+  /* #endif */
+  padding: 0 10px;
+  flex-direction: row;
+  align-items: center;
+
+  &-left {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  &-right {
+    width: 25px;
+  }
+
+  &-center {
+    flex-direction: row;
+    // justify-content: center;
+
+    &-list {
+      position: relative;
+      height: 45px;
+
+      &-show {
+        position: absolute;
+        height: 5px;
+        bottom: 0;
+        left: 50%;
+        border-radius: 30px;
+        background-color: #ffffff;
+      }
+    }
+
+    &-text {
+      font-size: 14px;
+      line-height: 45px;
+      text-align: center;
+      color: #fcebeb;
+    }
+
+    &-active {
+      color: #ffffff;
+      font-weight: 600;
+    }
+  }
+}
+</style>

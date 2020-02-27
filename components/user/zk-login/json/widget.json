@@ -1,0 +1,21 @@
+{
+  "name": "登录",
+  "loginForm": [
+    {
+      "isEnable": true,
+      "link": {
+        "url": "/user/reg",
+        "name": "注册账号"
+      },
+      "colors": ""
+    },
+    {
+      "isEnable": true,
+      "link": {
+        "url": "/user/password/find",
+        "name": "忘记密码"
+      },
+      "colors": ""
+    }
+  ]
+}

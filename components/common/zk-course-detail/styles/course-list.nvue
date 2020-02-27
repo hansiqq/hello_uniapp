@@ -1,0 +1,139 @@
+<template>
+	<view class="course-list">
+		<view class="course-list-title">
+			<view class="course-list-title-list" :style="{width: (screenWidth - 30) /2 + 'px'}" v-for="(item, index) in list" :key="index">
+				<view class="course-list-title-list-left" v-if="tabIndex === index"></view>
+				<text class="course-list-title-list-right" :class="{'course-list-title-list-active': tabIndex === index}">{{item}}</text>
+			</view>
+		</view>
+		<view class="course-list-ul">
+			<view class="course-list-list" v-for="(item, index) in viewModel" :key="index">
+				<text class="course-list-list-title">{{item.title}}</text>
+				<view class="course-list-list-cont">
+					<image class="course-list-list-cont-image" :src="item.image" />
+					<view class="course-list-list-cont-right" :style="{width: screenWidth - 170 + 'px'}">
+						<text class="course-list-list-cont-right-title">{{item.name}}</text>
+						<view class="course-list-list-cont-right-bottom" v-if="item.show">
+							<image class="course-list-list-cont-right-image" src="http://img.baoduoduo.club/study/rout.png" />
+							<text class="course-list-list-cont-right-text">正在学习中</text>
+						</view>
+						<view class="course-list-list-cont-right-show" v-else :style="{width: screenWidth - 170 + 'px'}">
+							<text class="course-list-list-cont-right-show-text">时长：2分30秒</text>
+							<text class="course-list-list-cont-right-show-text">第二节  |  0.8万人关注</text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	import testJson from './test.json'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				list: ['课程目录(10节)', '图文课程'],
+				tabIndex: 0,
+				viewModel: testJson
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.course-list{
+		padding: 15px;
+		padding-bottom: 0;
+		&-title{
+			height: 30px;
+			flex-direction: row;
+			&-list {
+				flex-direction: row;
+				align-items: center;
+				justify-content: center;
+				&-left{
+					width: 10px;
+					height: 10px;
+					border-color: #F92E2C;
+					border-width: 2px;
+					border-style: solid;
+					border-radius: 50%;
+				}
+				&-right {
+					margin-left: 5px;
+					font-size: 15px;
+					color: #999999;
+				}
+				&-active {
+					color: #434343;
+					font-weight: bold;
+				}
+			}
+		}
+		&-list{
+			padding: 10px 0;
+			border-bottom-width: 1px;
+			border-bottom-style: solid;
+			border-bottom-color: #F6F3F7;
+			&-title{
+				color: #202020;
+				font-size: 15px;
+				font-weight: bold;
+			}
+			&-cont{
+				padding: 10px 0;
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-between;
+				&-image{
+					height: 90px;
+					width: 130px;
+					border-radius: 10px;
+				}
+				&-right {
+					height: 80px;
+					justify-content: space-between;
+					&-title{
+						font-size: 14px;
+						color: #999999;
+						line-height: 25px;
+					}
+					&-bottom{
+						flex-direction: row;
+						justify-content: flex-end;
+						align-items: center;
+					}
+					&-image {
+						height: 10px;
+						width: 10px;
+						// background-color: #F92E2C;
+					}
+					&-text {
+						margin-left: 5px;
+						color: #F92E2C;
+						font-size: 11px;
+					}
+					&-show{
+						flex-direction: row;
+						justify-content: space-between;
+						&-text {
+							font-size: 11px;
+							color: #999999;
+						}
+					}
+				}
+			}
+		}
+	}
+</style>

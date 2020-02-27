@@ -1,0 +1,116 @@
+<template>
+	<view class="show_detail">
+		<uni-popup ref="uniPopup" type="bottom">
+			<view class="show_detail-cont" :style="{height: screenHeight + 'px', width: screenWidth + 'px',paddingTop: statusHeight + 'px'}">
+				<view class="show_detail-cont-title">
+					<view class="show_detail-cont-title-left" @click="close">
+						<image src="http://img.baoduoduo.club/study/left.png" class="show_detail-cont-title-left-image" />
+					</view>
+					<text class="show_detail-cont-title-right">保存原图</text>
+				</view>
+				<view :style="{height: screenHeight - (statusHeight + 120) + 'px'}" class="show_detail-cont-show">
+					<image v-if="viewModel.contentType == 3" :src="'http://b-api.baoduoduo.club' + viewModel.message" :style="{width: imageWidth + 'px', height: imageHeight + 'px'}" />
+					<view v-if="viewModel.contentType == 2">
+						<video id="myVideo" :show-center-play-btn="true" :style="{width: screenWidth + 'px'}" :show-fullscreen-btn="true" :src="'http://b-api.baoduoduo.club' + viewModel.message"></video>
+					</view>
+				</view>
+			</view>
+		</uni-popup>
+	</view>
+</template>
+
+<script>
+	import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup'
+	import ala from '@/service/ala.js'
+	export default {
+		components: {
+			uniPopup
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				statusHeight: 0,
+				screenHeight: 10,
+				viewModel: '',
+				imageHeight: 0,
+				imageWidth: 0
+			}
+		},
+		methods: {
+			init(data) {
+				this.screenWidth = ala.screenWidth()
+				this.statusHeight = ala.statusHeight()
+				this.screenHeight = ala.screenHeight()
+				this.viewModel = data
+				if (this.viewModel.contentType === 3) {
+					uni.getImageInfo({
+						src: 'http://b-api.baoduoduo.club' + this.viewModel.message,
+						success: res => {
+							if (res.width > this.screenWidth) {
+								var sclice = res.width - this.screenWidth
+								var num = 1 - sclice / res.width
+								this.imageHeight = res.height
+								this.imageWidth = res.width
+							} else {
+								this.imageHeight = res.height
+								this.imageWidth = res.width
+							}
+						}
+					})
+				}
+				this.$refs.uniPopup.open()
+			},
+			open(data) {
+				console.info('data', data)
+				this.viewModel = data
+				if (data.contentType === 2) {
+					this.videoLink = 'http://b-api.baoduoduo.club' + data.message
+				}
+			},
+			close() {
+				this.$refs.uniPopup.close()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.show_detail{
+		position: fixed;
+		z-index: 9999;
+		&-cont{
+			height: 100px;
+			width: 100px;
+			background-color: #000000;
+			&-title{
+				height: 50px;
+				padding: 0 10px;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+				&-left{
+					width: 20px;
+					height: 20px;
+					&-image{
+						width: 10px;
+						height: 18px;
+					}
+				}
+				&-right{
+					height: 25px;
+					line-height: 25px;
+					border-style: solid;
+					border-color: #FFFFFF;
+					border-width: 1px;
+					padding: 0 10px;
+					font-size: 12px;
+					color: #FFFFFF;
+				}
+			}
+			&-show{
+				align-items: center;
+				justify-content: center;
+			}
+		}
+	}
+</style>

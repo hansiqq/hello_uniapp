@@ -1,0 +1,50 @@
+<template>
+  <view class="add">
+    <zk-product-chat></zk-product-chat>
+  </view>
+</template>
+<script>
+import api from '@/service/api'
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      viewModel: {},
+      viewModel2: '',
+      tabIndex: 0
+    }
+  },
+  beforeCreate() {},
+  mounted() {
+    this.init()
+	// #ifdef APP-NVUE
+	console.info('添加注释')
+	// #endif
+  },
+  methods: {
+    init() {}
+  }
+}
+</script>
+<style lang="scss" scoped>
+.uni-rate {
+  line-height: 0;
+  font-size: 0;
+  flex-direction: row;
+
+  &-icon {
+    position: relative;
+    line-height: 0;
+    font-size: 0;
+    display: inline-block;
+
+    &-on {
+      line-height: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+    }
+  }
+}
+</style>

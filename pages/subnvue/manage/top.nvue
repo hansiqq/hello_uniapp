@@ -1,0 +1,153 @@
+<template>
+ <view class="index-bg">
+    <view class="index-bg-show" :style="{ width: screenWidth + 'px', height: 45 + statusHeight + 'px' }">
+      <image src="/static/image/home/index_nav_bg.png" :style="{ width: screenWidth + 'px', height: 45 + statusHeight + 'px' }" />
+    </view>
+    <view class="index-nav" :style="{ width: screenWidth + 'px', marginTop: statusHeight + 'px' }">
+      <view class="index-nav-left">
+        <image src="/static/image/home/address.png" class="index-nav-left-icon" />
+        <text class="index-nav-left-text" @click="addressClick">{{ address }}</text>
+        <text class="index-nav-left-content" :style="{ width: screenWidth - 205 + 'px' }">店铺管理</text>
+      </view>
+      <view class="index-nav-right">
+        <image src="/static/image/home/hongbao.png" class="index-nav-right-left" />
+        <image src="/static/image/home/msg.png" class="index-nav-right-right" />
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      screenWidth: 0,
+      statusHeight: 0,
+      list: ['推荐', '招商', '直播', '体验', '培训', '采集'],
+      tabIndex: 0,
+      address: ''
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screenWidth = ala.screenWidth()
+      this.statusHeight = ala.statusHeight()
+      uni.$on('imtRecentCity', () => {
+        this.address = ala.localGet('imtRecentCity')
+      })
+      this.address = ala.localGet('imtRecentCity')
+	  this.address = '番禺区'
+      // #ifdef APP-NVUE
+      this.address = await ala.addressLocation()
+      // #endif
+    },
+    addressClick() {
+      ala.to('/pages/address/index')
+    },
+    tabClick(item, index) {
+      this.tabIndex = index
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.index-nav {
+  height: 45px;
+  padding: 0 14px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  
+  &-left {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+	//flex-shrink: 0;
+	
+    &-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    &-text {
+      width: 50px;
+      height: 20px;
+      line-height: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      /* #ifdef APP-PLUS-NVUE */
+      lines: 1;
+      /* #endif */
+      /* #ifdef MP || H5 */
+      // white-space: nowrap;
+      /* #endif */
+    }
+
+    &-content {
+	  height: 25px;
+	 color: #FFFFFF;
+	 text-align: center;
+	 font-size: 16px;
+	 font-weight: bold;
+    }
+
+    &-search {
+      width: 20px;
+      height: 20px;
+
+      &-text {
+        font-size: 12px;
+        margin-left: 5px;
+        color: #a3a3a3;
+      }
+    }
+  }
+
+  &-right {
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    &-left {
+      height: 30px;
+      width: 27px;
+	  margin-left: 15px;
+    }
+	
+    &-right {	  
+      height: 20px;
+      width: 20px;
+	  margin: 0 4px;
+    }
+	
+    &-icon {
+      width: 25px;
+      height: 25px;
+    }
+  }
+}
+.index-bg {
+  position: relative;
+  /* #ifndef APP-NVUE */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  /* #endif */
+
+  // background-image: url('/static/image/home/index_nav_bg.png');
+  &-show {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+</style>

@@ -1,0 +1,81 @@
+<template>
+  <view class="class-list-ul" :style="{ width: screenWidth - 20 + 'px;' }">
+    <view class="class-list-list" :style="{ width: (screenWidth + 1) / 5 + 'px;' }" v-for="(item, index) in formList" :key="index">
+      <text class="class-list-test" :class="{ 'class-list-list-test-active': index === 0 }">{{ item }}</text>
+      <view class="class-list-list-bottom" v-if="index === 0">
+        <image src="http://img.baoduoduo.club/home/prodist01.png" :alt="item.intro" class="class-list-image" />
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import api from '@/service/ala/'
+export default {
+  data() {
+    return {
+      screenWidth: '',
+      formList: ['商品专区', '优选专区', '折扣优惠', '积分专区', '一元购']
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = api.screenWidth()
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.class-list-ul {
+  height: 60px;
+  padding: 10px 14px 10px;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #fafafc;
+  box-sizing: border-box;
+}
+
+.class-list-list {
+  position: relative;
+}
+
+.class-list-test {
+  color: #000000;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 35px;
+  text-align: center;
+}
+
+.class-list-list-bottom {
+  position: absolute;
+  bottom: 0;
+  /* #ifdef MP || H5 */
+  left: 50%;
+  /* #endif */
+  /* #ifdef APP-PLUS-NVUE */
+  left: 30%;
+  /* #endif */
+  width: 11px;
+  height: 10px;
+  //background-color: #1aad19;
+  transform: translate(-50%, -50%);
+}
+
+.class-list-list-test-active {
+  color: #fb342e;
+  font-size: 15px;
+}
+
+.class-list-image {
+  width: 11px;
+  height: 10px;
+  font-size: 0;
+  // position: relative;
+  // top: -3px; 
+}
+</style>

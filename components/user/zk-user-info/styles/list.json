@@ -1,0 +1,96 @@
+{
+  "infoView": [
+    {
+      "infoType": "avator",
+      "type": "头像",
+      "value": "",
+      "icon": "icon-right",
+      "url": "/user/avator",
+      "show": true,
+      "isAct": true,
+      "image": ""
+    },
+    {
+      "infoType": "name",
+      "type": "名字",
+      "value": "",
+      "icon": "",
+      "show": false
+    },
+    {
+      "infoType": "userName",
+      "type": "用户名",
+      "value": "",
+      "icon": "",
+      "show": false
+    },
+    {
+      "infoType": "gradeName",
+      "type": "会员等级",
+      "value": "",
+      "icon": "",
+      "show": false
+    },
+    {
+      "infoType": "mobile",
+      "type": "手机号",
+      "value": "",
+      "icon": "",
+      "show": false
+    },
+    {
+      "infoType": "sex",
+      "type": "性别",
+      "value": "",
+      "icon": "",
+      "show": false
+    },
+    {
+      "infoType": "email",
+      "type": "邮箱",
+      "value": "",
+      "icon": "",
+      "show": false
+    },
+    {
+      "infoType": "parentUserName",
+      "type": "推荐人",
+      "value": "",
+      "icon": "",
+      "show": false
+    },
+    {
+      "infoType": "identityStatusName",
+      "type": "实名状态",
+      "value": "",
+      "icon": "",
+      "show": false
+    }
+  ],
+  "infoOut": [
+    {
+      "infoType": "editAddress",
+      "type": "收货地址",
+      "name": "",
+      "icon": "icon-right",
+      "url": "",
+      "show": true
+    },
+    {
+      "infoType": "localClear",
+      "type": "清空缓存",
+      "name": "",
+      "icon": "icon-right",
+      "url": "",
+      "show": true
+    },
+    {
+      "infoType": "loginOut",
+      "type": "退出登录",
+      "name": "",
+      "icon": "icon-right",
+      "url": "",
+      "show": true
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+	"value": {
+		"gridForm": {
+			"gridType": 3,
+			"gridCount": 4,
+			"gridList": [
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav01.png",
+					"isEnable": true,
+					"link": {
+						"url": "/pages/study/index",
+						"name": "店主学习"
+					}
+				},
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav02.png",
+					"isEnable": true,
+					"link": {
+						"url": "pages/nav/share/index",
+						"name": "店主分享"
+					}
+				},
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav03.png",
+					"isEnable": true,
+					"link": {
+						"name": "店主收益",
+						"url": "/pages/nav/store/profit"
+					}
+				},
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav04.png",
+					"isEnable": true,
+					"link": {
+						"name": "店主优选",
+						"url": "/pages/nav/optimization/index"
+					}
+				},
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav05.png",
+					"isEnable": true,
+					"link": {
+						"name": "店主生活",
+						"url": "/pages/nav/store/live"
+					}
+				},
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav06.png",
+					"isEnable": true,
+					"link": {
+						"name": "社群团购",
+						"url": "/pages/nav/community/group"
+					}
+				},
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav07.png",
+					"isEnable": true,
+					"link": {
+						"name": "社群圈落",
+						"url": "/pages/nav/community/source"
+					}
+				},
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav08.png",
+					"isEnable": true,
+					"link": {
+						"name": "社区生活",
+						"url": "/pages/nav/community/live"
+					}
+				},
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav09.png",
+					"isEnable": true,
+					"link": {
+						"name": "社区商家",
+						"url": "/pages/nav/community/store"
+					}
+				},
+				{
+					"icon": {},
+					"image": "http://img.baoduoduo.club/home/nav10.png",
+					"isEnable": true,
+					"link": {
+						"name": "店铺管理",
+						"url": "/pages/manage/index"
+					}
+				}
+			]
+		}
+	}
+}

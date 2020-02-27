@@ -1,0 +1,73 @@
+<template>
+	<view class="grid-item-3" v-if="async">
+		<view class="grid-item-3-cont">
+			<view class="grid-item-3-ul" :style="{ width: screenWidth - 20 + 'px;' }">
+				<view class="grid-item-3-list" @click="linkTo(item)" v-for="(item, index) in gridList" :key="index" :style="{ width: (screenWidth - 20) / 5 + 'px' }">
+					<image :src="item.image" alt="" class="grid-item-3-image" />
+					<text class="grid-item-3-test">{{ item.link.name }}</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		props: {
+			gridList: {},
+			gridModel: {}
+		},
+		data() {
+			return {
+				screenWidth: '',
+				async: false,
+				listWidth: ''
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				this.listWidth = this.screenWidth / 5
+				this.async = true
+			},
+			linkTo(item) {
+				ala.to(item.link.url)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.grid-item-3 {
+		background-color: #ba1511;
+	}
+
+	.grid-item-3-ul {
+		flex-direction: row;
+		flex-wrap: wrap;
+		padding-left: 7px;
+	}
+
+	.grid-item-3-list {
+		height: 90px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.grid-item-3-image {
+		width: 44px;
+		height: 44px;
+		font-size: 0;
+		//border-radius: 50%;
+	}
+
+	.grid-item-3-test {
+		font-size: 13px;
+		line-height: 30px;
+		color: #ffffff;
+	}
+</style>

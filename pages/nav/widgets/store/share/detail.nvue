@@ -1,0 +1,50 @@
+<template>
+	<view class="share-detail">
+		<text class="share-detail-title">邀请步骤</text>
+		<view class="share-detail-list">
+			<text class="share-detail-intro">1、选择您的专属海报或者链接给您的好友</text>
+		</view>
+		<view class="share-detail-list">
+			<text class="share-detail-intro">2、好友通过您推荐或者二维码下载APP并注册</text>
+		</view>
+		<view class="share-detail-list">
+			<text class="share-detail-intro">3、好友注册成为会员时需要有您的邀请码</text>
+		</view>
+		<view class="share-detail-list">
+			<text class="share-detail-intro share-detail-bottom">注：推荐邀请码仅限于宝多多平台服务范围内，具体请您查阅 </text>
+		</view>
+		<view class="share-detail-list">
+			<text class="share-detail-intro">《用户免责协议》</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		
+	}
+</script>
+
+<style lang="scss" scoped>
+	.share-detail{
+		margin-top: 20px;
+		&-title {
+			height: 25px;
+			line-height: 25px;
+			color: #434343;
+			font-size: 14px;
+		}
+		&-list {
+			height: 20px;
+		}
+		&-intro{
+			line-height: 20px;
+			color: #999999;
+			font-size: 12px;
+		}
+		&-bottom{
+			margin-top: 10px;
+			height: 40px;
+		}
+	}
+</style>

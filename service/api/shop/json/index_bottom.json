@@ -1,0 +1,71 @@
+[{
+    "name": "生活服务专区",
+    "image": "http://img.baoduoduo.club/home/prodbg01.png",
+    "tagId": 13
+  },
+  {
+    "name": "日常快消费专区",
+    "image": "http://img.baoduoduo.club/home/prodbg02.png",
+    "tagId": 14
+  },
+  {
+    "name": "美妆护肤专区",
+    "image": "http://img.baoduoduo.club/home/prodbg03.png",
+    "tagId": 85
+  },
+  {
+    "name": "个护清洁专区",
+    "image": "http://img.baoduoduo.club/home/prodbg04.png",
+    "tagId": 86
+  },
+  {
+    "name": "居家生活专区",
+    "image": "http://img.baoduoduo.club/home/prodbg05.png",
+    "tagId": 87
+  },
+  {
+    "name": "数码电器专区",
+    "image": "http://img.baoduoduo.club/home/prodbg06.png",
+    "tagId": 88
+  },
+  {
+    "name": "食品酒水专区",
+    "image": "http://img.baoduoduo.club/home/prodbg07.png",
+    "tagId": 89
+  },
+  {
+    "name": "钟表珠宝专区",
+    "image": "http://img.baoduoduo.club/home/prodbg08.png",
+    "tagId": 90
+  },
+  {
+    "name": "母婴亲子专区",
+    "image": "http://img.baoduoduo.club/home/prodbg09.png",
+    "tagId": 91
+  },
+  {
+    "name": "服饰箱包专区",
+    "image": "http://img.baoduoduo.club/home/prodbg10.png",
+    "tagId": 92
+  },
+  {
+    "name": "运动户外专区",
+    "image": "http://img.baoduoduo.club/home/prodbg11.png",
+    "tagId": 93
+  },
+  {
+    "name": "健康保健专区",
+    "image": "http://img.baoduoduo.club/home/prodbg12.png",
+    "tagId": 94
+  },
+  {
+    "name": "跨境专区",
+    "image": "http://img.baoduoduo.club/home/prodbg13.png",
+    "tagId": 95
+  },
+  {
+    "name": "轻奢专区",
+    "image": "http://img.baoduoduo.club/home/prodbg14.png",
+    "tagId": 96
+  }
+]

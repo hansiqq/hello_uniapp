@@ -1,0 +1,76 @@
+<template>
+	<view class="top">
+		<view class="top-cont" :style="{width: screenWidth + 'px', marginTop: statusHeight + 'px'}">
+			<image src="http://img.baoduoduo.club/study/left.png" class="top-cont-left" />
+			<view class="top-cont-right">
+				<text class="top-cont-right-title" :style="{width: (screenWidth-30)*0.55 + 'px'}">{{viewModel.productItem.name}}</text>
+				<text class="top-cont-right-intro">{{viewModel.viewCount}}人观看</text>
+			</view>
+			<view class="top-cont-left"></view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		props: {
+			viewModel: {}
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				statusHeight: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				this.statusHeight = ala.statusHeight()
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	.top{
+		background-color: #FF0B3E;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 99;
+		&-cont{
+			height: 50px;
+			padding: 0 15px;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			&-left{
+				width: 10px;
+				height: 18px;
+			}
+			&-right {
+				&-title{
+					font-size: 16px;
+					color: #FFFFFF;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					/* #ifndef APP-NVUE */
+					white-space: nowrap;
+					/* #endif */ 
+					/* #ifdef APP-NVUE */
+					 lines: 1;
+					/* #endif */ 
+				}
+				&-intro{
+					text-align: center;
+					font-size: 14px;
+					color: #FFFFFF;
+				}
+			}
+		}
+	}
+</style>

@@ -1,0 +1,374 @@
+<template>
+  <view class="order-buy">
+    <order-address v-model="addressId" ref="orderAddress"></order-address>
+    <view v-if="ready">
+      <view v-for="(item, index) in viewModel.storeItems" :key="index">
+        <x-cell :title="item.storeName"></x-cell>
+        <view class="order-buy-ul" :style="{ width: screenWidth + 'px' }">
+          <view class="order-buy-list" v-for="(t, i) in item.productSkuItems" :key="i">
+            <image :src="t.thumbnailUrl" class="order-buy-list-left" />
+            <view class="order-buy-list-right" :style="{ width: screenWidth - 105 + 'px' }">
+              <view>
+                <text class="order-buy-list-right-title">{{ t.name }}</text>
+                <text class="order-buy-list-right-intro">{{ t.propertyValueDesc }}</text>
+              </view>
+              <view class="order-buy-list-right-bottom">
+                <text class="order-buy-list-right-bottom-price">￥{{ t.displayPrice }}</text>
+                <text class="order-buy-list-right-bottom-count">x{{ t.buyCount }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <x-cell v-if="false" title="请选择快递方式" @click="popupVisible1 = !popupVisible1" isLink :value="showDeliveryName[index]"></x-cell>
+        <view class="order-buy-remarks">
+          <text class="order-buy-remarks-left">备注：</text>
+          <input placeholder="请填写备注信息" v-model="userMessages[index]" class="order-buy-remarks-right" :style="{ width: screenWidth - 150 + 'px' }" />
+        </view>
+        <view class="order-buy-account" v-if="ready">
+          <view v-if="showAdmin && checkedFC">
+            <view class="order-buy-account-list">
+              <text class="order-buy-account-list-left">会员优惠()</text>
+              <text class="order-buy-account-list-right">-￥{{ storePrices[index].memberDiscountAmount }}</text>
+            </view>
+            <view class="order-buy-account-list">
+              <text class="order-buy-account-list-left">商品总价</text>
+              <text class="order-buy-account-list-right">￥{{ totalPrice[index] }}</text>
+            </view>
+            <view v-if="ready">
+              <view class="order-buy-account-list">
+                <text class="order-buy-account-list-left">运费</text>
+                <text class="order-buy-account-list-right">￥{{ storePrices[index].expressAmount }}</text>
+              </view>
+              <view class="order-buy-account-list">
+                <text class="order-buy-account-list-left">实付款</text>
+                <text class="order-buy-account-list-right" v-if="showAdmin && checkedFC">￥{{ storePrices[index].totalAmount }}</text>
+                <text class="order-buy-account-list-right" v-else>￥{{ priceView.totalAmount }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="uni-list" v-if="item.coupons !== undefined && item.coupons.length !== 0">
+          <view class="uni-list-cell uni-list-cell-pd" @click="couponsClick(item.coupons)">
+            <view class="uni-list-cell-db">商品优惠卷</view>
+            <view>{{ couponsMsg }} <x-icon name="icon-zk-right" color="#dddddd"></x-icon> </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="order-buy-bottom_placeholder"></view>
+    <view class="order-buy-bottom" :style="{ width: screenWidth + 'px' }">
+      <view class="order-buy-bottom-left">
+        <text class="order-buy-bottom-left-text">实付款</text>
+        <view class="order-buy-bottom-left-price">
+          <text class="order-buy-bottom-left-price-left">￥</text>
+          <text class="order-buy-bottom-left-price-right">{{ priceView.totalAmount }}</text>
+        </view>
+      </view>
+      <text class="order-buy-bottom-right" @click="buy()" v-if="showBtn">提交订单</text>
+      <text class="order-buy-bottom-right disabled" v-if="!showBtn">提交订单</text>
+    </view>
+    <!-- 尚未修改 -->
+    <!-- <view class="uni-mask" v-show="couponsBox" @click="couponsBox = false"></view> -->
+    <!-- <view class="show-popup uni-popup-bottom_popup" v-show="couponsBox">
+      <view class="discounts-title">优惠详情</view>
+      <view class="discounts-pla"></view>
+      <view class="uni-list discounts-box">
+        <radio-group>
+          <label class="uni-list-cell uni-list-cell-pd" @click="radioChange(-1)">
+            <view>不使用</view>
+            <view>
+              <radio :value="'-1'" :checked="-1 === currentss" />
+            </view>
+          </label>
+          <label class="uni-list-cell " v-for="(item, index) in couponsList" :key="index" @click="radioChange(index, item)">
+            <view class="discounts-item">
+              <div class="discounts-item-top">
+                {{ item.name }}(<span style="color:#e4393c">优惠￥{{ item.value }})</span>
+              </div>
+              <div class="discounts-item-bottom">有效期至{{ item.endValidityTime }}</div>
+            </view>
+            <view>
+              <radio :value="String(item.storeId)" :checked="index === currentss" />
+            </view>
+          </label>
+        </radio-group>
+      </view>
+    </view> -->
+    <x-pay ref="show_pay" :top="0"></x-pay>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import orderAddress from './address.nvue'
+import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup'
+export default {
+  components: {
+    orderAddress,
+    uniPopup
+  },
+  data() {
+    return {
+      currentss: -1,
+      current: '-1',
+      widgetModel: '',
+      pageInfo: '',
+      viewModel: null,
+      popupVisible1: false,
+      userMessages: [], // 卖家留言
+      priceView: '', // 价格显示模型
+      storePrices: [], // 店铺价格显示
+      ready: false,
+      showDeliveryTyoe: [], // 显示物流快递
+      showDelivery: [], // 选择的物流快递方式
+      showDeliveryName: [],
+      reduceMoneys: [], // 非人民币资产信息
+      addressId: '00000000-0000-0000-0000-000000000000', // 地址选择，默认为空,
+      isFromCart: false, // 是否来自购物车
+      isFromOrder: false, // 是否来自订货页面
+      activityRecordId: 0,
+      isGroupBuy: false,
+      textarbool: true,
+      xbuy: true,
+      disBtn: false,
+      showBtn: true,
+      totalPrice: [],
+      expressType: [],
+      reduceMoneysItem: [],
+      couponsBox: false,
+      couponsList: [],
+      couponsMsg: '无',
+      CouponList: [],
+      radioChanges: true,
+      showAdmin: true,
+      checkedFC: true,
+      screenWidth: 0
+    }
+  },
+  props: {
+    widget: {}
+  },
+  mounted() {
+    this.screenWidth = ala.screenWidth()
+    this.init()
+    // 全局变量监听地址选择
+    uni.$on('global_select_address', () => {
+      this.init()
+    })
+  },
+  methods: {
+    changeReduceMoney: function(e) {
+      this.checkedFC = e.detail.value
+      if (e.target.value === false) {
+        this.reduceMoneysItem = []
+        this.getPrice()
+      } else {
+        this.reduceMoneysItem = [{ key: this.viewModel.allowMoneys[0].moneyId, value: this.viewModel.allowMoneys[0].maxPayPrice }]
+        this.getPrice()
+      }
+    },
+    async init() {
+      this.$nextTick(() => {
+        if (this.$refs.orderAddress) {
+          this.$refs.orderAddress.init()
+        }
+      })
+      var buyProductInfo = await ala.localGet('buyProductInfo')
+      if (buyProductInfo === undefined) {
+        ala.toastWarn('暂无商品，请先购买商品')
+      }
+      if (this.widget && this.widget.route.isFromCart) {
+        this.isFromCart = this.widget.route.isFromCart
+      }
+      if (buyProductInfo.isFromOrder !== undefined) {
+        this.isFromOrder = buyProductInfo.isFromOrder
+      }
+      var buyInfoInput = {
+        userId: ala.userId(),
+        productJson: JSON.stringify(buyProductInfo)
+      }
+      var initResponse = await ala.httpPost('api/order/buyinfo', buyInfoInput)
+      if (!initResponse) {
+        return false
+      } else {
+        this.viewModel = initResponse
+        if (this.viewModel.allowMoneys.length !== 0) {
+          this.reduceMoneysItem = [{ key: this.viewModel.allowMoneys[0].moneyId, value: this.viewModel.allowMoneys[0].maxPayPrice }]
+        }
+        for (var i = 0; i < this.viewModel.storeItems.length; i++) {
+          this.showDeliveryTyoe[i] = {}
+          this.showDelivery[i] = {}
+          this.showDeliveryName[i] = []
+          this.userMessages[i] = '' // 初始化留言信息
+          this.expressType.push(0)
+          for (var io = 0; io < this.viewModel.storeItems[i].expressTemplates.length; io++) {
+            var a = {
+              value: this.viewModel.storeItems[i].expressTemplates[io].value,
+              name: this.viewModel.storeItems[i].expressTemplates[io].key
+            }
+            this.showDeliveryTyoe[i][io] = a
+            if (io === 0) {
+              this.showDelivery[i] = this.viewModel.storeItems[i].expressTemplates[io].key
+              this.showDeliveryName[i] = this.viewModel.storeItems[i].expressTemplates[io].value
+            }
+          }
+        }
+        for (var k = 0; k < this.viewModel.allowMoneys.length; k++) {
+          this.reduceMoneys[k] = true
+        }
+        this.getPrice()
+      }
+    },
+    couponsClick(coupons) {
+      if (this.radioChanges) {
+        this.couponsList = coupons
+        this.couponsBox = !this.couponsBox
+      }
+    },
+    radioChange(index, e) {
+      this.CouponList = []
+      if (index !== -1) {
+        this.couponsMsg = e.name
+        this.CouponList.push(e.id)
+      } else {
+        this.couponsMsg = '无'
+      }
+      this.getPrice()
+    },
+    checkboxChange(index) {
+      if (this.expressType[index] === 0) {
+        this.$set(this.expressType, [index], 1)
+      } else {
+        this.$set(this.expressType, [index], 0)
+      }
+      this.getPrice()
+    },
+    async getPrice() {
+      var storeDelivery = []
+      for (var i = 0; i < this.viewModel.storeItems.length; i++) {
+        var storeItem = this.viewModel.storeItems[i]
+        var deliveryItem = {
+          key: storeItem.storeId,
+          value: this.showDelivery[i],
+          ExpressType: this.expressType[i]
+        }
+        storeDelivery.push(deliveryItem)
+      }
+      var priceInput = {
+        sign: this.viewModel.sign, // 传递签名
+        userId: ala.userId(), // 用户Id
+        addressId: this.addressId,
+        reduceMoneysJson: JSON.stringify(this.reduceMoneysItem),
+        storeExpressJson: JSON.stringify(storeDelivery),
+        CouponJson: JSON.stringify(this.CouponList)
+      }
+      var priceResponse = await ala.httpPost('api/order/getprice', priceInput)
+      if (!priceResponse) {
+        ala.toastWarn(priceResponse.message)
+        this.showBtn = false
+      } else {
+        this.priceView = priceResponse
+        this.storePrices = this.priceView.storePrices
+        var that = this
+        this.storePrices.forEach(price => {
+          that.totalPrice.push((price.totalAmount - price.expressAmount).toFixed(2))
+        })
+        this.ready = true
+        this.showBtn = true
+      }
+    },
+    async buy() {
+      try {
+        this.showBtn = false
+        uni.showLoading({
+          title: '加载中..'
+        })
+        var storeBuyItems = []
+        for (var i = 0; i < this.viewModel.storeItems.length; i++) {
+          var storeBuyItem = this.viewModel.storeItems[i]
+          var productBuyItems = []
+          for (var j = 0; j < storeBuyItem.productSkuItems.length; j++) {
+            var productSkuBuyItem = storeBuyItem.productSkuItems[j]
+            var buyproductItem = {
+              ProductSkuId: productSkuBuyItem.productSkuId,
+              Count: productSkuBuyItem.buyCount,
+              ProductId: productSkuBuyItem.productId,
+              priceStyleId: productSkuBuyItem.priceStyleId,
+              Amount: productSkuBuyItem.buyCount * productSkuBuyItem.price,
+              storeId: storeBuyItem.storeId
+            }
+            productBuyItems.push(buyproductItem)
+          }
+          var buyStoreItem = {
+            storeId: storeBuyItem.storeId,
+            isGroupBuy: this.isGroupBuy, // 是否为拼图
+            // deliveryId: this.showDelivery[i], // 运费
+            userMessage: this.userMessages[i],
+            totalAmount: this.priceView.storePrices[i].totalAmount, // 店铺订单总价格
+            totalCount: this.viewModel.storeItems[i].totalCount, // 店铺商品总数量
+            expressAmount: this.priceView.storePrices[i].expressAmount, // 店铺运费
+            productAmount: this.priceView.storePrices[i].productAmount, // 店铺总商品费用
+            productSkuItems: productBuyItems,
+            ExpressType: this.expressType[i]
+          }
+          storeBuyItems.push(buyStoreItem)
+        }
+        // // 虚拟资产
+        // var reduceMoneys = []
+        // for (var r = 0; r < this.viewModel.allowMoneys.length; r++) {
+        //   var allowMoneyItem = this.viewModel.allowMoneys[r]
+        //   if (this.reduceMoneys[r]) {
+        //     var reduceMoneyItem = {
+        //       key: allowMoneyItem.moneyId,
+        //       value: allowMoneyItem.maxPayPrice
+        //     }
+        //     reduceMoneys.push(reduceMoneyItem)
+        //   }
+        // }
+        var buyInput = {
+          // reduceMoneysJson: JSON.stringify(reduceMoneys),
+          reduceMoneysJson: JSON.stringify(this.reduceMoneysItem),
+          StoreOrderJson: JSON.stringify(storeBuyItems),
+          addressId: this.addressId, // 选择地址Id
+          payType: 3, // 支付方式
+          totalAmount: this.priceView.totalAmount, // 订单总金额
+          TotalCount: this.viewModel.totalCount, // 订单总商品
+          paymentAmount: this.priceView.totalAmount, // 订单总金额
+          orderType: 1, // 订单类型
+          // isGroupBuy: this.isGroupBuy, // 是否为拼团购买/*  */
+          sign: this.viewModel.sign, // 签名信息
+          isFromCart: this.isFromCart, // 是否从购物车购买
+          isFromOrder: this.isFromOrder, // 是否从订货页面来
+          userId: ala.user().id, // 下单用户ID
+          CouponJson: JSON.stringify(this.CouponList)
+        }
+        var response = await ala.httpPost('api/order/buy', buyInput)
+        if (response) {
+          uni.hideLoading()
+          // ala.to(`/order/pay?data=${JSON.stringify(response)}`)
+          // 唤起支付窗口页面
+          // this.$refs.show_pay.init()
+          this.$refs.show_pay.$emit('payMethod', response.payId, response.payAmount, response.orderIds) // 唤起支付窗口
+          this.radioChanges = false
+        } else {
+          uni.hideLoading()
+          ala.toastWarn(response.message)
+        }
+        this.showBtn = true
+      } catch (error) {
+        this.init() // 如果出错重新请求一次服务器
+      }
+    },
+    onChange(index, value, key) {
+      this.showDeliveryName[index] = value
+      this.showDelivery[index] = key
+      this.getPrice()
+      this.popupVisible1 = false
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import './var.scss';
+</style>

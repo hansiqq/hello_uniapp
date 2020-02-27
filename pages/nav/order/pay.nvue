@@ -1,0 +1,44 @@
+<template>
+	<view class="pay-info" :style="{width: screenWidth+'px',height: screeenHeight+'px'}">
+		<x-pay ref="show_pay"></x-pay>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				screenHeight: 0
+			}
+		},
+		onLoad(options) {
+			if (options) {
+				var data = JSON.parse(options.data)
+				this.$nextTick(() => {
+					this.$refs.show_pay.payMethod(data.payId, data.payAmount, data.orderIds)
+					// this.$refs.show_pay.$emit('payMethod', data.payId, data.payAmount, data.orderIds)
+				})
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				this.screenHeight = ala.screenHeight()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.pay-info{
+		top: 0;
+		left: 0;
+		background-color: #F8F8F8;
+		position: fixed;
+	}
+</style>

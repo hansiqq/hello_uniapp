@@ -1,0 +1,34 @@
+[{
+    "name": "宝贝",
+    "icon": "icon-code01"
+  },
+  {
+    "name": "拍照",
+    "icon": "icon-mall",
+    "type": "camera"
+  },
+  {
+    "name": "相册",
+    "type": "album",
+    "icon": "icon-bankcard"
+  },
+  {
+    "name": "短视频",
+    "icon": "icon-gift",
+    "type": "video"
+  },
+  {
+    "name": "红包",
+    "icon": "icon-redpacket",
+    "type": "packet"
+  },
+  {
+    "name": "智能联想",
+    "icon": "icon-port"
+  },
+  {
+    "name": "位置",
+    "icon": "icon-addressf",
+    "type": "map"
+  }
+]

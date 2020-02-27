@@ -1,0 +1,57 @@
+<template>
+	<view :style="{width: screenWidth + 'px'}" class="select">
+		<selectTop @changeNav="changeNav"></selectTop>
+		<x-image src="http://bdd.5ug.com/wwwroot/uploads/api/242-873-583/2020-02-15/5e476c3d96bc051164311042.png" :width="screenWidth" height="180"></x-image>
+			<selectTime v-if="navIndex === 0"></selectTime>
+		<selectNotice v-if="navIndex !== 0"></selectNotice>
+		<productItem></productItem>
+		
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	import selectTop from './widgets/top'
+	import selectTime from './widgets/time'
+	import selectNotice from './widgets/notice'
+	import productItem from './widgets/product-item'
+	
+	export default {
+		components: {
+			selectTop,
+			selectTime,
+			productItem,
+			selectNotice
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				screenHeight: 0,
+				navIndex: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenHeight = ala.screenHeight()
+				this.screenWidth = ala.screenWidth()
+			},
+			changeNav(index) {
+				if (this.navIndex !== index) {
+					this.navIndex = index
+					uni.pageScrollTo({
+						scrollTop: 0
+					})
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.select{
+		background-color: #9F1315;
+	}
+</style>

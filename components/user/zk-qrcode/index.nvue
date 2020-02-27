@@ -1,0 +1,84 @@
+<template>
+  <view class="zk-qrcode">
+    <view class="qrcode_icon" @click="back" :style="'top:' + statusBarHeight + 'px;'" v-if="isNotApp">
+      <x-icon name="icon-zk-black" :color="'#ffffff'" :size="16"></x-icon>
+    </view>
+    <img :src="vimodel" class="qrcode_image" />
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import host from '@/service/config.js'
+export default {
+  data() {
+    return {
+      widgetModel: '',
+      vimodel: '',
+      imgUrl: host.host,
+      statusBarHeight: '',
+      isNotApp: false
+    }
+  },
+  props: {
+    widget: {}
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      if (ala.client() === 'AppPlus') {
+        this.statusBarHeight = ala.getSystemInfoSync().statusBarHeight + 15
+      }
+      var para = {
+        userId: ala.user().id
+      }
+      var reposen = await ala.httpGet('api/userdetail/qrcode', para)
+      this.vimodel = reposen
+      if (ala.client() === 'AppPlus') {
+        this.isNotApp = false
+      } else {
+        this.isNotApp = true
+      }
+    },
+    back() {
+      uni.navigateBack({
+        delta: 1
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+// #ifndef APP-PLUS
+// app-plus-css
+
+.zk-qrcode {
+  font-size: $uni-font-size-base;
+  width: 100vw;
+  height: 100vh;
+}
+.zk-qrcode::before {
+  display: none;
+}
+.qrcode_image {
+  width: 100%;
+  height: 100%;
+}
+.qrcode_icon {
+  width: 28px;
+  height: 28px;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  padding-left: 3px;
+}
+// app-plus-css
+// #endif
+</style>

@@ -1,0 +1,111 @@
+<template>
+	<view class="two-top">
+		<view class="two-top-ul">
+			<view class="two-top-list" :style="{width: (screenWidth-20) / 3 + 'px'}">
+				<view class="two-top-list-title two-top-list-border">
+					<text class="two-top-list-title-left">88</text>
+					<text class="two-top-list-title-center">节</text>
+					<!-- <view class="two-top-list-title-right"></view> -->
+				</view>
+				<text class="two-top-list-bottom">累计学习</text>
+			</view>
+			<view class="two-top-list" :style="{width: (screenWidth-20) / 3 + 'px'}">
+				<view class="two-top-list-title two-top-list-border">
+					<text class="two-top-list-title-left">0</text>
+					<text class="two-top-list-title-center">节</text>
+					<view class="two-top-list-title-right">
+						<image class="two-top-list-title-right-image" src="http://img.baoduoduo.club/study/tab-2-icon.png" />
+					</view>
+				</view>
+				<text class="two-top-list-bottom">今日学习</text>
+			</view>
+			<view class="two-top-list" :style="{width: (screenWidth-20) / 3 + 'px'}">
+				<view class="two-top-list-title">
+					<text class="two-top-list-title-left">32</text>
+					<text class="two-top-list-title-center">分</text>
+				</view>
+				<text class="two-top-list-bottom">知识问答</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.two-top {
+		padding: 10px;
+		background-color: #FFFFFF;
+
+		&-ul {
+			flex-direction: row;
+		}
+
+		&-list {
+			height: 70px;
+
+			&-title {
+				flex-direction: row;
+				align-items: center;
+				justify-content: center;
+				height: 50px;
+
+				&-left {
+					color: #343434;
+					font-size: 21px;
+				}
+
+				&-center {
+					margin: 0 3px;
+					margin-top: 5px;
+					color: #999999;
+					font-size: 14px;
+				}
+
+				&-right {
+					width: 18px;
+					height: 18px;
+					border-radius: 50%;
+					margin-bottom: 10px;
+					justify-content: center;
+					align-items: center;
+					background-image:  linear-gradient(to right, #F73F15, #FB6A0D);
+					&-image{
+						
+						width: 12px;
+						height: 8px;
+					}
+				}
+			}
+			&-border {
+				border-right-color: #F5F5F5;
+				border-right-width: 1px;
+				border-right-style: solid;
+			}
+
+			&-bottom {
+				text-align: center;
+				color: #999999;
+				font-size: 12px;
+				text-decoration: underline;
+			}
+		}
+	}
+</style>

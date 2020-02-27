@@ -1,0 +1,150 @@
+<template>
+	<view class="share-show">
+		<uni-popup ref="uniPopup">
+			<view class="share-show-cont" :style="{width: screenWidth + 'px'}">
+				<view class="share-show-cont-title" :style="{width: screenWidth - 40 + 'px'}">
+					<view class="share-show-cont-title-text">
+						<text class="share-show-cont-title-intro">分享</text>
+					</view>
+					<view class="share-show-cont-title-ul" :style="{width: screenWidth - 40 + 'px'}">
+						<view class="share-show-cont-title-list" @click="clickShare(item)" v-for="(item, index) in list" :key="index" :style="{width: (screenWidth - 40)/4 + 'px'}">
+							<view class="share-show-cont-title-list-image">
+								<uni-icons :style="item.icon" size="30" color="#000000"></uni-icons>
+							</view>
+							<text class="share-show-cont-title-list-text">{{item.name}}</text>
+						</view>
+					</view>
+				</view>
+				<view class="share-show-cont-bottom" :style="{width: screenWidth - 20 + 'px'}" @click="clickClose">
+					<text class="share-show-cont-bottom-intro">取消</text>
+				</view>
+			</view>
+		</uni-popup>
+	</view>
+</template>
+
+<script>
+	import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup'
+	import uniIcons from '@dcloudio/uni-ui/lib/uni-icons/uni-icons'
+	import ala from '@/service/ala'
+	export default {
+		components: {
+			uniPopup,
+			uniIcons
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				screenHeight: 0,
+				list: [],
+				shareType: 0, // 默认为图文分享
+				viewModel: {
+					text: '宝多多分享'
+				}
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			open(type = 0, data) {
+				this.shareType = type
+				if (data) {
+					this.viewModel = data
+				}
+				this.$refs.uniPopup.open()
+			},
+			clickClose() {
+				this.$refs.uniPopup.close()
+			},
+			init() {
+				this.screenHeight = ala.screenHeight()
+				this.screenWidth = ala.screenWidth()
+				this.list = ala.shareScene2
+			},
+			clickShare(data) {
+				if (data.provider === 'save') {
+					ala.shareDown('https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2462146637,4274174245&fm=26&gp=0.jpg')
+				} else {
+					switch (this.shareType) {
+						case 0:
+						ala.share(data, this.viewModel.name, this.viewModel.name,'http://b-api.baoduoduo.club' + this.viewModel.image, 'https://www.baidu.com/')
+						break
+						case 1: 
+						ala.shareText(data, this.viewModel.text)
+						break
+						case 2:
+						ala.shareImage(data, this.viewModel.imageUrl)
+						break
+						default:
+						ala.shareText(data, this.viewModel.text)
+						break
+					}
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.share-show{
+		&-cont{
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			padding: 0 10px;
+			height: 300px;
+			&-title{
+				padding: 10px;
+				padding-top: 0px;
+				background-color: #F0EFF2;
+				border-radius: 5px;
+				&-text{
+					text-align: center;
+					height: 20px;
+					margin-bottom: 10px;
+				}
+				&-intro{
+					text-align: center;
+					color: #343434;
+					font-size: 14px;
+				}
+				&-ul{
+					display: flex;
+					flex-direction: row;
+					flex-wrap: wrap;
+				}
+				&-list{
+					height: 80px;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+					&-image{
+						width: 40px;
+						height: 40px;
+						background-color: #FFFFFF;
+						border-radius: 3px;
+					}
+					&-text{
+						margin-top: 5px;
+						font-size: 14px;
+						color: #434343;
+					}
+				}
+			}
+			&-bottom{
+				margin-top: 10px;
+				height: 50px;
+				background-color: #F0EFF2;
+				border-radius: 3px;
+				text-align: center;
+				&-intro{
+					line-height: 50px;
+					color: #343434;
+					font-size: 14px;
+				}
+			}
+		}
+	}
+</style>

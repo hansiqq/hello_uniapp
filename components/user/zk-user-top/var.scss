@@ -1,0 +1,63 @@
+.zk-user-top {
+  background-color: $gl-themeColor;
+  padding: 10px;
+  &-title {
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    &-left {
+      flex-direction: row;
+      height: 48px;
+      &-image {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: #1ba39c;
+      }
+      &-name {
+        justify-content: space-between;
+        margin-left: 10px;
+        &-title {
+          font-size: 15px;
+          font-weight: 600;
+          color: #ffffff;
+        }
+        &-text {
+          font-size: 14px;
+          color: #ffffff;
+        }
+      }
+    }
+    &-right {
+      width: 50px;
+      height: 60px;
+      flex-direction: row;
+      justify-content: space-between;
+      &-icon {
+        width: 20px;
+        height: 20px;
+        margin: 0 5px;
+      }
+    }
+  }
+  &-ul {
+    height: 60px;
+    flex-direction: row;
+    &-list {
+      height: 60px;
+      margin-top: 5px;
+      justify-content: center;
+      align-items: center;
+      &-title {
+        font-size: 14px;
+        color: #ffffff;
+      }
+      &-intro {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #ffffff;
+        font-weight: 600;
+      }
+    }
+  }
+}

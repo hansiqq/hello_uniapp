@@ -1,0 +1,77 @@
+<template>
+  <view>
+    <view v-if="isArray">
+      <uni-list>
+        <uni-list-item :show-extra-icon="true" :note="item.remark" :extra-icon="item.icon" :title="item.link.name" v-for="(item, index) in viewModel" :key="index"></uni-list-item>
+      </uni-list>
+    </view>
+    <view v-if="!isArray">
+      <uni-list>
+        <uni-list-item :show-extra-icon="true" :extra-icon="iconObj" :title="viewModel.name"></uni-list-item>
+      </uni-list>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import uniList from '@dcloudio/uni-ui/lib/uni-list/uni-list.vue'
+import uniListItem from '@dcloudio/uni-ui/lib/uni-list-item/uni-list-item.vue'
+export default {
+  components: {
+    uniList,
+    uniListItem
+  },
+  name: 'x-cell',
+  props: {
+    widget: {},
+    icon: {},
+    elementData: {},
+    value: {},
+    title: {},
+    XClass: {},
+    isLink: {
+      type: Boolean,
+      default: false
+    },
+    link: {}
+  },
+  data() {
+    return {
+      async: false,
+      viewModel: '',
+      isArray: false,
+      delestu: false,
+      iconObj: {
+        color: '#4cd964',
+        size: '22',
+        type: 'chat'
+      }
+    }
+  },
+  onLoad() {
+    this.init()
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.async = false
+      if (this.elementData !== undefined) {
+        this.isArray = true
+        this.viewModel = this.elementData
+      }
+      this.async = true
+    },
+    onClick(url) {
+      this.$emit('click')
+      if (url !== undefined) {
+        ala.to(url)
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped></style>

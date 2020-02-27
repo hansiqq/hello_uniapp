@@ -1,0 +1,82 @@
+<template>
+  <view class="grid-item" :style="{ width: screenWidth + 'px' }">
+    <view class="grid-item-list" v-for="(item, index) in list" :key="index" :style="{ width: (screenWidth - 20) / 5 + 'px' }" @click="linkTo(item)">
+      <view class="grid-item-list-image"></view>
+      <text class="grid-item-list-text">{{ item.name }}</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      screenWidth: 0,
+      list: [
+        {
+          name: '待付款',
+          status: 1,
+          url: '/order/list'
+        },
+        {
+          name: '待发货',
+          status: 2,
+          url: '/order/list'
+        },
+        {
+          name: '待收货',
+          status: 3,
+          url: '/order/list'
+        },
+        {
+          name: '评价',
+          status: 99,
+          url: '/order/list'
+        },
+        {
+          name: '售后',
+          status: 200,
+          url: '/order/index'
+        }
+      ]
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+    },
+    linkTo(item) {
+      ala.to(`/order/list?status=${item.status}`)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.grid-item {
+  background-color: #ffffff;
+  height: 80px;
+  padding: 0 10px;
+  flex-direction: row;
+  align-items: center;
+  &-list {
+    height: 65px;
+    align-items: center;
+    justify-content: space-between;
+    &-image {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background-color: #22313f;
+    }
+    &-text {
+      font-size: 12px;
+      color: #666666;
+    }
+  }
+}
+</style>

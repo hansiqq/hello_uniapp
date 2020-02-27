@@ -1,0 +1,110 @@
+<template>
+	<view class="course-msg">
+		<text class="course-msg-title">圈落互动</text>
+		<view class="course-msg-ul">
+			<view class="course-msg-list" v-for="item in 3" :key="item">
+				<image class="course-msg-list-image" src="http://img.baoduoduo.club/study/artor.png" />
+				<view class="course-msg-list-right" :style="{width: screenWidth - 75 + 'px'}">
+					<view class="course-msg-list-right-title">
+						<text class="course-msg-list-right-text" :style="{width: screenWidth - 120 + 'px'}">我们要圈地播种（拉新）所谓圈地 播种即增大流量户...</text>
+						<view class="course-msg-list-right-left">
+							<image src="http://img.baoduoduo.club/study/act-show.png" class="course-msg-list-right-image" />
+							<text class="course-msg-list-right-left-text">8</text>
+						</view>
+					</view>
+					<view class="course-msg-list-right-bottom">
+						<text class="course-msg-list-right-bottom-text">2月26日 · </text>
+						<text class="course-msg-list-right-bottom-right"> 回复ta</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.course-msg{
+		padding: 10px 0;
+		&-title{
+			height: 30px;
+			line-height: 30px;
+			padding-left: 15px;
+			font-size: 15px;
+			color: #343434;
+			font-weight: bold;
+		}
+		&-ul{
+			
+		}
+		&-list{
+			padding: 10px 15px;
+			flex-direction: row;
+			border-bottom-color: #F0F0F0;
+			border-bottom-width: 1px;
+			border-bottom-style: solid;
+			&-image{
+				width: 35px;
+				height: 35px;
+				border-radius: 50%;
+			}
+			&-right{
+				height: 80px;
+				margin-left: 10px;
+				justify-content: space-between;
+				&-title{
+					flex-direction: row;
+					justify-content: space-between;
+				}
+				&-text{
+					padding-top: 5px;
+					font-size: 14px;
+					color: #999999;
+				}
+				&-left{
+					height: 35px;
+					flex-direction: row;
+					align-items: center;
+					&-text{
+						margin-left: 5px;
+						font-size: 14px;
+						color: #999999;
+					}
+				}
+				&-image{
+					width: 12px;
+					height: 12px;
+				}
+				&-bottom{
+					flex-direction: row;
+					&-text {
+						font-size: 12px;
+						color: #999999;
+					}
+					&-right {
+						font-size: 12px;
+						color: #000000;
+					}
+				}
+			}
+		}
+	}
+</style>

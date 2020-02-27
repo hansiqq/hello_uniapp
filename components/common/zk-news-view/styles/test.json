@@ -1,0 +1,71 @@
+[{
+		"name": "优选爆品",
+		"intro": "提示店主优选和爆品商品有关的通知",
+		"image": "http://img.baoduoduo.club/material/list-1.png"
+	},
+	{
+		"name": "红包/优惠券",
+		"intro": "提示红包优惠券积分宝币有关的活动",
+		"image": "http://img.baoduoduo.club/material/list-4.png"
+	},
+	{
+		"name": "资产动态",
+		"intro": "您有一笔新的奖励到账/你刚刚完成了提现",
+		"image": "http://img.baoduoduo.club/material/list-3.png"
+	},
+	{
+		"name": "商圈动态",
+		"intro": "店铺，生活专区，附近有关的线下通知",
+		"image": "http://img.baoduoduo.club/material/list-4.png"
+	},
+	{
+		"name": "红包优惠券",
+		"intro": "开春好礼，优惠券送你",
+		"image": "http://img.baoduoduo.club/material/list-5.png"
+	},
+	{
+		"name": "课程培训",
+		"intro": "最新直播课程开课了，这里显示最新动态",
+		"image": "http://img.baoduoduo.club/material/list-6.png"
+	},
+	{
+		"name": "排行动态",
+		"intro": "杭州大区牛人榜大咖业绩提升",
+		"image": "http://img.baoduoduo.club/material/list-3.png"
+	},
+	{
+		"name": "系统通知",
+		"intro": "系统会员开通，平台设置内容的通知",
+		"image": "http://img.baoduoduo.club/material/list-4.png"
+	},
+	{
+		"name": "客服消息",
+		"intro": "这里是客服互动的及时消息通知",
+		"image": "http://img.baoduoduo.club/material/list-1.png"
+	},
+	{
+		"name": "活动消息",
+		"intro": "平台设置及时活动通知",
+		"image": "http://img.baoduoduo.club/material/list-2.png"
+	},
+	{
+		"name": "杭州区域企业主",
+		"intro": "面料超级柔软细腻",
+		"image": "http://img.baoduoduo.club/material/list-3.png"
+	},
+	{
+		"name": "群主轻松体验",
+		"intro": "超火的宽松慵懒风打底针织毛衣  ",
+		"image": "http://img.baoduoduo.club/material/list-5.png"
+	},
+	{
+		"name": "广州大区抢购群企业主",
+		"intro": "很喜欢分享产品",
+		"image": "http://img.baoduoduo.club/material/list-6.png"
+	},
+	{
+		"name": "产品爆品推送",
+		"intro": "图片",
+		"image": "http://img.baoduoduo.club/material/list-4.png"
+	}
+]

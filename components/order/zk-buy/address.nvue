@@ -1,0 +1,166 @@
+<template>
+  <view v-if="async">
+    <view v-if="orderAddress" class="address-message" @click="select">
+      <view class="address-message-left">
+        <view class="address-message-left-left">
+          <x-icon name="icon-address" size="16" color="#666666"></x-icon>
+        </view>
+        <view class="address-message-left-right" :style="{ width: screenWidth - 85 + 'px' }">
+          <view class="address-message-left-right-title">
+            <text class="address-message-left-right-title-name">{{ orderAddress.name }}</text>
+            <text class="address-message-left-right-title-phone">{{ orderAddress.mobile }}</text>
+          </view>
+          <text class="address-message-left-right-intro" :style="{ width: screenWidth - 85 + 'px' }">{{ orderAddress.addressDescription }} {{ orderAddress.address }}</text>
+        </view>
+      </view>
+      <view class="address-message-right">
+        <x-icon name="icon-right" size="16" color="#666666"></x-icon>
+      </view>
+    </view>
+    <view v-if="!orderAddress" class="address-add" @click="addAddress()">
+      <text class="address-add-left">请先添加地址</text>
+      <view class="address-add-right">
+        <x-icon name="icon-right" size="16" color="#666666"></x-icon>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import ala from '@/service/ala'
+export default {
+  model: {
+    prop: 'dataModel',
+    event: 'change'
+  },
+  data() {
+    return {
+      async: false,
+      orderAddress: null,
+      screenWidth: 0
+    }
+  },
+  mounted() {
+    this.screenWidth = ala.screenWidth()
+  },
+  methods: {
+    to(url) {
+      ala.to(url)
+    },
+    select() {
+      ala.to('/user/address?type=select')
+    },
+    async init() {
+      var defaultAddress = ala.localGet('shop_order_select_address')
+      if (!defaultAddress) {
+        defaultAddress = await ala.httpGet('api/UserAddress/Single')
+      }
+      if (!defaultAddress) {
+        uni.showModal({
+          title: '提示',
+          content: '请先添加地址',
+          showCancel: true,
+          confirmText: '确定',
+          success: res => {
+            if (res.confirm) {
+              this.addAddress()
+            }
+          }
+        })
+      } else {
+        this.orderAddress = defaultAddress
+        this.setDefaultAddress(defaultAddress)
+      }
+      this.async = true
+    },
+    addAddress() {
+      ala.toastWarn('请先添加地址')
+      ala.to('/user/address?type=select')
+    },
+    setDefaultAddress(defaultAddress) {
+      if (defaultAddress) {
+        ala.localSet('shop_order_select_address', defaultAddress)
+      }
+    }
+  },
+  watch: {
+    orderAddress: {
+      deep: true,
+      handler(val) {
+        this.$emit('change', this.orderAddress.id)
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.address-message {
+  height: 55px;
+  padding: 0 10px;
+  flex-direction: row;
+  border-bottom-width: 1px;
+  border-bottom-color: #e5e5e5;
+  border-bottom-style: solid;
+  align-items: center;
+  justify-content: space-between;
+
+  &-left {
+    flex-direction: row;
+    align-items: center;
+    &-left {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    &-right {
+      &-title {
+        flex-direction: row;
+        align-items: center;
+        &-name {
+          font-size: 16px;
+        }
+        &-phone {
+          margin-left: 10px;
+          font-size: 14px;
+        }
+      }
+      &-intro {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #999999;
+        text-overflow: ellipsis;
+        /* #ifndef APP-PLUS-NVUE */
+        overflow: hidden;
+        // white-space: nowrap;
+        /* #endif */
+        /* #ifdef APP-PLUS-NVUE */
+        lines: 1;
+        /* #endif */
+      }
+    }
+  }
+  &-right {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+  }
+}
+.address-add {
+  height: 40px;
+  padding: 0 10px;
+  border-bottom-color: #e5e5e5;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  &-left {
+    font-size: 16px;
+  }
+  &-right {
+    width: 25px;
+    height: 25px;
+  }
+}
+</style>

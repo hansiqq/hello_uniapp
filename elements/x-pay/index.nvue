@@ -1,0 +1,535 @@
+<template>
+  <view element-path="h5/x-pay">
+    <uni-popup ref="uniPopup" type="bottom">
+      <!-- 选择支付方式 -->
+      <view class="x-pay" :style="{ width: screenWidth + 'px' }" v-if="showPupop">
+        <view class="x-pay-title" :style="{ width: screenWidth + 'px' }">
+          <view class="x-pay-title-left"></view>
+          <text class="x-pay-title-center">确认付款</text>
+          <view class="x-pay-title-right" @click=";(showPupop = false), payClose()"></view>
+        </view>
+        <view class="x-pay-price">
+          <text class="x-pay-price-text">￥ {{ amount }}</text>
+        </view>
+        <view class="x-pay-ul">
+          <view class="x-pay-ul-list" @click="change(item.key)" :style="{ width: screenWidth + 'px' }" v-for="(item, index) in payTypes" :key="index">
+            <view class="x-pay-ul-list-left"></view>
+            <view class="x-pay-ul-list-center" :style="{ width: screenWidth - 130 + 'px' }">
+              <text class="x-pay-ul-list-center-title" :style="{ width: screenWidth - 130 + 'px' }">{{ item.value }}</text>
+              <text class="x-pay-ul-list-center-text" :style="{ width: screenWidth - 130 + 'px' }">{{ item.desc }}</text>
+            </view>
+            <view class="x-pay-ul-list-right" :class="{ 'x-pay-ul-list-right-active': item.key === selectPayType }"></view>
+          </view>
+        </view>
+        <view class="x-pay-bottom" @click="payClick()">
+          <text class="x-pay-bottom-text">确认支付{{ amount }}</text>
+        </view>
+      </view>
+      <!-- 支付密码 -->
+      <view class="x-pay-tool" :style="{ width: screenWidth + 'px' }" v-if="showPayPassword">
+        <view class="x-pay-tool-title" :style="{ width: screenWidth + 'px' }">
+          <view class="x-pay-tool-title-left" @click="closePay()"></view>
+          <text class="x-pay-tool-title-center">请输入支付密码</text>
+          <view class="x-pay-tool-title-right" @click=";(showPupop = false), payClose()"></view>
+        </view>
+        <view class="x-pay-tool-case" :style="{ width: screenWidth + 'px' }">
+          <view class="x-pay-tool-case-ul">
+            <view class="x-pay-tool-case-ul-list" v-for="i in items" :class="{ 'x-pay-tool-case-ul-list-border': i !== 0 }" :key="i" :style="{ width: (screenWidth - 30) / 6 + 'px' }">
+              <view class="x-pay-tool-case-ul-list-dont" v-if="password[i] === 1 || password[i] === 2 || password[i] === 3 || password[i] === 4 || password[i] === 5 || password[i] === 6 || password[i] === 7 || password[i] === 8 || password[i] === 9 || password[i] === 0"></view>
+            </view>
+          </view>
+        </view>
+        <view class="x-pay-tool-link">
+          <text class="x-pay-tool-link-text" @click="to('/user/password/payedit')">修改支付密码</text>
+          <text class="x-pay-tool-link-text" @click="to('/user/password/payfind')">找回支付密码</text>
+        </view>
+        <!-- 输入框 -->
+        <view class="x-pay-tool-keyboard">
+          <view class="x-pay-tool-keyboard-ul">
+            <view class="x-pay-tool-keyboard-ul-list" :class="{ 'x-pay-tool-keyboard-ul-list-border': index % 3 == 2, 'x-pay-tool-keyboard-bang': index == 9 }" @click="keyUpHandle($event, val)" hover-class="hoverClss" hover-stay-time="20" v-for="(val, index) in keys" :key="index" :style="{ width: (screenWidth - 20) / 3 + 'px' }">
+              <text class="x-pay-tool-keyboard-ul-list-text">{{ val }}</text>
+            </view>
+            <view @click="delHandle" hover-class="hoverClss" hover-stay-time="20" class="x-pay-tool-keyboard-ul-list x-pay-tool-keyboard-ul-list-border x-pay-tool-keyboard-bang" :style="{ width: (screenWidth - 23) / 3 + 'px' }">
+              <text class="x-pay-tool-keyboard-ul-list-del">x</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </uni-popup>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import appPay from './appPay'
+import weixin from '@/service/plugin/weixin'
+import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup'
+const keys = () => [1, 2, 3, 4, 5, 6, 7, 8, 9, ' ', 0]
+export default {
+  components: {
+    uniPopup
+  },
+  data() {
+    return {
+      screenWidth: 0,
+      screenHeight: 0,
+      showPupop: false,
+      payTypes: [], // 支付方式
+      asyncFlag: false, // 异步数据传递判断，如果没有获取完成则不传递数据子组件中
+      orderIds: [],
+      payId: 0, // 支付账单Id
+      amount: 0.0, // 支付金额
+      selectPayType: 0, // 选择的支付方式
+      note: '', // 显示标题
+      redirectUrl: null, // 支付后指定跳转链接，默认使用订单详情页
+      items: [0, 1, 2, 3, 4, 5],
+      keys: keys(),
+      password: [],
+      option: {},
+      buyCount: 0,
+      showPayPassword: false,
+      onlyPassword: false, // 只弹出支付窗口
+      isKeyBoard: true,
+      Identification: null,
+      originShops: null,
+      userInfo: null // 用户信息
+    }
+  },
+  onLoad(option) {
+    this.option = option
+  },
+  mounted() {
+    this.userInfo = ala.user()
+    this.$nextTick(function() {
+      this.$on('payMethod', function(payId, amount, orderIds, redirectUrl, Identification, originShops) {
+        this.Identification = Identification
+        this.payId = payId
+        this.amount = amount
+        this.orderIds = orderIds
+        // 弹出层
+        this.showPayPassword = false
+        this.$refs.uniPopup.open()
+        this.password = []
+        this.init() //  点击以后，才请求支付
+        this.showPupop = true
+        this.redirectUrl = redirectUrl // 不同的地方有不同的跳转
+        this.originShops = originShops
+      })
+      this.$on('autoOrder', buyCount => {
+        this.buyCount = buyCount
+      })
+      this.$on('payMethod_second', function(amount, payId, payType) {
+        this.onlyPassword = true
+        this.showPayPassword = true
+        this.payId = payId
+        this.amount = amount
+        this.selectPayType = payType
+      })
+    })
+  },
+  methods: {
+    closePay() {
+      this.showPupop = false
+      this.showPayPassword = false
+      this.showPupop = true
+      this.password = []
+    },
+    goFindPayPassword() {
+      ala.localSet('goFindPayPasswordOption', this.option)
+      ala.to('/pages/index?path=user_password_find')
+    },
+    // 关闭确认付款
+    payClose() {
+      this.$refs.uniPopup.close()
+      // if (ala.strIsEmpty(this.redirectUrl)) {
+      //   this.redirectUrl = '/pages/index?path=order_show&id=' + this.orderIds
+      //   if (this.redirectUrl.indexOf('successful_opening') !== -1) {
+      //   } else {
+      //     ala.to(this.redirectUrl)
+      //   }
+      // }
+    },
+    async init() {
+      this.screenWidth = ala.screenWidth()
+      this.screenHeight = ala.screenHeight()
+      ala.localRemove('wechat_logincount')
+      var loginUser = ala.user()
+      this.userName = loginUser.userName
+      let paras = {
+        // browserType: ala.payType(), // this.ClientType // 在gloal中获取支付方式列表
+        browserType: 4,
+        amount: this.amount,
+        payId: this.payId,
+        userId: ala.userId()
+      }
+      var response = await ala.httpGet('api/pay/GetList', paras) // 获取支付方式列表
+      if (response) {
+        this.asyncFlag = true
+        var pays = response.payTypeList // 所有的支付方式
+        if (!ala.strIsEmpty(response.note)) {
+          this.note = response.note
+        }
+        this.payTypes = []
+        pays.forEach(element => {
+          var pay = {}
+          pay['key'] = element.payType
+          pay['value'] = element.name
+          pay['icon'] = element.icon
+          pay['desc'] = element.intro
+          this.payTypes.push(pay)
+        })
+        this.selectPayType = this.payTypes[0].key
+      }
+    },
+    async pay() {
+      let paras = {
+        amount: this.amount,
+        payType: this.selectPayType,
+        payId: this.payId,
+        redirectUrl: this.redirectUrl,
+        openId: ala.localGet('wechat_openId'),
+        clientType: ala.client(),
+        userId: ala.userId()
+      }
+      this.disBtn = false
+      if (ala.client() === 'AppPlus' && this.selectPayType === 8) {
+        // app微信支付
+        await appPay.appWxPay(this, paras, this.orderIds, 'wxpay')
+      } else if (ala.client() === 'AppPlus' && this.selectPayType === 4) {
+        // app支付宝支付
+        var response = await ala.httpPost('api/pay/pay', paras)
+        appPay.appAliPay(this, response, this.orderIds)
+      } else {
+        var response = await ala.httpPost('api/pay/pay', paras)
+        if (response) {
+          this.showPupop = false
+          this.showPayPassword = false
+          if (this.selectPayType === 7) {
+            // 微信支付
+            await weixin.onBridgeReady(response, paras)
+          } else if (this.selectPayType === 12) {
+            // 小程序支付
+            weixin.Pay(response)
+          } else if (this.selectPayType === 3) {
+            // 支付宝
+            if (this.Identification === 'isBooking') {
+              window.location.href = response.message
+            } else {
+              window.location.href = response.url
+            }
+          } else {
+            if (this.redirectUrl !== undefined && this.redirectUrl.indexOf('merchant_order_view') > -1) {
+              var that = this
+              uni.showModal({
+                title: '支付成功',
+                showCancel: false,
+                content: '恭喜您，订单支付成功',
+                success: function(res) {
+                  ala.to(that.redirectUrl)
+                }
+              })
+            } else {
+              var that = this
+              uni.showModal({
+                title: '支付成功',
+                showCancel: false,
+                content: '恭喜您，订单支付成功',
+                success: function(res) {
+                  ala.to(`/order/show?id=${response.entityIds[0]}`)
+                }
+              })
+            }
+          }
+        } else {
+          var _This = this
+          uni.showModal({
+            content: response.message,
+            showCancel: false,
+            confirmText: '确定',
+            success: function(res) {
+              if (res.confirm) {
+                _This.password = []
+              }
+            }
+          })
+        }
+        this.isKeyBoard = true
+      }
+    },
+    async payClick() {
+      if (this.selectPayType === 1) {
+        this.showPayPassword = true
+        this.showPupop = false
+      } else {
+        this.pay()
+      }
+    },
+    change(key) {
+      this.selectPayType = key
+    },
+    backHandle() {
+      this.clearPasswordHandle() // 返回时清除password
+      this.$emit('backFnc') // 返回上级
+    },
+    keyUpHandle(e, val) {
+      if (this.isKeyBoard) {
+        if (this.password.length >= 6) {
+          this.isKeyBoard = false
+        } else {
+          if (val !== '') {
+            this.password.push(val)
+          }
+          this.ajaxData()
+        }
+      }
+    },
+    delHandle() {
+      if (this.password.length <= 0) return false
+      // this.password.shift()
+      this.password.splice(this.password.length - 1, 1)
+    },
+    async ajaxData() {
+      if (this.password.length >= 6) {
+        this.showPayPassword = false
+        this.$refs.uniPopup.close()
+        let parament = {
+          payPassWord: String(parseInt(this.password.join(' ').replace(/\s/g, ''))),
+          userId: ala.userId()
+        }
+        var message = await ala.httpPost('Api/User/ConfirmPayPassword', parament)
+        uni.showLoading({
+          title: '加载中..'
+        })
+        var _This = this
+        setTimeout(() => {
+          uni.hideLoading()
+          if (!message) {
+            uni.showModal({
+              title: '提示',
+              content: '支付密码错误',
+              showCancel: false,
+              confirmText: '确定',
+              complete: function(res) {
+                _This.password = []
+                _This.isKeyBoard = true
+                _This.showPayPassword = true
+              }
+            })
+            this.password = []
+          } else {
+            if (message) {
+              uni.hideLoading()
+              _This.pay()
+              _This.showPayPassword = false
+            }
+          }
+          _This.password = []
+        }, 500)
+      }
+      return false
+    },
+    to(url) {
+      ala.to(url)
+    },
+    clearPasswordHandle: function() {
+      this.password = []
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.x-pay {
+  background-color: #007aff;
+  &-title {
+    height: 45px;
+    padding: 0 10px;
+    background-color: $gl-themeColor;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    &-right,
+    &-left {
+      width: 25px;
+      height: 25px;
+      background-color: #00c5dc;
+      border-radius: 50%;
+    }
+    &-center {
+      color: #ffffff;
+      font-size: 16px;
+    }
+  }
+  &-price {
+    height: 35px;
+    background-color: #ffffff;
+    &-text {
+      text-align: center;
+      line-height: 35px;
+      color: $gl-themeColor;
+      font-size: 18px;
+      font-weight: 700;
+    }
+  }
+  &-ul {
+    background-color: #ffffff;
+    &-list {
+      height: 60px;
+      padding: 0 20px;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #ffffff;
+      border-top-color: #e9e9e9;
+      border-top-width: 1px;
+      border-top-style: solid;
+      &-left {
+        width: 26px;
+        height: 26px;
+        margin-right: 20px;
+        background-color: #1ba39c;
+        border-radius: 50%;
+      }
+      &-center {
+        &-title {
+          font-size: 16px;
+          color: #333;
+        }
+        &-text {
+          margin-top: 5px;
+          font-size: 12px;
+          color: #999;
+        }
+      }
+      &-right {
+        width: 24px;
+        height: 24px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #e5e5e5;
+        border-radius: 50%;
+        margin-left: 20px;
+        &-active {
+          background-color: #4c87b9;
+        }
+      }
+    }
+  }
+  &-bottom {
+    height: 40px;
+    background-color: $gl-themeColor;
+    &-text {
+      text-align: center;
+      line-height: 40px;
+      color: #ffffff;
+      font-size: 14px;
+    }
+  }
+}
+
+/* 支付密码 */
+.x-pay-tool {
+  height: 300px;
+  background-color: #ffffff;
+  &-title {
+    height: 40px;
+    background-color: #ffffff;
+    border-bottom-color: #dcdfe6;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    &-right,
+    &-left {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background-color: #00c5dc;
+    }
+    &-center {
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+  &-case {
+    padding: 15px;
+    padding-bottom: 3px;
+    background-color: #ffffff;
+    &-ul {
+      border-radius: 3px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: #dcdfe6;
+      flex-direction: row;
+      &-list {
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        &-border {
+          border-left-width: 1px;
+          border-left-color: #dcdfe6;
+          border-left-style: solid;
+        }
+        &-dont {
+          width: 12px;
+          height: 12px;
+          background-color: gray;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+  &-link {
+    height: 30px;
+    background-color: #ffffff;
+    flex-direction: row;
+    justify-content: center;
+    &-text {
+      font-size: 13px;
+      padding: 0 2px;
+      color: #979797;
+      text-decoration: underline;
+    }
+  }
+  &-keyboard {
+    padding: 0 10px;
+    &-ul {
+      border-style: solid;
+      border-color: #dcdfe6;
+      border-top-width: 1px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      &-list {
+        height: 40px;
+        border-bottom-width: 1px;
+        border-right-width: 1px;
+        border-style: solid;
+        border-color: #dcdfe6;
+        &-border {
+          border-right-width: 0;
+        }
+        &-text {
+          line-height: 40px;
+          text-align: center;
+          font-size: 20px;
+          font-weight: 600;
+        }
+        &-del {
+          line-height: 40px;
+          text-align: center;
+          color: #361759;
+          font-size: 20px;
+        }
+      }
+    }
+    &-bang {
+      background-color: #f2f6fc;
+    }
+  }
+}
+.hoverClss {
+  background-color: #575962;
+}
+</style>

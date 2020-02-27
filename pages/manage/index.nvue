@@ -1,0 +1,24 @@
+<template>
+	<view>
+		<!-- #ifndef APP-NVUE -->
+		<topNav></topNav>
+		<tabNav></tabNav>
+		<!-- #endif -->
+		<zk-manage-view></zk-manage-view>
+	</view>
+</template>
+
+<script>
+	import topNav from '../subnvue/manage/top'
+	import tabNav from '../subnvue/manage/bottom'
+	export default {
+		components: {
+			topNav,
+			tabNav
+		}
+	}
+</script>
+
+<style>
+
+</style>

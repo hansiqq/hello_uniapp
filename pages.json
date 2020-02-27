@@ -1,0 +1,414 @@
+{
+  "pages": [
+    {
+      "path": "pages/tabbar/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false,
+          "subNVues": [
+            {
+              "id": "indexNav",
+              "path": "pages/tabbar/subnvue/index-nav",
+              "type": "navigationBar",
+              "height": "50px"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": "pages/tabbar/two",
+      "style": {
+        "navigationBarTitleText": "圈落",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+          "titleNView": false,
+          "subNVues": [
+            {
+              "id": "twonav",
+              "path": "components/cloud/zk-material-quan/subNvue/material-subNvue",
+              "type": "navigationBar",
+              "height": "50px"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": "pages/tabbar/three",
+      "style": {
+        "navigationBarTitleText": "群",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/tabbar/four",
+      "style": {
+        "navigationBarTitleText": "圈圈",
+        "enablePullDownRefresh": true,
+        "app-plus": {
+			"titleNView": false,
+			"subNVues": [
+				{
+				  "id": "fourNav",
+				  "path": "pages/tabbar/subnvue/four-nav",
+				  "type": "navigationBar",
+				  "height": "50px"
+				}
+			]
+        }
+      }
+    },
+    {
+      "path": "pages/test",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/test-2",
+      "style": {
+        "navigationBarTitleText": "测试一",
+        "enablePullDownRefresh": true,
+        "titleNView": true
+      }
+    },
+    {
+      "path": "pages/tabbar/user",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/index",
+      "style": {
+        "enablePullDownRefresh": true
+      }
+    },
+    // #ifdef H5
+    {
+      "path": "pages/diy/index",
+      "style": {}
+    },
+    // #endif
+    {
+      "path": "pages/user/login",
+      "style": {
+        "navigationBarTitleText": "登陆",
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
+      "path": "pages/user/reg",
+      "style": {
+        "navigationBarTitleText": "注册"
+      }
+    },
+    {
+      "path": "pages/nav/earning/index",
+      "style": {}
+    },
+    {
+      "path": "pages/nav/share/index",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "店主分享",
+        "navigationBarBackgroundColor": "#FFFFFF"
+      }
+    },
+    {
+      "path": "pages/nav/share/share_detail",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "店主分享",
+        "navigationBarBackgroundColor": "#FFFFFF"
+      }
+    },
+    {
+      "path": "pages/nav/study/index",
+      "style": {}
+    },
+    {
+      "path": "pages/product/show",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/nav/source/detail",
+      "style": {}
+    },
+    {
+      "path": "pages/nav/optimization/index",
+      "style": {
+        "navigationBarTitleText": "店主优选"
+      }
+    },
+    {
+      "path": "pages/address/index",
+      "style": {
+        "navigationBarTitleText": "定位",
+        "app-plus": {
+          "titleNView": false,
+          "subNVues": [
+            {
+              "id": "addressNav",
+              "path": "pages/subnvue/address/address",
+              "type": "navigationBar",
+              "height": "50px"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": "pages/study/index",
+      "style": {
+        "navigationBarTitleText": "店主学习",
+        "app-plus": {
+          "titleNView": false,
+          "subNVues": [
+            {
+              "id": "studyBottomNav",
+              "path": "pages/subnvue/study/bottom",
+              "style": {
+                "position": "absolute",
+                "bottom": "0",
+                "left": "10px",
+                "height": "50px"
+              }
+            },
+            {
+              "id": "studyTopNav",
+              "path": "pages/subnvue/study/top",
+              "type": "navigationBar",
+              "height": "50px"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": "pages/study/region",
+      "style": {
+        "navigationBarTitleText": "管理系统课程"
+      }
+    },
+    {
+      "path": "pages/study/course_detail",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/study/clock",
+      "style": {
+        "navigationBarTitleText": "每日打卡",
+        "navigationBarBackgroundColor": "#F52D3F",
+        "navigationBarTextStyle": "white",
+        "app-plus": {
+          "titleNView": {
+            "buttons": [
+              {
+                "float": "right",
+                "text": "课程预约",
+                "fontSize": "12px",
+                "widget": "60px"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "path": "pages/study/reserve",
+      "style": {
+        "navigationBarTitleText": "课程预约",
+        "navigationBarBackgroundColor": "#FFFFFF",
+        "navigationBarTextStyle": "black"
+      }
+    },
+    {
+      "path": "pages/manage/index",
+      "style": {
+        "navigationBarTitleText": "店铺管理",
+        "app-plus": {
+          "titleNView": false,
+          "subNVues": [
+            {
+              "id": "manageBottomNav",
+              "path": "pages/subnvue/manage/bottom",
+              "style": {
+                "position": "absolute",
+                "bottom": "0",
+                "left": "10px",
+                "height": "50px"
+              }
+            },
+            {
+              "id": "manageTopNav",
+              "path": "pages/subnvue/manage/top",
+              "type": "navigationBar",
+              "height": "50px"
+            }
+          ]
+        }
+      }
+    },
+	{
+	  "path": "pages/customer/index",
+	  "style": {
+	    "navigationBarTitleText": "联系客服",
+	    "navigationBarBackgroundColor": "#FFFFFF",
+	    "navigationBarTextStyle": "black"
+	  }
+	}
+  ],
+  "globalStyle": {
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "#f42e14",
+    "backgroundColor": "#f42e14"
+  },
+  "easycom": {
+    "zk-article": "@/components/articles/zk-article/index.nvue",
+    "zk-help": "@/components/articles/zk-help/index.nvue",
+    "zk-marquee": "@/components/articles/zk-marquee/index.nvue",
+    "zk-amount": "@/components/assets/zk-amount/index.nvue",
+    "zk-bank-list": "@/components/assets/zk-bank-list/index.nvue",
+    "zk-material-quan": "@/components/cloud/zk-material-quan/index.nvue",
+    "zk-auto-form": "@/components/common/zk-auto-form/index.nvue",
+    "zk-cell": "@/components/common/zk-cell/index.nvue",
+    "zk-grid": "@/components/common/zk-grid/index.nvue",
+    "zk-html": "@/components/common/zk-html/index.nvue",
+    "zk-image-list": "@/components/common/zk-image-list/index.nvue",
+    "zk-view-list": "@/components/common/zk-view-list/index.nvue",
+    "zk-image": "@/components/common/zk-image/index.nvue",
+    "zk-list": "@/components/common/zk-list/index.nvue",
+    "zk-preview": "@/components/common/zk-preview/index.nvue",
+    "zk-swiper": "@/components/common/zk-swiper/index.nvue",
+    "zk-tabbar": "@/components/common/zk-tabbar/index.nvue",
+    "zk-product-chat": "@/components/common/zk-product-chat/index.nvue",
+    "zk-course-list": "@/components/common/zk-course-list/index.nvue",
+    "zk-course-detail": "@/components/common/zk-course-detail/index.nvue",
+    "zk-clock-view": "@/components/common/zk-clock-view/index.nvue",
+    "zk-course-reserve": "@/components/common/zk-course-reserve/index.nvue",
+    "zk-manage-view": "@/components/common/zk-manage-view/index.nvue",
+	"zk-news-view": "@/components/common/zk-news-view/index.nvue",
+	"zk-customer-view": "@/components/common/zk-customer-view/index.nvue",
+    "zk-chat": "@/components/im/zk-chat/index.nvue",
+    "zk-im-chat": "@/components/im/zk-im-chat/index.nvue",
+    // "zk-video": "@/components/common/zk-video/index.nvue",
+    "zk-im-contact": "@/components/im/zk-im-contact/index.nvue",
+    "zk-im-group": "@/components/im/zk-im-group/index.nvue",
+    "zk-im-message": "@/components/im/zk-im-message/index.nvue",
+    "zk-im-service": "@/components/im/zk-im-service/index.nvue",
+    "zk-buy": "@/components/order/zk-buy/index.nvue",
+    "zk-cart": "@/components/order/zk-cart/index.nvue",
+    "zk-order-list": "@/components/order/zk-order-list/index.nvue",
+    "zk-order-refund": "@/components/order/zk-order-refund/index.nvue",
+    "zk-order-show": "@/components/order/zk-order-show/index.nvue",
+    "zk-product-list": "@/components/product/zk-product-list/index.nvue",
+    "zk-product-image": "@/components/product/zk-product-image/index.nvue",
+    "zk-product-pagelist": "@/components/product/zk-product-pagelist/index.nvue",
+    "zk-product-show": "@/components/product/zk-product-show/index.nvue",
+    "zk-product-class": "@/components/product/zk-product-class/index.nvue",
+    "zk-product-area-class": "@/components/product/zk-product-area-class/index.nvue",
+    "zk-search": "@/components/themes/zk-search/index.nvue",
+    "zk-change-avator": "@/components/user/zk-change-avator/index.nvue",
+    "zk-login": "@/components/user/zk-login/index.nvue",
+    "zk-logout": "@/components/user/zk-logout/index.nvue",
+    "zk-qrcode": "@/components/user/zk-qrcode/index.nvue",
+    "zk-reg": "@/components/user/zk-reg/index.nvue",
+    "zk-user-address": "@/components/user/zk-user-address/index.nvue",
+    "zk-user-auth": "@/components/user/zk-user-auth/index.nvue",
+    "zk-user-collect": "@/components/user/zk-user-collect/index.nvue",
+    "zk-user-info": "@/components/user/zk-user-info/index.nvue",
+    "zk-user-reg": "@/components/user/zk-user-reg/index.nvue",
+    "zk-user-service": "@/components/user/zk-user-service/index.nvue",
+    "zk-user-top": "@/components/user/zk-user-top/index.nvue",
+    "zk-user-avator": "@/components/user/zk-user-avator/index.nvue",
+    "x-button": "@/elements/x-button/index.nvue",
+    "x-cell": "@/elements/x-cell/index.nvue",
+    "x-count-down": "@/elements/x-count-down/index.nvue",
+    "x-form-label": "@/elements/x-form-label/index.nvue",
+    "x-icon": "@/elements/x-icon/index.nvue",
+    "x-image": "@/elements/x-image/index.nvue",
+    "x-input": "@/elements/x-input/index.nvue",
+    "x-message": "@/elements/x-message/index.nvue",
+    "x-number": "@/elements/x-number/index.nvue",
+    "x-password": "@/elements/x-password/index.nvue",
+    "x-pay": "@/elements/x-pay/index.nvue",
+    "x-phone-verifiy": "@/elements/x-phone-verifiy/index.nvue",
+    "x-picker": "@/elements/x-picker/index.nvue",
+    "x-popup": "@/elements/x-popup/index.nvue",
+    "x-radio": "@/elements/x-radio/index.nvue",
+    "x-region": "@/elements/x-region/index.nvue",
+    "x-scroll-view": "@/elements/x-scroll-view/index.nvue",
+    "x-select": "@/elements/x-select/index.nvue",
+    "x-time-picker": "@/elements/x-time-picker/index.nvue",
+    "x-share": "@/elements/x-share/index.nvue",
+    "x-upload": "@/elements/x-upload/index.nvue",
+    "x-widget": "@/elements/x-widget/index.nvue",
+    "x-qrcode": "@/elements/x-qrcode/index",
+    "x-msg": "@/elements/x-msg/index"
+  },
+  "condition": {
+    "current": 0,
+    "list": [
+      {
+        "name": "test",
+        "path": "pages/test"
+      },
+      {
+        "name": "首页",
+        "path": "pages/tabbar/index"
+      },
+      {
+        "name": "会员中心",
+        "path": "pages/tabbar/user"
+      }
+    ]
+  },
+  "tabBar": {
+    "color": "#868692",
+    "selectedColor": "#F92E2A",
+    "borderStyle": "black",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/tabbar/index",
+        "text": "首页",
+        "iconPath": "static/tabbar/tabbar01.png",
+        "selectedIconPath": "static/tabbar/tabbar01.png"
+      },
+      {
+        "pagePath": "pages/tabbar/two",
+        "text": "圈落",
+        "iconPath": "static/tabbar/tabbar02.png",
+        "selectedIconPath": "static/tabbar/tabbar02.png"
+      },
+      {
+        "pagePath": "pages/tabbar/three",
+        "text": "群",
+        "iconPath": "static/tabbar/tabbar03.png",
+        "selectedIconPath": "static/tabbar/tabbar03.png"
+      },
+      {
+        "pagePath": "pages/tabbar/four",
+        "text": "圈圈",
+        "iconPath": "/static/tabbar/tabbar04.png",
+        "selectedIconPath": "static/tabbar/tabbar04.png"
+      },
+      {
+        "pagePath": "pages/tabbar/user",
+        "text": "圈主",
+        "iconPath": "static/tabbar/tabbar05.png",
+        "selectedIconPath": "static/tabbar/tabbar05.png"
+      }
+    ]
+  }
+}

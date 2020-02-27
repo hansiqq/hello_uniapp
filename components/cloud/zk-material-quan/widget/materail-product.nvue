@@ -1,0 +1,394 @@
+<template>
+  <view class="source" :style="{ width: screenWidth + 'px' }" v-if="viewModel">
+    <view class="source-list" v-for="(item, index) in viewModel.result" :key="index">
+      <view class="source-list-right" :style="{ width: screenWidth - 70 + 'px' }">
+        <!-- 头部信息 -->
+        <view class="source-list-right-title">
+          <view class="source-list-right-title-left" @click="clickDetail" :style="{ width: screenWidth - 240 + 'px' }">
+            <text class="source-list-right-title-left-title">{{ item.material.name }}</text>
+            <text class="source-list-right-title-left-intro">{{ item.material.fullName }} {{ item.material.createTime }}</text>
+          </view>
+          <view class="source-list-right-title-right">
+            <view class="source-list-right-title-right-text" @click="downShare">
+              <x-icon name="icon-homes" size="16" color="#E5312E"></x-icon>
+              <text class="source-list-right-title-right-text-text">下载发圈</text>
+            </view>
+            <text class="source-list-right-title-right-collect" @click="favoriteCancel" v-if="item.isFavorite === true">已收藏</text>
+            <text class="source-list-right-title-right-collect" @click="favoriteAdd" v-else>收藏</text>
+          </view>
+        </view>
+        <!-- 图文信息 -->
+        <view class="source-list-right-detail" @click="clickDetail" :style="{ width: screenWidth - 70 + 'px' }">
+          <text class="source-list-right-detail-text">{{ item.material.intro }}</text>
+          <view class="source-list-right-detail-ul">
+            <x-image :src="img" class="source-list-right-detail-list" v-for="(img, imgIndex) in item.images" :key="imgIndex" :style="{ width: imageSize + 'px', height: imageSize + 'px' }"></x-image>
+          </view>
+        </view>
+        <!-- 商品信息 -->
+        <view class="source-list-right-product" :style="{ width: screenWidth - 70 + 'px' }">
+          <image :src="product.thumbnailUrl" class="source-list-right-product-left" />
+          <view class="source-list-right-product-right" :style="{ width: screenWidth - 165 + 'px' }">
+            <view class="source-list-right-product-right-title">
+              <x-icon name="icon-gs-car" size="16"></x-icon>
+              <text class="source-list-right-product-right-title-text" :style="{ width: screenWidth - 185 + 'px' }">{{ item.product.name }}</text>
+            </view>
+            <view class="source-list-right-product-right-center">
+              <view class="source-list-right-product-right-price">
+                <text class="source-list-right-product-right-price-left">劵后 ￥</text>
+                <text class="source-list-right-product-right-price-right">{{ item.product.price }}</text>
+              </view>
+              <x-icon name="icon-gs-car" size="16"></x-icon>
+            </view>
+            <view class="source-list-right-product-right-bottom">
+              <text class="source-list-right-product-right-bottom-text">返现￥2.10</text>
+              <text class="source-list-right-product-right-bottom-text">{{ item.product.soldCount }}人已购买</text>
+            </view>
+          </view>
+        </view>
+        <!-- 商品折扣劵 -->
+        <view class="source-list-right-coupon" :style="{ width: screenWidth - 70 + 'px' }">
+          <view class="source-list-right-coupon-title">
+            <x-icon name="icon-info-user" size="20" color="#E21E17"></x-icon>
+          </view>
+          <view class="source-list-right-coupon-ul">
+            <text class="source-list-right-coupon-list">【原价】 ￥{{ item.product.marketPrice }}元</text>
+            <text class="source-list-right-coupon-list">【劵后加】 ￥{{ item.product.price }}元</text>
+            <text class="source-list-right-coupon-list">---------------------</text>
+            <text class="source-list-right-coupon-list">复制这条口令，让您的朋友进入抢购即可抢购</text>
+          </view>
+          <view class="source-list-right-coupon-bottom">
+            <text class="source-list-right-coupon-bottom-text">复制评论</text>
+          </view>
+        </view>
+        <!-- 数量统计 -->
+        <view class="source-list-right-num" :style="{ width: screenWidth - 70 + 'px' }">
+          <view class="source-list-right-num-list">
+            <x-icon name="icon-info-user" size="16" color="#E21E17"></x-icon>
+            <text class="source-list-right-num-list-text">{{ item.material.shareCount }}</text>
+          </view>
+          <view class="source-list-right-num-list">
+            <x-icon name="icon-info-user" size="16" color="#E21E17"></x-icon>
+            <text class="source-list-right-num-list-text">{{ item.material.commentCount }}</text>
+          </view>
+          <view class="source-list-right-num-list">
+            <x-icon name="icon-info-user" size="16" color="#E21E17"></x-icon>
+            <text class="source-list-right-num-list-text">{{ item.material.favoriteCount }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <sourceShow ref="sourceShow"></sourceShow>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import api from '@/service/api.js'
+import sourceShow from './source_show'
+export default {
+  components: {
+    sourceShow
+  },
+  data() {
+    return {
+      viewModel: null,
+      pageIndex: 0, // 当前页
+      screenWidth: 0,
+      product: {},
+      imageList: [], // 图片列表
+      imageSize: 0, // 图片展示大小
+      async: false,
+      city: '',
+      createTime: '',
+      favoriteCount: 0,
+      isFavorite: false
+    }
+  },
+  mounted() {},
+  methods: {
+    async load(classData) {
+      this.viewModel = await api.materailProduct(classData.id, this.pageIndex)
+    },
+    async init() {
+      this.screenWidth = ala.screenWidth()
+      // 设置时间和城市
+      this.city = ala.strSubStart(this.viewModel.fullName, '市').replace('省', ' ')
+      this.createTime = ala.timeAgo(this.viewModel.createTime)
+      var response = await api.productShow(this.viewModel.entityId)
+      if (response) {
+        this.product = response
+      }
+      this.imageList = JSON.parse(this.product.detail.imageJson)
+      this.getImage()
+      /* 获取收藏状态 */
+      var response = await api.favoriteStatus('Material', this.viewModel.id)
+      console.info('收藏状态', response)
+      this.isFavorite = response
+      console.info('收藏状态 isFavorite', this.isFavorite)
+      /* 设置收藏数量 */
+      this.favoriteCount = this.viewModel.favoriteCount
+      this.async = true
+    },
+    // 图片展示大小
+    getImage() {
+      var length = this.imageList.length
+      var width = this.screenWidth - 70
+      switch (length) {
+        case 1:
+          this.imageSize = width
+          break
+        case 2 || 4:
+          this.imageSize = width / 2 - 7
+          break
+        case 3:
+          this.imageSize = width / 3 - 7
+          break
+        default:
+          this.imageSize = width / 3 - 7
+      }
+    },
+    clickDetail() {
+      ala.to(`/pages/nav/source/detail?id=${this.viewModel.id}`)
+    },
+    // 下载发圈
+    downShare() {
+      this.$refs.sourceShow.open(this.imageList)
+    },
+    // 收藏
+    async favoriteAdd() {
+      console.info('点击收藏')
+      var response = await api.favoriteAdd('Material', this.viewModel.id)
+      this.isFavorite = true
+      this.favoriteCount = response
+      console.info('收藏返回', response)
+    },
+    // 取消收藏
+    async favoriteCancel() {
+      console.info('点击取消收藏')
+      var response = await api.favoriteCancel('Material', this.viewModel.id)
+      this.isFavorite = false
+      this.favoriteCount = response
+      console.info('取消收藏返回', response)
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.source {
+  &-list {
+    background-color: #ffffff;
+    padding: 15px 10px;
+    flex-direction: row;
+
+    &-left {
+      margin-right: 10px;
+      width: 40px;
+      height: 40px;
+    }
+
+    &-right {
+      &-title {
+        flex-direction: row;
+        justify-content: space-between;
+
+        &-left {
+          &-title {
+            height: 25px;
+            line-height: 25px;
+            font-size: 15px;
+            font-weight: 600;
+          }
+
+          &-intro {
+            height: 25px;
+            line-height: 25px;
+            color: #979497;
+            font-size: 12px;
+          }
+        }
+
+        &-right {
+          height: 25px;
+          width: 170px;
+          flex-direction: row;
+          justify-content: flex-end;
+
+          &-text {
+            padding: 0 10px;
+            background-color: #fff0f0;
+            border-radius: 30px;
+            flex-direction: row;
+            align-items: center;
+
+            &-icon {
+              width: 15px;
+              height: 15px;
+            }
+
+            &-text {
+              margin-left: 3px;
+              font-size: 14px;
+              color: #e13730;
+            }
+
+            margin-right: 5px;
+          }
+
+          &-collect {
+            padding: 0 10px;
+            line-height: 25px;
+            background-color: #fb2e2d;
+            border-radius: 30px;
+            font-size: 14px;
+            color: #ffffff;
+          }
+        }
+      }
+
+      /* 图文信息 */
+      &-detail {
+        &-text {
+          font-size: 14px;
+        }
+
+        &-ul {
+          margin-top: 10px;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        &-list {
+          border-radius: 3px;
+        }
+      }
+
+      /* 商品信息 */
+      &-product {
+        margin-top: 10px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        background-color: #fbf8fb;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        &-left {
+          width: 65px;
+          height: 65px;
+          border-radius: 3px;
+          background-color: #36a3f7;
+        }
+
+        &-right {
+          height: 65px;
+          justify-content: space-between;
+
+          &-title {
+            height: 25px;
+            flex-direction: row;
+            align-items: center;
+            &-text {
+              margin-left: 5px;
+              font-size: 14px;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              /* #ifdef APP-NVUE */
+              lines: 1;
+              /* #endif */
+              /* #ifndef APP-NVUE */
+              white-space: nowrap;
+              /* #endif */
+            }
+          }
+
+          &-center {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          &-bottom {
+            flex-direction: row;
+
+            &-text {
+              padding: 0 5px;
+              margin-right: 5px;
+              height: 18px;
+              border-color: #d23a34;
+              background-color: #ffefee;
+              border-style: solid;
+              border-width: 1px;
+              font-size: 10px;
+              color: #d23a34;
+              line-height: 18px;
+              border-radius: 3px;
+            }
+          }
+
+          &-price {
+            flex-direction: row;
+            align-items: flex-end;
+
+            &-left {
+              font-size: 12px;
+              color: #d23a34;
+            }
+
+            &-right {
+              color: #d23a34;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+
+      /* 商品折扣劵 */
+      &-coupon {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #fbf8fb;
+        border-radius: 5px;
+        &-title {
+          flex-direction: row;
+        }
+        &-ul {
+          margin-top: 2px;
+        }
+        &-list {
+          font-size: 14px;
+          color: #555354;
+        }
+        &-bottom {
+          margin-top: 3px;
+          flex-direction: row;
+          justify-content: flex-end;
+          &-text {
+            height: 25px;
+            width: 70px;
+            line-height: 25px;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 14px;
+            background-color: #e8e5e9;
+          }
+        }
+      }
+      &-num {
+        height: 40px;
+        background-color: #ffffff;
+        flex-direction: row;
+        justify-content: space-between;
+        &-list {
+          flex-direction: row;
+          align-items: center;
+          &-text {
+            margin-left: 3px;
+            font-size: 14px;
+            color: #383538;
+          }
+        }
+      }
+    }
+  }
+}
+</style>

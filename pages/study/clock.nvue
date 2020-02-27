@@ -1,0 +1,23 @@
+<template>
+	<view>
+	 <zk-clock-view></zk-clock-view>
+	</view>
+</template>
+
+<script>
+	export default {
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+			}
+		},
+		onNavigationBarButtonTap(res) {
+		}
+	}
+</script>
+
+<style>
+
+</style>

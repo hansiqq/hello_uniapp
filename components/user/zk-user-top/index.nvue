@@ -1,0 +1,78 @@
+<template>
+	<view class="zk-user-top" :style="{ width: screenWidth + 'px' }" v-if="viewModel">
+		<view :style="{ height: statusHeight + 'px' }"></view>
+		<view class="zk-user-top-title">
+			<view class="zk-user-top-title-left" :style="{ width: screenWidth - 80 + 'px' }">
+				<image class="zk-user-top-title-left-image" :src="viewModel.avator" />
+				<view class="zk-user-top-title-left-name">
+					<text class="zk-user-top-title-left-name-title">{{ viewModel.userName }}</text>
+					<text class="zk-user-top-title-left-name-text">{{ loginUser.name }} {{ loginUser.gradeName }}</text>
+				</view>
+			</view>
+			<view class="zk-user-top-title-right">
+				<x-icon name="icon-info-user" size="18" @click.native="linkTo('/user/set')" color="#ffffff"></x-icon>
+				<x-icon name="icon-info-user" size="18" @click.native="linkTo('/user/info')" color="#ffffff"></x-icon>
+			</view>
+		</view>
+		<view class="zk-user-top-ul" :style="{ width: screenWidth + 'px' }">
+			<view class="zk-user-top-ul-list" :style="{ width: (screenWidth - 20) / 3 + 'px' }">
+				<text class="zk-user-top-ul-list-title">我的余额</text>
+				<text class="zk-user-top-ul-list-intro" v-if="viewModel.storeRevenue">{{ viewModel.storeRevenue }}</text>
+				<text class="zk-user-top-ul-list-intro" v-else>0</text>
+			</view>
+			<view class="zk-user-top-ul-list" :style="{ width: (screenWidth - 20) / 3 + 'px' }">
+				<text class="zk-user-top-ul-list-title">今日订单</text>
+				<text class="zk-user-top-ul-list-intro" v-if="viewModel.todayOrderCount">{{ viewModel.todayOrderCount }}</text>
+				<text class="zk-user-top-ul-list-intro" v-else>0</text>
+			</view>
+			<view class="zk-user-top-ul-list" :style="{ width: (screenWidth - 20) / 3 + 'px' }">
+				<text class="zk-user-top-ul-list-title">我的收藏</text>
+				<text class="zk-user-top-ul-list-intro" v-if="viewModel.favorite">{{ viewModel.favorite }}</text>
+				<text class="zk-user-top-ul-list-intro" v-else>0</text>
+			</view>
+		</view>
+	</view>
+</template>
+<script>
+	import ala from '@/service/ala'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				statusHeight: 0,
+				widgetModel: {},
+				viewModel: '',
+				loginUser: ''
+			}
+		},
+		props: {
+			widget: {}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			async init() {
+				this.screenWidth = ala.screenWidth()
+				this.statusHeight = ala.statusHeight()
+				if (ala.userIsLogin()) {
+					var para = {
+						userId: ala.userId()
+					}
+					this.viewModel = await ala.widget(this, 'MemberWidget', para)
+					this.loginUser = ala.user()
+				}
+			},
+			linkTo(url) {
+				ala.to(url)
+			}
+		}
+	}
+</script>
+<style lang="scss" scoped>
+	@import './var.scss';
+</style>
+
+<style lang="scss" scoped>
+
+</style>

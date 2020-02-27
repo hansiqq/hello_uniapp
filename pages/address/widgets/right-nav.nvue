@@ -1,0 +1,50 @@
+<template>
+	<view class="right-nav" :style="{height: screenHeight + 'px', top: statusHeight + 'px'}" v-if="viewModel">
+		<text class="right-nav-list" @click="scrolClick(null)">热门</text>
+		<text class="right-nav-list" v-for="(item, index) in viewModel" @click="scrolClick(index)" :key="index">{{item.name}}</text>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	export default {
+		props: {
+			viewModel: {}
+		},
+		data() {
+			return {
+				screenHeight: 0,
+				statusHeight: 0,
+				list: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenHeight = ala.screenHeight()
+				this.screenHeight = this.screenHeight - 100
+				// #ifndef APP-NVUE
+				this.statusHeight = 90
+				// #endif
+			},
+			scrolClick(index) {
+				this.$emit('scrollClick', index)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.right-nav{
+		position: fixed;
+		right: 0;
+		width: 30px; 
+		justify-content: center;
+		&-list{
+			text-align: center;
+			font-size: 11px;
+		}
+	}
+</style>

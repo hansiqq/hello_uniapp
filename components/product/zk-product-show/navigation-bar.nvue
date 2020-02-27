@@ -1,0 +1,161 @@
+<template>
+  <view class="navigate-bar">
+    <view class="navigate-bar-show" :style="{ opacity: opacity, width: screenWidth + 1 + 'px', height: 50 + statusBarHeight + 'px', paddingTop: statusBarHeight + 'px' }">
+      <view class="navigate-bar-show-left navigate-bar-show-common" @click="backClick">
+        <x-icon name="icon-white" size="16" color="#000000"></x-icon>
+      </view>
+      <view class="navigate-bar-show-center" :style="{ width: screenWidth * 0.4 + 'px' }">
+        <text class="navigate-bar-show-center-text" :class="{ 'navigate-bar-show-center-active': index === scrollIndex }" @click="scrollClick(item, index)" v-for="(item, index) in list" :key="index">{{ item.name }}</text>
+      </view>
+      <view class="navigate-bar-show-right">
+        <view class="navigate-bar-show-common navigate-bar-show-right-text">
+          <x-icon name="icon-me" size="16" color="#000000"></x-icon>
+        </view>
+        <view class="navigate-bar-show-common navigate-bar-show-right-text">
+          <x-icon name="icon-code01" size="16" color="#000000"></x-icon>
+        </view>
+      </view>
+    </view>
+    <view class="navigate-bar-hid" :style="{ opacity: 1 - opacity, width: screenWidth + 'px', top: statusBarHeight + 'px' }">
+      <view class="navigate-bar-hid-left navigate-bar-hid-common" @click="backClick">
+        <x-icon name="icon-white" size="16" color="#ffffff"></x-icon>
+      </view>
+      <view class="navigate-bar-hid-right">
+        <view class="navigate-bar-hid-common navigate-bar-hid-right-text">
+          <x-icon name="icon-me" size="16" color="#ffffff"></x-icon>
+        </view>
+        <view class="navigate-bar-hid-common navigate-bar-hid-right-text">
+          <x-icon name="icon-code01" size="16" color="#ffffff"></x-icon>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  props: {
+    nagiveTab: {}
+  },
+  mounted() {
+    this.init()
+  },
+  data() {
+    return {
+      opacity: 0,
+      screenWidth: '',
+      statusBarHeight: 0,
+      list: [],
+      scrollIndex: 0
+    }
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+      uni.$on('navigation-bar-view', data => {
+        this.opacity = data.scrollTop / this.screenWidth
+        if (this.list[1].scrollTop > data.scrollTop) {
+          this.scrollIndex = 0
+        } else if (this.list[1].scrollTop < data.scrollTop && this.list[2].scrollTop > data.scrollTop) {
+          this.scrollIndex = 1
+        } else if (this.list[2].scrollTop < data.scrollTop) {
+          this.scrollIndex = 2
+        }
+      })
+      this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
+      uni.$on('navigation-bar-list', data => {
+        this.list = data
+      })
+    },
+    backClick() {
+      uni.navigateBack({
+        delta: 1
+      })
+    },
+    scrollClick(item, index) {
+      this.scrollIndex = index
+      this.$emit('scrollClick', item)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.navigate-bar {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  &-show,
+  &-hid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 50px;
+    z-index: 9;
+  }
+  &-show {
+    z-index: 10 !important;
+    background-color: #ffffff;
+    padding: 0 10px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    &-common {
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      background-color: #007aff;
+    }
+    &-left {
+      justify-content: center;
+      align-items: center;
+    }
+    &-right {
+      flex-direction: row;
+      &-text {
+        justify-content: center;
+        align-items: center;
+        margin: 0 2px;
+      }
+    }
+    &-center {
+      height: 30px;
+      align-items: center;
+      flex-direction: row;
+      justify-content: space-between;
+      &-text {
+        font-size: 16px;
+      }
+      &-active {
+        color: $gl-themeColor;
+      }
+    }
+  }
+  &-hid {
+    padding: 0 10px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    &-common {
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    &-left {
+      justify-content: center;
+      align-items: center;
+    }
+    &-right {
+      flex-direction: row;
+      &-text {
+        justify-content: center;
+        align-items: center;
+        margin: 0 2px;
+      }
+    }
+  }
+}
+</style>

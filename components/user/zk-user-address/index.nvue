@@ -1,0 +1,69 @@
+<template>
+  <view v-if="async">
+    <addList v-if="!editStatus" :addressType="addressType" @add="add" ref="addList"></addList>
+    <addEdit v-if="editStatus" :addressType="addressType" ref="addEdit" @afterSave="afterSave" @afterDelete="afterDelete"></addEdit>
+  </view>
+</template>
+<script>
+import addList from './styles/list.nvue'
+import addEdit from './styles/edit.nvue'
+export default {
+  components: {
+    addList,
+    addEdit
+  },
+  props: {
+    widget: {},
+    option: {}
+  },
+  data() {
+    return {
+      addressType: 'admin', // 分为管理admin,选择select
+      editStatus: false, // 是否为编辑状态
+      async: false
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      var type = this.widget.route.type
+      if (type === 'select') {
+        this.addressType = 'select'
+      }
+      this.async = true
+      this.$nextTick(() => {
+        if (this.$refs.addList) {
+          this.$refs.addList.init(this.addressType)
+        }
+      })
+    },
+    // 添加地址或编辑地址
+    add(data) {
+      this.editStatus = true
+      this.$nextTick(() => {
+        if (this.$refs.addEdit) {
+          this.$refs.addEdit.init(data)
+        }
+      })
+    },
+    // 添加或保存地址
+    afterSave() {
+      this.editStatus = false
+      if (this.addressType === 'select') {
+        uni.$emit('global_select_address')
+        uni.navigateBack({
+          delta: 1
+        })
+      } else {
+        this.init()
+      }
+    },
+    afterDelete() {
+      this.editStatus = false
+      this.init()
+    }
+  }
+}
+</script>

@@ -1,0 +1,27 @@
+[
+	{
+		"name":"推荐人",
+		"placeholder":"请输入推荐人手机号",
+		"type":"text"
+	},
+	{
+		"name":"姓名",
+		"placeholder":"请输入姓名",
+		"type":"text"
+	},
+	{
+		"name":"手机号",
+		"placeholder":"请输入手机号",
+		"type":"text"
+	},
+	{
+		"name":"验证码",
+		"placeholder":"请输入验证码",
+		"type":"code"
+	},
+	{
+		"name":"密码",
+		"placeholder":"请输入密码",
+		"type":"password"
+	}
+]

@@ -1,0 +1,9 @@
+/* 所有终端样式  */
+@import './css/global.scss';
+
+/* #ifndef APP-PLUS-NVUE */
+@import './sass/_index.scss';
+@import './css/napp.scss';
+@import '../../static/iconfont/css/iconfount.scss';
+/* @import './../border/index.scss'; */
+/* #endif */

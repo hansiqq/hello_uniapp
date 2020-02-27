@@ -1,0 +1,22 @@
+<template>
+  <zk-material-quan v-if="async"></zk-material-quan>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      async: false
+    }
+  },
+  onShow() {
+    if (ala.userCheckLogin() === true) {
+      this.async = true
+    }
+  },
+  onReady() {
+    ala.uniSubNVue('twonav')
+  }
+}
+</script>

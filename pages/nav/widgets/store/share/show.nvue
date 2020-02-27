@@ -1,0 +1,32 @@
+<template>
+	<view class="share-show">
+		<uni-popup ref="uniPopup">
+			<button @click="clickShare">分享a</button>
+		</uni-popup>
+	</view>
+</template>
+
+<script>
+	import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup'
+	export default {
+		components: {
+			uniPopup
+		},
+		mounted() {
+			this.$nextTick(() => {
+				this.$refs.uniPopup.open()
+			})
+		},
+		methods: {
+			clickShare() {
+
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.share-show{
+		
+	}
+</style>

@@ -1,0 +1,96 @@
+<template>
+	<view class="news-list">
+		<view v-if="viewModel.contentType == 1" class="news-list-msg" :style="{width: screenWidth * 0.6 + 'px'}">
+			<view class="news-list-msg-show">
+				<view v-html="viewModel.message"></view>
+			</view>
+		</view>
+		<view v-if="viewModel.contentType == 2" @click="showPop(viewModel)" class="news-list-video">
+			<view class="news-list-video-cont">
+				<image class="news-list-video-cont-image" src="/static/tabbar/t22.png" />
+			</view>
+		</view>
+		<image :src="'http://b-api.baoduoduo.club' + viewModel.message" @click="showPop(viewModel)" v-if="viewModel.contentType == 3"
+		 :style="{ width: imageWidth + 'px', height: imageHeight + 'px' }" class="news-list-image" />
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		props: {
+			viewModel: {}
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				imageWidth: 0,
+				imageHeight: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				if (this.viewModel.contentType === 3) {
+					uni.getImageInfo({
+						src: 'http://b-api.baoduoduo.club' + this.viewModel.message,
+						success: res => {
+							if (res.width > this.screenWidth * 0.45) {
+								var sclice = res.width - this.screenWidth * 0.45
+								var num = 1 - sclice / res.width
+								this.imageHeight = num * res.height
+								this.imageWidth = num * res.width
+							}
+						}
+					})
+				}
+			},
+			showPop(data) {
+				this.$emit('showPop', data)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	.news-list {
+		&-msg {
+			flex-direction: row;
+
+			&-show {
+				padding: 10px;
+				background-color: #FFFFFF;
+				border-radius: 10px;
+				font-size: 14px;
+			}
+		}
+
+		&-video {
+			width: 130px;
+			height: 130px;
+			align-items: center;
+			justify-content: center;
+
+			&-cont {
+				width: 30px;
+				height: 30px;
+				border-radius: 50%;
+				justify-content: center;
+				align-items: center;
+				background-color: rgba($color: #000000, $alpha: 0.6);
+
+				&-image {
+					width: 20px;
+					height: 20px;
+				}
+			}
+		}
+
+		&-image {
+			border-radius: 10px;
+		}
+	}
+</style>

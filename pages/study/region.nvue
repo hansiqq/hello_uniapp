@@ -1,0 +1,41 @@
+<template>
+	<view class="study-detail">
+		<image class="study-detail-image" :style="{width: screenWidth - 30 + 'px'}" src="http://img.baoduoduo.club/study/detail-show.png" />
+		<detailList style="margin-bottom: 10px;"></detailList>
+		<zk-course-list :viewModel="detailList"></zk-course-list>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	import detailList from './widgets/detail-list'
+	import detailJson from './json/detail.json'
+	export default {
+		components: {
+			detailList
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				detailList: detailJson
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.study-detail{
+		&-image {
+			margin: 10px 15px;
+			height: 150px;
+		}
+	}
+</style>

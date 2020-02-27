@@ -1,0 +1,67 @@
+<template>
+	<view class="tabbar-two" :style="{width: screenWidth + 'px'}">
+		<view class="tabbar-two-show">
+			<image src="http://img.baoduoduo.club/study/tab-user-nav.png" :style="{width: screenWidth + 'px', height: statusHeight + 51 + 'px'}">
+		</view>
+		<view class="tabbar-two-cont" :style="{marginTop: statusHeight + 'px'}">
+			<image class="tabbar-two-cont-left" src="http://img.baoduoduo.club/study/left.png" />
+			<text class="tabbar-two-cont-center">个人中心</text>
+			<view class="tabbar-two-cont-right"></view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				statusHeight: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				this.statusHeight = ala.statusHeight()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.tabbar-two{
+		/* #ifndef APP-NVUE */ 
+		position: fixed;
+		z-index: 99;
+		/* #endif */ 
+		padding: 0 15px;
+		&-show{
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		&-cont{
+			height: 51px;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			&-left{
+				height: 16px;
+				width: 9px;
+				border-radius: 50%;
+			}
+			&-center{
+				font-size: 16px;
+				color: #FFFFFF;
+				font-weight: 600;
+			}
+			&-right{
+				width: 9px;
+			}
+		}
+	}
+</style>

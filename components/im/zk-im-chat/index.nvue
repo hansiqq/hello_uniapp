@@ -1,0 +1,163 @@
+<template>
+  <view class="zk-im-chat">
+    <view :style="'height:' + statusHeight + 'px;background: rgba(0,0,0,0.3);'"></view>
+    <view class="zk-im-chat-head">
+      <view class="head-left">
+        <x-icon name="icon-white" size="16"></x-icon>
+      </view>
+      <view class="head-center">麦速达旗舰店</view>
+      <view class="head-right">
+        <view class="head_store">店铺</view>
+        <x-icon name="icon-adduser" size="18"></x-icon>
+      </view>
+    </view>
+    <scroll-view class="zk-im-caht-scroll" :show-scrollbar="false" :scroll-top="scrollTop" @click="hiddenFoot" scroll-y :style="'height:' + scrollHeight + 'px;'">
+      <view class="scroll-view-chat" v-for="(item, index) in viewModel" :key="index">
+        <listItem :widget="item" :userId="userId"></listItem>
+      </view>
+    </scroll-view>
+    <view class="zk-im-chat-foot" :style="'height:' + footHeight + 'px;'">
+      <footItem ref="footItem" @toolClick="toolClick" @change="change" @showFoot="showFoot"></footItem>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import listItem from './styles/list-item'
+import footItem from './styles/foot-item'
+import im from './im'
+import styles from './styles'
+import actions from './actives'
+export default {
+  components: {
+    listItem,
+    footItem
+  },
+  data() {
+    return {
+      scrollHeight: 0, // 聊天区域信息展示区高度
+      footHeight: 50, // 底部高度
+      scrollTop: 0, // 初始滚动距离,
+      userInfo: {}, // 存储当前用户，
+      viewModel: [], // 存储消息记录
+      connection: '',
+      userId: '',
+      targetId: '',
+      pageData: '',
+      statusHeight: 0
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      if (ala.client() === 'AppPlus') {
+        this.statusHeight = ala.getSystemInfoSync().statusBarHeight
+      }
+      this.scrollHeight = ala.screenHeight() - 90
+      this.userId = ala.userId()
+      if (this.userId === 6) {
+        this.targetId = 5
+      } else {
+        this.targetId = 6
+      }
+      im.startChat(this)
+    },
+    // 聊天室置低
+    scrollBottom() {
+      var query = ala.getQuery(this, '.zk-im-caht-scroll')
+      query.exec(res => {
+        this.scrollTop = res[0][0].height
+      })
+    },
+    showFoot(data) {
+      const { type, isMoreFoot } = data
+      if (isMoreFoot) {
+        this.footHeight = 50
+        this.scrollHeight = this.scrollHeight + 200
+      } else if (type !== 'input') {
+        this.footHeight = 250
+        this.scrollHeight = this.scrollHeight - 200
+      }
+    },
+    hiddenFoot() {
+      // this.$refs.footItem.showFoot()
+    },
+    // 发送消息
+    change(val, type = 1) {
+      // if(this.$client())
+      var para = styles.getPara(this, { content: val, contType: type })
+      if (ala.client() === 'WapH5') {
+        this.connection.invoke('SendMessage', para)
+      } else {
+        this.pageData = para
+        this.connection.sendMessage(JSON.stringify(para))
+      }
+      this.$refs.footItem.value = ''
+    },
+    // 底部功能触发
+    toolClick(data) {
+      actions.toolClick(this, data)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+// #ifndef APP-PLUS
+// app-plus-css
+.zk-im-chat {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  //  box-sizing: border-box;
+  .zk-im-chat-head {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    background: #f2f2f2;
+    .head-right,
+    .head-left {
+      width: 75px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+    }
+    .head-right {
+      .head_store {
+        display: inline-block;
+        padding: 1px 8px;
+        color: #fff;
+        border-radius: 20px;
+        background: linear-gradient(to right, #fe8902, #fb5500);
+      }
+      justify-content: space-between;
+    }
+    .head-center {
+      flex-grow: 1;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+    }
+  }
+  .zk-im-caht-scroll {
+    width: 100%;
+    background: #e5e5e5;
+    transition: 0.3s;
+  }
+  .zk-im-chat-foot {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #f2f2f2;
+    transition: 0.3s;
+    overflow: hidden;
+  }
+}
+// app-plus-css
+// #endif
+</style>

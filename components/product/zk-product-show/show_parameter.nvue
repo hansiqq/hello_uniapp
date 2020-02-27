@@ -1,0 +1,435 @@
+<template>
+  <view>
+    <view class="show-parameter">
+      <view class="show-parameter-title" @click="showSkuBox()">
+        <text class="show-parameter-title-left">已选</text>
+        <view class="show-parameter-title-right">
+          <text class="show-parameter-title-right-text">{{ selectSku.propertyValueDesc }}</text>
+          <x-icon name="icon-jiantou" size="15"></x-icon>
+        </view>
+      </view>
+      <view class="show-parameter-list" :style="{ width: screenWidth + 'px', height: screenHeight + 44 + 'px' }" v-if="popupSale">
+        <view class="show-parameter-list-show" @click.stop="popupSale = false" :style="{ width: screenWidth + 'px', height: screenHeight * 0.4 + 'px' }"></view>
+        <view class="show-parameter-list-cont" :style="{ width: screenWidth + 'px', height: screenHeight * 0.6 + 'px' }">
+          <view class="show-parameter-list-cont-title">
+            <image :src="productView.thumbnailUrl" class="show-parameter-list-cont-title-left" />
+            <view class="show-parameter-list-cont-title-right" :style="{ width: screenWidth - 130 + 'px' }">
+              <text class="show-parameter-list-cont-title-right-title">{{ productView.name }}</text>
+              <text class="show-parameter-list-cont-title-right-price">￥{{ productView.productExtensions.productSkus[0].displayPrice }}</text>
+              <text class="show-parameter-list-cont-title-right-stock">库存：{{ selectSku.stock }}</text>
+              <text class="show-parameter-list-cont-title-right-stock">货号：{{ selectSku.bn }}</text>
+            </view>
+          </view>
+          <view class="show-parameter-list-cont-center">
+            <view v-for="(item, index) in productView.productExtensions.productCategory.salePropertys" :key="index">
+              <text class="show-parameter-list-cont-center-title">{{ item.name }}</text>
+              <view class="show-parameter-list-cont-center-ul">
+                <text class="show-parameter-list-cont-center-list" :class="{ showActive: checker[index] === sIndex }" @click="selectPropertys(sale, index, sIndex)" v-for="(sale, sIndex) in item.propertyValues" :key="sIndex">{{ sale.valueAlias }}</text>
+              </view>
+            </view>
+          </view>
+          <view class="show-parameter-list-cont-bottom">
+            <text class="show-parameter-list-cont-bottom-left">购买数量</text>
+            <view class="show-parameter-list-cont-bottom-right">
+              <x-number :value="buyCount" :multiplication="buCountMin" v-on:change="onNumberChange2" :min="buCountMin" :max="buCountMax"></x-number>
+            </view>
+          </view>
+          <view class="show-parameter-list-bottom">
+            <text class="show-parameter-list-bottom-left" @click="addCart()" v-if="isShowCart" :style="{ width: (screenWidth - 20) / 2 + 'px' }">加入采购单</text>
+            <text class="show-parameter-list-bottom-right" @click="buyProduct()" :style="{ width: (screenWidth - 20) / 2 + 'px' }">立即采购</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import ala from '@/service/ala'
+import host from '@/service/config.js'
+// import { setTimeout } from 'timers'
+export default {
+  props: {
+    productView: {},
+    isActivity: {},
+    timeLimit: {},
+    widget: {}
+  },
+  data() {
+    return {
+      async: false,
+      popupSale: false,
+      popupParameter: false,
+      saleValue: '',
+      selectSku: '', // 选择的商品Sku
+      selectSkuDisplayPrice: '', // 选择sku的显示价格
+      buyCount: 1, // 购买数量
+      buCountMin: 1,
+      buCountMax: Infinity,
+      saleItems: [], // 商品规格属性,
+      checker: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      isClient: false,
+      siteUrl: '',
+      isShowCart: true,
+      screenHeight: '', // 屏幕高度
+      screenWidth: '', // 屏幕宽度
+      inputValue: 10
+    }
+  },
+  mounted() {
+    this.screenHeight = ala.screenHeight()
+    this.screenWidth = ala.screenWidth()
+    this.inint()
+    this.$nextTick(function() {
+      this.$on('childMethod', function(boo) {
+        this.popupSale = boo
+      })
+    })
+  },
+  onLoad() {
+    this.inint()
+  },
+  methods: {
+    showSkuBox() {
+      this.popupSale = true
+      if (ala.user().gradeName !== '免费会员') {
+        this.popupSale = true
+      }
+    },
+    showpopupSale() {
+      this.popupSale = false
+    },
+    inint() {
+      if (ala.client() === 'WeChatLite' || ala.client() === 'AppPlus') {
+        this.isClient = true
+      }
+      this.selectSku = this.productView.productExtensions.productSkus[0]
+      this.selectSkuDisplayPrice = this.productView.productExtensions.productSkus[0].displayPrice
+      for (var i = 0; i < this.productView.productExtensions.productCategory.salePropertys.length; i++) {
+        this.saleItems[i] = this.productView.productExtensions.productCategory.salePropertys[i].propertyValues[0]
+      }
+      this.changSku()
+      this.siteUrl = host.host
+      this.gradePrice()
+      if (this.productView.productActivityExtension.userPermissions.singleBuyCountMin !== 0) {
+        this.buCountMin = Number(this.productView.productActivityExtension.userPermissions.singleBuyCountMin)
+        this.buyCount = this.buCountMin
+      }
+      if (this.productView.productActivityExtension.userPermissions.singleBuyCountMax !== 0) {
+        this.buCountMax = Number(this.productView.productActivityExtension.userPermissions.singleBuyCountMax)
+      }
+      this.async = true
+      if (this.widget && this.widget.value) {
+        if (this.widget.value.isShowCart !== undefined || this.widget.value.isShowCart !== '' || this.widget.value.isShowCart !== null) {
+          this.isShowCart = this.widget.value.isShowCart
+        }
+      }
+    },
+    gradePrice() {
+      if (this.timeLimit.isTimeLimit) {
+        var price
+        var that = this
+        this.selectSku.gradePriceList.forEach(grade => {
+          if (grade.id === that.$user.loginUser().gradeId) {
+            price = grade.price
+          }
+        })
+        this.selectSkuDisplayPrice = price
+      }
+    },
+    onNumberChange2(value) {
+      this.buyCount = value
+    },
+    selectPropertys(item, index, sindex) {
+      this.saleItems[index] = item
+      this.$set(this.checker, [index], sindex)
+      this.changSku()
+    },
+    changSku() {
+      this.selectSku = this.getSku() // 根据specSn获取商品的规格
+      this.saleValue = this.selectSku.propertyValueDesc
+      this.gradePrice()
+    },
+    getSku() {
+      var specSn = ''
+      this.saleItems.forEach(element => {
+        specSn += element.id + '|'
+      })
+      var productViewTemps = this.productView
+      var skus = productViewTemps.productExtensions.productSkus
+      var sku = ''
+      for (var i = 0; i < skus.length; i++) {
+        if (skus[i].specSn === specSn) {
+          sku = skus[i]
+          this.selectSkuDisplayPrice = skus[i].displayPrice
+        }
+      }
+      return sku
+    },
+    async addCart() {
+      var that = this
+      if (ala.user() === null) {
+        if (ala.client() !== 'WeChatLite') {
+          uni.showModal({
+            title: '提示',
+            content: '请先登录',
+            showCancel: false,
+            confirmText: '确定',
+            success: function(res) {
+              if (res.confirm) {
+                ala.to('/user/login')
+              }
+            }
+          })
+        } else {
+          uni.showModal({
+            title: '提示',
+            content: '请先登录',
+            showCancel: false,
+            confirmText: '确定',
+            success: function(res) {
+              if (res.confirm) {
+                ala.to('/user/login')
+              }
+            }
+          })
+        }
+      } else if (this.selectSku.stock === 0) {
+        ala.toastWarn('库存不足')
+      } else {
+        let params = {
+          ProductSkuId: this.selectSku.id,
+          productId: this.productView.id,
+          storeId: this.productView.storeId,
+          count: this.buyCount,
+          userId: ala.user().id
+        }
+        var message = await ala.httpPost('api/cart/addcart', params)
+        if (message) {
+          ala.toastSuccess('成功加入购物车')
+          this.popupSale = false
+        }
+      }
+    },
+    async buyProduct() {
+      this.saleItems = this.saleItems
+      var that = this
+      if (this.selectSku.stock === 0) {
+        ala.toastWarn('库存不足')
+        return false
+      }
+      if (!ala.user()) {
+        if (this.isClient) {
+          ala.to('/user/login')
+        } else {
+          uni.showModal({
+            title: '提示',
+            content: '请先登录',
+            showCancel: false,
+            confirmText: '确定',
+            success: res => {
+              if (res.confirm) {
+                ala.to('/user/login')
+              }
+            }
+          })
+        }
+      } else {
+        let buyProductInfo = [
+          {
+            ProductSkuId: this.selectSku.id,
+            Count: this.buyCount,
+            ProductId: this.productView.id,
+            storeId: this.productView.storeId,
+            userId: ala.user().id
+          }
+        ]
+        ala.localRemove('buyProductInfo')
+        ala.localSet('buyProductInfo', buyProductInfo)
+        ala.to('/order/buy')
+      }
+    }
+  }
+}
+</script>
+<style lang="scss">
+.show-parameter {
+  &-title {
+    height: 46px;
+    background-color: #ffffff;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 10px;
+    justify-content: space-between;
+    &-left {
+      font-size: 12px;
+      color: #666666;
+    }
+    &-right {
+      height: 46px;
+      flex-direction: row;
+      align-items: center;
+      &-text {
+        font-size: 14px;
+      }
+    }
+  }
+  &-list {
+    position: fixed;
+    z-index: 998;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    &-show {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    &-cont {
+      position: fixed;
+      z-index: 999;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      bottom: 0;
+      left: 0;
+      background-color: #ffffff;
+      &-title {
+        border-bottom-color: #e5e5e5;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        padding: 15px 10px;
+        flex-direction: row;
+        justify-content: space-between;
+        &-left {
+          border-radius: 5px;
+          width: 95px;
+          height: 95px;
+        }
+        &-right {
+          &-title {
+            font-size: 14px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            /* #ifndef APP-PLUS-NVUE */
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            /* #endif */
+            /* #ifdef APP-PLUS-NVUE */
+            lines: 2;
+            /* #endif */
+          }
+          &-price {
+            color: $gl-themeColor;
+            font-weight: 700;
+            font-size: 16px;
+            margin-top: 3px;
+          }
+          &-stock {
+            font-size: 14px;
+            color: #575962;
+            margin-top: 3px;
+          }
+        }
+      }
+      &-center {
+        padding: 10px;
+        border-bottom-color: #e5e5e5;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        &-title {
+          font-size: 14px;
+        }
+        &-ul {
+          flex-direction: row;
+          flex-wrap: wrap;
+          padding-bottom: 5px;
+        }
+        &-list {
+          font-size: 12px;
+          padding: 4px 5px;
+          margin-top: 10px;
+          margin-right: 10px;
+          background-color: #007aff;
+          background-color: #e5e5e5;
+          border-radius: 5px;
+        }
+      }
+      &-bottom {
+        height: 50px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+        &-left {
+          font-size: 12px;
+        }
+        &-right {
+          // height: 32px;
+          // flex-direction: row;
+          // border-width: 1px;
+          // border-color: #E5E5E5;
+          // border-style: solid;
+          // border-radius: 3px;
+        }
+      }
+    }
+
+    &-bottom {
+      padding: 0 10px;
+      height: 50px;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+      flex-direction: row;
+      align-items: center;
+      &-right,
+      &-left {
+        height: 35px;
+        font-size: 14px;
+        color: #ffffff;
+        text-align: center;
+        line-height: 35px;
+      }
+      &-left {
+        border-bottom-left-radius: 30px;
+        border-top-left-radius: 30px;
+        background-color: #ff999a;
+      }
+      &-right {
+        border-bottom-right-radius: 30px;
+        border-top-right-radius: 30px;
+        background-color: $gl-themeColor;
+      }
+    }
+  }
+  &-num-plus {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+  &-num-minus {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+  &-num-plus,
+  &-num-minus {
+    text-align: center;
+    line-height: 30px;
+    width: 34px;
+    height: 30px;
+    color: #999999;
+    background-color: #f8f8f8;
+  }
+  &-num-value {
+    width: 40px;
+    height: 30px;
+    background-color: #ffffff;
+    text-align: center;
+    font-size: 14px;
+  }
+}
+.showActive {
+  color: #ffffff !important;
+  background-color: $gl-themeColor !important;
+}
+</style>

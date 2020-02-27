@@ -1,0 +1,80 @@
+<template>
+  <view class="x-region" v-if="async" :style="{ width: screenWidth - 20 + 'px' }">
+    <view class="x-region-form">
+      <text class="x-region-form-left">选择地址:</text>
+      <view class="x-region-form-right" :style="{ width: screenWidth - 120 + 'px' }" @click="clickCity">
+        <text class="x-region-form-right-text" v-if="!widgetModel">请选择地址</text>
+        <text class="x-region-form-right-text" v-else>{{ widgetModel.label }}</text>
+      </view>
+    </view>
+    <cityPicker ref="cityPicker" v-model="viewModel" @onConfirm="onConfirm"></cityPicker>
+  </view>
+</template>
+
+<script>
+import cityPicker from './city-picker'
+import ala from '@/service/ala'
+export default {
+  components: {
+    cityPicker
+  },
+  model: {
+    prop: 'dataModel',
+    event: 'change'
+  },
+  props: {
+    dataModel: {}
+  },
+  data() {
+    return {
+      viewModel: '',
+      widgetModel: null,
+      async: false,
+      screenWidth: 0
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+      this.viewModel = this.dataModel
+      this.async = true
+    },
+    onConfirm(e) {
+      this.widgetModel = e
+      this.viewModel = e.cityCode
+      this.$emit('change', this.viewModel)
+    },
+    clickCity() {
+      this.$refs.cityPicker.show()
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.x-region {
+  height: 60px;
+  border-top-color: #eee;
+  border-top-width: 0.5px;
+  border-top-style: solid;
+  &-form {
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    &-left {
+      width: 100px;
+      font-size: 15px;
+      font-weight: 200;
+    }
+    &-right {
+      &-text {
+        color: grey;
+        font-size: 15px;
+      }
+    }
+  }
+}
+</style>

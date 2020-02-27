@@ -1,0 +1,37 @@
+<template>
+	<view>
+		<courseVideo></courseVideo>
+		<courseDetail></courseDetail>
+		<view style="height: 10px;background-color: #FCF9FC;"></view>
+		<shotList></shotList>
+		<view style="height: 10px;background-color: #FCF9FC;"></view>
+		<courseList></courseList>
+		<view style="height: 10px;background-color: #F0F0F0;"></view>
+		<courseMsg></courseMsg>
+		<view style="height: 60px;"></view>
+		<bottom></bottom>
+	</view>
+</template>
+
+<script>
+	import courseVideo from './styles/video'
+	import courseDetail from './styles/detail'
+	import shotList from './styles/shot-list'
+	import courseList from './styles/course-list'
+	import courseMsg from './styles/course-msg'
+	import bottom from './styles/bottom'
+	export default {
+		components: {
+			courseVideo,
+			courseDetail,
+			shotList,
+			courseList,
+			courseMsg,
+			bottom
+		}
+	}
+</script>
+
+<style>
+
+</style>

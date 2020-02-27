@@ -1,0 +1,54 @@
+<template>
+	<view class="select-notice">
+		<view class="select-notice-cont">
+			<view class="select-notice-cont-left"></view>
+			<view class="select-notice-cont-right">
+				<text class="select-notice-cont-right-list"># 欧莱雅 # 限量100件出售(上下滚动消息样式)</text>
+				<text class="select-notice-cont-right-list"># 维达纸巾 # 限量1000件出售，预购从速</text>
+				<text class="select-notice-cont-right-list"># 飘柔洗发护发套装 # 限量100件出售，预购从速</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	export default {
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.select-notice{
+		padding: 10px;
+		&-cont{
+			padding: 5px 0;
+			background-color: #CA0200;
+			border-radius: 10px;
+			flex-direction: row;
+			&-left{
+				width: 50px;
+			}
+			&-right{
+				&-list{
+					height: 22px;
+					line-height: 22px;
+					font-size: 12px;
+					color: rgba($color: #ffffff, $alpha: 0.8);
+				}
+			}
+		}
+	}
+</style>

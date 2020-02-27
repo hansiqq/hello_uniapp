@@ -1,0 +1,60 @@
+<template>
+  <view class="user-list">
+    <view class="user-list-ul">
+      <view class="user-list-list" @click="linkTo(item)" v-for="(item, index) in gridList" :key="index" :style="{ width: (screenWidth - 30) / 4 + 'px' }">
+        <image class="user-list-list-image" :src="item.image" />
+        <text class="user-list-list-text">{{ item.name }}</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import gridJson from '../json/grid-list.json'
+export default {
+  data() {
+    return {
+      screenWidth: 0,
+      gridList: gridJson
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+    },
+	linkTo(data) {
+		if (data.url) {
+			ala.to(data.url)
+		}
+	}
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.user-list {
+  padding: 0 10px;
+  &-ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  &-list {
+    height: 80px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    &-image {
+      width: 40px;
+      height: 40px;
+    }
+    &-text {
+      font-size: 13px;
+      color: #343434;
+    }
+  }
+}
+</style>

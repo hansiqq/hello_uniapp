@@ -1,0 +1,65 @@
+<template>
+  <view>
+    <view class="x-divider"></view>
+    <view class="show-intro">
+      <text class="show-intro-title" id="showRecommended">商品详情</text>
+      <div class="show-intro-img">
+        <rich-text :nodes="showHtml"></rich-text>
+      </div>
+      <view class="x-divider"></view>
+    </view>
+  </view>
+</template>
+<script>
+export default {
+  props: {
+    productView: {}
+  },
+  mounted() {
+    this.init()
+  },
+  data() {
+    return {
+      showHtml: ''
+    }
+  },
+  onLoad() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.showHtml = this.productView.detail.intro
+      // eslint-disable-next-line
+      this.showHtml = this.showHtml.replace(/\<img/gi, '<img style="width:100%;height:auto;display:block;"')
+      // eslint-disable-next-line
+      this.showHtml = this.showHtml.replace(/\<p/gi, '<p style="line-height:0;"')
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+
+
+.show-intro {
+  &-title {
+    height: 35px;
+    color: $uni-color-title;
+    text-align: center;
+    line-height: 35px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  &-img {
+    // background-color: #09BB07;
+	padding: 0px 25px;
+  }
+}
+.x-divider {
+	background-color: #f7f7f7;
+  height: 10px;
+  line-height: 10px;
+  padding: 0;
+  margin: 0;
+}
+</style>

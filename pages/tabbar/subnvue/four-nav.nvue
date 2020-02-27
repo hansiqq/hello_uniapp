@@ -1,0 +1,81 @@
+<template>
+	<view class="four-nav" :style="{width: screenWidth + 'px'}">
+		<image class="four-nav-show" :style="{width: screenWidth + 'px', height: statusHeight + 45 + 'px'}" src="http://img.baoduoduo.club/material/nav_bg.png" />
+		<view class="four-nav-cont" :style="{marginTop: statusHeight + 'px'}">
+			<view class="four-nav-cont-right">
+				<text class="four-nav-cont-right-text"></text>
+			</view>
+			<text class="four-nav-cont-center">圈圈</text>
+			<view class="four-nav-cont-right" @click="linkTo">
+				<text class="four-nav-cont-right-text">客服服务</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				statusHeight: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				this.statusHeight = ala.statusHeight()
+			},
+			linkTo() {
+				ala.to('/pages/customer/index')
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.four-nav{
+		/* #ifndef APP-NVUE */ 
+		position: fixed;
+		z-index: 99;
+		/* #endif */ 
+		padding: 0 15px;
+		background-color: #FFFFFF;
+		// background-image: linear-gradient(to right, #F42E14, #D0281D);
+		&-show{
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		&-cont{
+			height: 45px;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			&-left{
+				height: 16px;
+				width: 9px;
+				border-radius: 50%;
+			}
+			&-center{
+				font-size: 16px;
+				color: #FFFFFF;
+				font-weight: 600;
+			}
+			&-right{
+				width: 80px;
+				&-text{
+					margin-left: 5px;
+					font-size: 14px;
+					color: #FFFFFF;
+					text-align: right;
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+</style>

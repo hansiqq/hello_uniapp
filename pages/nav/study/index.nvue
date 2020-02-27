@@ -1,0 +1,16 @@
+<template>
+  <view>
+    店主学习页面
+  </view>
+</template>
+
+<script>
+export default {
+  data() {
+    return {}
+  },
+  methods: {}
+}
+</script>
+
+<style lang="scss" scoped></style>

@@ -1,0 +1,167 @@
+<template>
+	<view class="top">
+		<image class="top-show" :style="{width: screenWidth + 'px'}" src="http://img.baoduoduo.club/study/clock_bg.png" />
+		<view class="top-title" :style="{width: screenWidth + 'px'}">
+			<view class="top-title-left">
+				<image src="http://img.baoduoduo.club/study/clock-artr.png" class="top-title-left-image" />
+				<view class="top-title-left-right">
+					<text class="top-title-left-right-title">显示用户昵称</text>
+					<text class="top-title-left-right-bottom">荣誉勋章</text>
+				</view>
+			</view>
+			<text class="top-title-right">立即打卡</text>
+		</view>
+		<view class="top-center">
+			<view class="top-center-cont">
+				<image src="http://img.baoduoduo.club/study/clock-cal.png" class="top-center-show" />
+				<view class="top-center-cont-title">
+					<text class="top-center-cont-name">战神锻造</text>
+					<view class="top-center-cont-center">
+						<text class="top-center-cont-center-num">8</text>
+						<text class="top-center-cont-center-day">天</text>
+					</view>
+					<text class="top-center-cont-botton">学习赚钱分享也赚钱</text>
+				</view>
+			</view>
+		</view>
+		<calendarItem></calendarItem>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	import calendarItem from './calendar-item'
+	export default {
+		components: {
+			calendarItem
+		},
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.top {
+		position: relative;
+		height: 355px;
+		background-color: #F7F6F9;
+		&-show{
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 320px;
+		}
+		&-title{
+			padding-top: 10px;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: flex-end;
+			height: 70px;
+			&-left{
+				padding-left: 15px;
+				flex-direction: row;
+				padding-bottom: 10px;
+				&-image {
+					width: 35px;
+					height: 35px;
+					border-radius: 50%;
+				}
+				&-right{
+					padding-left: 10px;
+					padding-top: 6px;
+					&-title{
+						font-size: 15px;
+						color: #FFFFFF;
+					}
+					&-bottom {
+						margin-top: 5px;
+						font-size: 12px;
+						color: #FFFFFF;
+						height: 18px;
+						line-height: 18px;
+						padding-left: 10px;
+						width: 100px;
+						border-radius: 30px;
+						background-image: linear-gradient(to right, #FF5050, #FE6E3C);
+					}
+				}
+			}
+			&-right {
+				width: 100px;
+				height: 35px;
+				color: #FFFFFF;
+				font-size: 15px;
+				line-height: 35px;
+				text-align: center;
+				border-width: 1px;
+				border-style: solid;
+				border-color: #FFFFFF;
+				border-right-width: 0;
+				border-top-left-radius: 30px;
+				border-bottom-left-radius: 30px;
+			}
+		}
+		&-center{
+			height: 140px;
+			position: relative;
+			flex-direction: row;
+			justify-content: center;
+			
+			&-cont{
+				position: relative;
+				bottom: 10px;
+				width: 110px;
+				height: 140px;
+				&-title{
+					margin-top: 45px;
+					height: 95px;
+					width: 110px;
+					padding: 5px 0;
+					justify-content: space-between;
+				}
+				&-center{
+					flex-direction: row;
+					justify-content: center;
+					align-items: center;
+					&-num{
+						font-size: 31px;
+						color: #343434;
+					}
+					&-day{
+						color: #343434;
+						font-size: 12px;
+						padding-top: 10px;
+					}
+				}
+				&-botton{
+					font-size: 11px;
+					color: #343434;
+					text-align: center;
+				}
+				&-name{
+					font-size: 14px;
+					color: #999999;
+					text-align: center;
+				}
+			}
+			&-show{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 110px;
+				height: 140px;
+			}
+		}
+	}
+</style>

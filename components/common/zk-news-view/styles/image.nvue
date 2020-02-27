@@ -1,0 +1,73 @@
+<template>
+	<view class="news-image">
+			<image class="news-image-show" :style="{width: screenWidth-30 + 'px'}" src="http://img.baoduoduo.club/material/image-bg.png" />
+		<view class="news-image-cont">
+			<text class="news-image-cont-text">打开系统通知，不错过任何机会哦</text>
+			<text class="news-image-cont-open">去开启</text>
+			<!-- <view class="news-image-cont-close"></view> -->
+			<image class="news-image-cont-close" src="http://img.baoduoduo.club/material/image-close.png" />
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth() 
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.news-image{
+		margin: 0 15px;
+		position: relative;
+		margin-bottom: 10px;
+		&-show{
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 48px;
+			border-radius: 5px;
+		}
+		&-cont{
+			height: 48px;
+			border-radius: 5px;
+			padding: 0 10px;
+			flex-direction: row;
+			align-items: center;
+			justify-content: flex-end;
+			&-text{
+				font-size: 13px;
+				color: #FFFFFF;
+			}
+			&-open{
+				margin-left: 20px;
+				height: 20px;
+				line-height: 20px;
+				padding: 0 10px;
+				background-color: #FFFFFF;
+				border-radius: 30px;
+				font-size: 13px;
+				color: #AD2029;
+			}
+			&-close{
+				margin-left: 10px;
+				width: 14px;
+				height: 14px;
+				border-radius: 50%;
+			}
+		}
+	}
+</style>

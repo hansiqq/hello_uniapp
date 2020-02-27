@@ -1,0 +1,183 @@
+<template>
+  <view class="add-edit" v-if="async">
+    <view class="add-edit-ul">
+      <view class="add-edit-list" :style="{ width: screenWidth - 20 + 'px' }">
+        <text class="add-edit-list-left">姓名：</text>
+        <view class="add-edit-list-right" :style="{ width: screenWidth - 120 + 'px' }">
+          <input class="add-edit-list-right-input" placeholder="请输入姓名" :style="{ width: screenWidth - 120 + 'px' }" v-model="addressModel.name" />
+        </view>
+      </view>
+      <view class="add-edit-list" :style="{ width: screenWidth - 20 + 'px' }">
+        <text class="add-edit-list-left">电话：</text>
+        <view class="add-edit-list-right" :style="{ width: screenWidth - 120 + 'px' }">
+          <input class="add-edit-list-right-input" placeholder="请输入电话" :style="{ width: screenWidth - 120 + 'px' }" v-model="addressModel.mobile" />
+        </view>
+      </view>
+      <view>
+        <x-region v-model="addressModel.regionId"></x-region>
+      </view>
+      <view class="add-edit-list" :style="{ width: screenWidth - 20 + 'px' }">
+        <text class="add-edit-list-left">详细地址：</text>
+        <view class="add-edit-list-right" :style="{ width: screenWidth - 120 + 'px' }">
+          <input class="add-edit-list-right-input" placeholder="请输入详细地址" :style="{ width: screenWidth - 120 + 'px' }" v-model="addressModel.address" />
+        </view>
+      </view>
+      <view class="add-edit-list" :style="{ width: screenWidth - 20 + 'px' }">
+        <text class="add-edit-list-left">是否默认：</text>
+        <view class="add-edit-list-right-defualt" :class="{ 'add-edit-list-right-check': addressModel.isDefault == true }" @click="addressModel.isDefault = !addressModel.isDefault">
+          <view class="add-edit-list-right-defualt-poist" :class="{ 'add-edit-list-right-defualt-check': addressModel.isDefault == true }"></view>
+        </view>
+      </view>
+      <view class="add-edit-del" @click="deleteClick" :style="{ width: screenWidth - 20 + 'px' }" v-if="isEdit">
+        <text class="add-edit-del-text">删除收货地址</text>
+      </view>
+    </view>
+    <view class="add-edit-bottom" @click="sumbit()" :style="{ width: screenWidth - 100 + 'px' }">
+      <text class="add-edit-bottom-text">保存地址</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import api from '@/service/api'
+export default {
+  data() {
+    return {
+      addressModel: {},
+      async: false,
+      screenWidth: 0,
+      isEdit: false
+    }
+  },
+  methods: {
+    async init(data) {
+      this.screenWidth = ala.screenWidth()
+      if (data) {
+        this.isEdit = true
+        this.addressModel = data
+      } else {
+        var user = ala.user()
+        this.addressModel = {
+          name: user.name,
+          mobile: user.mobile,
+          userId: user.id,
+          isDefault: false
+        }
+      }
+      this.async = true
+    },
+    async sumbit() {
+      this.addressModel.userId = ala.userId()
+      var response = await api.addressEdit(this.addressModel)
+      if (response) {
+        ala.toastSuccess('保存成功')
+        this.$emit('afterSave')
+      }
+    },
+    // 删除地址
+    deleteClick() {
+      uni.showModal({
+        content: '确认删除此地址？',
+        success: async res => {
+          if (res.confirm) {
+            var response = await api.addressDelete(this.addressModel.id)
+            if (response) {
+              ala.localRemove('shop_order_select_address')
+              ala.toast('删除成功')
+              this.$emit('afterDelete')
+            }
+          }
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.add-edit {
+  &-ul {
+    margin: 0 10px;
+  }
+  &-list {
+    height: 60px;
+    border-top-color: #eeeeee;
+    border-top-width: 0.5px;
+    border-top-style: solid;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    &-left {
+      width: 100px;
+      font-size: 15px;
+      font-weight: 200;
+    }
+    &-right {
+      &-input {
+        font-size: 15px;
+      }
+    }
+    &-right-defualt {
+      width: 50px;
+      height: 27px;
+      position: relative;
+      border-radius: 30px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: #e5e5e5;
+      &-poist {
+        width: 25px;
+        height: 25px;
+        border-radius: 100%;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dfdfdf;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+      }
+      &-check {
+        background-color: #ffffff;
+        left: 22px;
+      }
+    }
+    &-right-check {
+      background-color: #007aff;
+    }
+  }
+  &-del {
+    height: 50px;
+    margin-top: 10px;
+    border-top-color: #eeeeee;
+    border-top-width: 0.5px;
+    border-bottom-color: #eeeeee;
+    border-bottom-width: 0.5px;
+    border-style: solid;
+    background-color: rgba(255, 0, 0, 0.05);
+    box-shadow: 0px 2px 5px rgba(0, 0.1, 0.1, 0);
+    &-text {
+      text-align: center;
+      line-height: 50px;
+      font-size: 18px;
+      color: #f06c7a;
+    }
+  }
+  &-bottom {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    margin: 0 50px;
+    height: 40px;
+    border-radius: 30px;
+    background-color: $gl-themeColor;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4);
+    &-text {
+      font-size: 15px;
+      text-align: center;
+      line-height: 40px;
+      color: #ffffff;
+    }
+  }
+}
+</style>

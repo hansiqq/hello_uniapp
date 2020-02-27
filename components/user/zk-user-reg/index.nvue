@@ -1,0 +1,65 @@
+<template>
+	<view class="zk-reg">
+		<text class="zk-reg-title">注册</text>
+		<view class="zk-reg-group">
+			<view  v-for="(item, index) in list" :key="index">
+				<view v-if="item.type != 'code'" class="zk-reg-group-list" :style="{width: screenWidth+'px'}">
+					<text class="zk-reg-group-list-left">{{item.name}}</text>
+					<view class="zk-reg-group-list-right" :style="{width: screenWidth-125+'px'}">
+						<input :type="item.type" :placeholder="item.placeholder" class="zk-reg-group-list-right-input" :style="{width: screenWidth-125+'px'}"/>
+					</view>
+				</view>
+				<view v-if="item.type =='code'" class="zk-reg-group-list" :style="{width: screenWidth+'px'}">
+					<text class="zk-reg-group-list-left">{{item.name}}</text>
+					<view class="zk-reg-group-list-right" :style="{width: screenWidth-100+'px'}">
+						<input type="text" :placeholder="item.placeholder" class="zk-reg-group-list-right-input" :style="{width: screenWidth-215+'px'}"/>
+						<text class="zk-reg-group-list-right-verification">获取验证码</text>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="zk-reg-tips">
+			<view class="zk-reg-tips-title">
+				<checkbox value="cb" checked="true" color="#FFCC33" />
+				<text class="zk-reg-tips-title-text">已阅读并同意以下协议</text>
+				<text class="zk-reg-tips-title-text active">《注册协议》</text>
+			</view>
+			<view class="zk-reg-tips-intro">
+				<text class="zk-reg-tips-intro-text" style="color: #999999;">如没有推荐人，请联系客服</text>
+				<text class="zk-reg-tips-intro-text">400-680-9088</text>
+				<text class="zk-reg-tips-intro-text" style="color: #999999;">为您分配。</text>
+			</view>
+		</view>
+		<view class="zk-reg-btn">
+			<x-button btnText="免费注册"></x-button>
+		</view>
+		<text class="zk-reg-bottom-text">已有账号？</text>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	import testJson from './test.json'
+	export default {
+		data() {
+			return {
+				screenWidth: '',
+				list: testJson
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+	
+</script>
+
+
+<style lang="scss" scoped>
+	@import './var.scss';
+</style>

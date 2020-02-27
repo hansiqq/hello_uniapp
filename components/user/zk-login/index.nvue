@@ -1,0 +1,135 @@
+<template>
+  <view class="zk-login zk-user-login">
+    <view class="pushButton" @click="back">
+      <x-icon name="icon-black" size="16" :color="'#fff'"></x-icon>
+    </view>
+    <view class="zk-user-login-form-login" :style="{ width: screenWidth + 'px' }">
+      <view class="zk-user-login-form-login-box">
+        <image class="zk-user-login-form-login-img" :src="logo" alt="" v-if="logo" />
+      </view>
+    </view>
+    <!--  -->
+    <view class="zk-user-login-head_yh">
+      <text class="zk-user-login-head_top">用户名/手机/邮箱登录</text>
+    </view>
+    <view class="zk-user-login-group">
+      <view class="zk-user-login-group-list" :style="{ width: screenWidth + 'px' }">
+        <text class="zk-user-login-group-list-left">用户名</text>
+        <view class="zk-user-login-group-list-right" :style="{ width: screenWidth - 125 + 'px' }">
+          <input type="text" placeholder="请输入用户名/手机/邮箱登录" v-model="user.username" class="zk-user-login-group-list-right-input" :style="{ width: screenWidth - 125 + 'px' }" />
+        </view>
+      </view>
+      <view class="zk-user-login-group-list" :style="{ width: screenWidth + 'px' }">
+        <text class="zk-user-login-group-list-left">密码</text>
+        <view class="zk-user-login-group-list-right" :style="{ width: screenWidth - 125 + 'px' }">
+          <input type="password" placeholder="请输入登录密码" v-model="user.password" class="zk-user-login-group-list-right-input" :style="{ width: screenWidth - 125 + 'px' }" />
+        </view>
+      </view>
+    </view>
+    <view class="zk-user-login-btn-row">
+      <x-button :loading="loading" btnText="登录" @change="bindLogin"></x-button>
+    </view>
+    <view class="zk-user-login-action-row" v-if="widgetModel">
+      <text class="zk-user-login-navigator" v-for="(item, index) in widgetModel.loginForm" :key="index" @click="to(item.link.url)">{{ item.link.name }}</text>
+    </view>
+    <view class="oauth-row" v-if="hasProvider" v-bind:style="{ top: positionTop + 'px' }">
+      <view class="oauth-image" v-for="provider in providerList" :key="provider.value">
+        <image :src="provider.image" @click="oauth(provider.value)" />
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import api from '@/service/api'
+import json from './json/widget.json'
+export default {
+  data() {
+    return {
+      widgetModel: null,
+      logo: null,
+      viewModel: {},
+      returnButtom: true,
+      user: {
+        username: '',
+        password: ''
+      },
+      positionTop: 0,
+      vaild: false,
+      vaild2: false,
+      hasProvider: '',
+      loading: false,
+      screenWidth: ''
+    }
+  },
+  props: {
+    widget: {}
+  },
+  created() {
+    if (ala.userIsLogin()) {
+      ala.toHome()
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screenWidth = ala.screenWidth()
+      this.logo = await api.configLogo()
+      if (this.widget && this.widget.value) {
+        this.widgetModel = this.widget.value
+      }
+      if (!this.widgetModel) {
+        this.widgetModel = json
+      }
+    },
+    back() {
+      ala.toHome()
+    },
+    to(url) {
+      ala.to(url)
+    },
+    initPosition() {
+      // 软键盘
+      this.positionTop = ala.getSystemInfoSync().windowHeight - 100
+    },
+    async bindLogin() {
+      this.loading = true
+      ala.userLogin(this.user)
+      setTimeout(() => {
+        this.loading = false
+      }, 300)
+    },
+    onFocus(e) {
+      if (e.detail.value === '') {
+        this.vaild = true
+      }
+    },
+    onInput(e) {
+      if (e.detail.value === '') {
+        this.vaild = true
+      } else {
+        this.vaild = false
+      }
+    },
+    onMa(e) {
+      if (e.detail.value === '') {
+        this.vaild2 = true
+      }
+    },
+    onMinput(e) {
+      if (e.detail.value === '') {
+        this.vaild2 = true
+      } else {
+        this.vaild2 = false
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import './index.scss';
+</style>

@@ -1,0 +1,15 @@
+<template>
+	<view class="x-msg">
+		删除删除
+	</view>
+</template>
+
+<script>
+	export default {
+		
+	}
+</script>
+
+<style>
+
+</style>

@@ -1,0 +1,78 @@
+<template>
+	<view class="select-time" :style="{width: screenWidth + 'px'}">
+		<view class="select-time-list" :style="{width: (screenWidth-20)/4 + 'px'}" v-for="(item, index) in list" :key="index">
+			<text class="select-time-list-title" :class="{'select-time-list-active': index === 0}">{{item.time}}</text>
+			<text class="select-time-list-text" :class="{'select-time-list-active': index === 0}">{{item.text}}</text>
+			<view class="select-time-list-bottom" v-if="index === 0" :style="{left: (screenWidth-20)/4*0.3 + 'px', width: (screenWidth-20)/4*0.3 + 'px' }"></view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				list: [
+					{
+						time: '08:00',
+						text: '已经结束'
+					},
+					{
+						time: '10:00',
+						text: '已开抢'
+					},
+					{
+						time: '12:00',
+						text: '正在疯抢'
+					},
+					{
+						time: '16:00',
+						text: '即将开始'
+					}
+				]
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.select-time{
+		margin-top: 20px;
+		padding: 0 10px;
+		flex-direction: row;
+		align-items: center;
+		&-list{
+			height: 52px;
+			position: relative;
+			justify-content: space-between;
+			padding-bottom: 7px;
+			&-text,
+			&-title {
+				text-align: center;
+				font-size: 16px;
+				color: rgba($color: #ffffff, $alpha: 0.7);
+			}
+			&-active{
+				color: #FFFFFF;
+			}
+			&-bottom{
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				height: 3px;
+				border-radius: 15px;
+				background-color: #FF0619;
+			}
+		}
+	}
+</style>

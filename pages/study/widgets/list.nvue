@@ -1,0 +1,99 @@
+<template>
+	<view class="study-list">
+		<view v-for="(item, index) in viewModel" @click="clickTo" :key="index" class="study-list-ul">
+			<view class="study-list-cont">
+				<text class="study-list-cont-title">{{ item.name }}</text>
+				<image class="study-list-cont-image" :src="item.image" :style="{width: screenWidth - 40 + 'px', borderRadius: 5 + 'px'}" />
+				<text class="study-list-cont-text">让您更快速的加入和融入宝多多，打造中国招商的黄埔军校...</text>
+				<view class="study-list-cont-bottom">
+					<view class="study-list-cont-bottom-left">
+						<image class="study-list-cont-bottom-left-image" src="http://img.baoduoduo.club/study/artor.png" />
+						<text class="study-list-cont-bottom-left-text">宝多多总部</text>
+					</view>
+					<text class="study-list-cont-bottom-right">23节  |  500人关注</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	export default {
+		props: {
+			viewModel: {}
+		},
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			},
+			clickTo() {
+				ala.to('/pages/study/region')
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.study-list{
+		padding: 10px;
+		&-ul{
+			margin-bottom: 10px;
+		}
+		&-cont{
+			box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.1);
+			background-color: #FFFFFF;
+			border-radius: 5px;
+			padding: 10px;
+			&-title{
+				height: 30px;
+				margin-bottom: 5px;
+				color: #202020;
+				font-size: 14px;
+				font-weight: 600;
+				line-height: 30px;
+			}
+			&-image{
+				height: 145px;
+				border-radius: 5px;
+			}
+			&-text{
+				margin: 10px 0;
+				color: #333333;
+				font-size: 14px;
+			}
+			&-bottom {
+				height: 30px;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+				&-left {
+					flex-direction: row;
+					align-items: center;
+					&-image{
+						width: 23px;
+						height: 23px;
+						border-radius: 50%;
+					}
+					&-text {
+						margin-left: 7px;
+						color: #999999;
+						font-size: 10px;
+					}
+				}
+				&-right{
+					color: #999999;
+					font-size: 10px;
+				}
+			}
+		}
+	}
+</style>

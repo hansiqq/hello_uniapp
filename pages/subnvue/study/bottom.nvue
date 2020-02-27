@@ -1,0 +1,35 @@
+<template>
+	<view>
+		<zk-tabbar :viewModel="list" @click_tab="clickTab"></zk-tabbar>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				list: [{
+						name: '学习',
+						image: '/static/tabbar/t32.png',
+						selectImage: '/static/tabbar/t32-hover.png'
+					},
+					{
+						name: '我的课程',
+						image: '/static/tabbar/t45.png',
+						selectImage: '/static/tabbar/t45-hover.png'
+					},
+					{
+						name: '我的',
+						image: '/static/tabbar/t23.png',
+						selectImage: '/static/tabbar/t23-hover.png'
+					}
+				]
+			}
+		},
+		methods: {
+			clickTab(index) {
+				uni.$emit('study_tab_click', index)
+			}
+		}
+	}
+</script>

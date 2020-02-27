@@ -1,0 +1,18 @@
+<template>
+	<view class="tabbar-three">
+		发布
+	</view>
+</template>
+
+<script>
+	export default {
+		
+	}
+</script>
+
+<style lang="scss" scoped>
+	.tabbar-three{
+		height: 45px;
+		background-color: #1BBC9B;
+	}
+</style>

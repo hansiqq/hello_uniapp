@@ -1,0 +1,11 @@
+<template>
+    <view class="">
+        zk-change-avator
+    </view>
+</template>
+
+<script>
+export default {
+    
+}
+</script>

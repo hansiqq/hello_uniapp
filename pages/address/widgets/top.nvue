@@ -1,0 +1,113 @@
+<template>
+  <view class="address-top">
+    <view class="address-top-cont" @click="isShow = !isShow">
+      <text class="address-top-cont-left">您正在看：{{ address }}</text>
+      <view class="address-top-cont-right">
+        <text class="address-top-cont-right-text">选择区县</text>
+        <x-icon name="icon-jiantou" size="16" color="#8C8C8C"></x-icon>
+      </view>
+    </view>
+    <view class="address-top-bottom" v-if="isShow">
+      <view class="address-top-list" @click="addressClick(item)" :style="{ width: (screenWidth - 40) / 3 - 10 + 'px' }" v-for="item in viewModel" :key="item">
+        <text class="address-top-list-text">{{ item }}</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import api from '@/service/api.js'
+export default {
+  data() {
+    return {
+      isShow: false,
+      screenWidth: 0,
+      address: '',
+      viewModel: ''
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screenWidth = ala.screenWidth()
+      this.address = ala.localGet('user_recent_city')
+      if (!this.address) {
+        this.address = '广州市'
+      }
+      var counyresponse = await api.addressGetCounty(this.address)
+      if (counyresponse) {
+        this.viewModel = counyresponse
+      }
+    },
+    addressClick(data) {
+      this.$emit('addressClick', data)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.address-top {
+  /* #ifdef APP-NVUE */
+  /* #endif */
+  padding: 0 10px;
+  padding-right: 30px;
+  background-color: #ffffff;
+
+  &-cont {
+    height: 50px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    &-left {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    &-right {
+      flex-direction: row;
+      align-items: center;
+
+      &-text {
+        font-size: 12px;
+        color: #8c8c8c;
+      }
+    }
+  }
+
+  &-bottom {
+    padding: 10px 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  &-list {
+    height: 35px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #f1f1f1;
+    border-radius: 5px;
+    margin: 0 4.5px;
+    margin-bottom: 10px;
+
+    &-text {
+      line-height: 35px;
+      padding: 0 2px;
+      font-size: 16px;
+      text-align: center;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      /* #ifdef APP-NVUE */
+      lines: 1;
+      /* #endif */
+      /* #ifndef APP-NVUE */
+      white-space: nowrap;
+      /* #endif */
+    }
+  }
+}
+</style>

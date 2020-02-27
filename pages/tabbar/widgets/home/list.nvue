@@ -1,0 +1,108 @@
+<template>
+  <view class="zk-list">
+    <view class="zk-list-list zk-list-list-border" :style="{ width: sreeWidth - 40 + 'px' }" @click="linkTo">
+      <text class="zk-list-list-left">圈落</text>
+      <text class="zk-list-list-cneter" :style="{ width: sreeWidth - 180 + 'px' }">这里是社交内容发送话题fsdf推送</text>
+      <text class="zk-list-list-right">1.2万围观</text>
+    </view>
+    <view class="zk-list-list" :style="{ width: sreeWidth - 40 + 'px' }">
+      <text class="zk-list-list-left">热点</text>
+      <view class="zk-list-list-cneter-cont" :style="{ width: sreeWidth - 180 + 'px' }">
+        <text class="zk-list-list-cneter" :style="{ width: sreeWidth - 250 + 'px' }">这里是社交内容发送话题fsdf推送</text>
+        <text class="zk-list-list-center-view">直播</text>
+      </view>
+      <text class="zk-list-list-right">1.2万围观</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala.js'
+export default {
+  data() {
+    return {
+      sreeWidth: ''
+    }
+  },
+  created() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.sreeWidth = ala.screenWidth()
+    },
+    linkTo() {
+      ala.to('/pages/test')
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.zk-list {
+  height: 100px;
+  background-color: #e62419;
+  margin: 10px;
+  padding: 0 10px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.1);
+  background-image: url("http://img.baoduoduo.club/home/listbg.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100px;
+}
+.zk-list-list {
+  height: 50px;
+  flex-direction: row;
+  align-items: center;
+}
+.zk-list-list-border {
+  border-bottom-width: 1px;
+  border-bottom-color: #eb4b30;
+}
+
+.zk-list-list-left {
+  width: 50px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffd870;
+  padding-left: 5px;
+}
+.zk-list-list-cneter {
+  font-size: 14px;
+  color: #fff997;
+  overflow: hidden;
+  /* #ifdef APP-PLUS-NVUE */
+  lines: 1;
+  /* #endif */
+
+  /* #ifdef MP || H5 */
+  // white-space: nowrap;
+  /* #endif */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.zk-list-list-cneter-cont {
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.zk-list-list-center-view {
+  width: 40px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  color: #e62419;
+  font-size: 12px;
+  border-radius: 20px;
+  background-color: #ffffa0;
+  /* background-image: linear-gradient(45deg, #F42C1C, #FE7610); */
+}
+.zk-list-list-right {
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  text-align: right;
+  color: #fefb9e;
+  font-size: 14px;
+}
+</style>

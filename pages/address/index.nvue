@@ -1,0 +1,118 @@
+<template>
+  <view class="address-index" v-if="async">
+    <!-- #ifndef APP-NVUE -->
+    <addressNav></addressNav>
+    <!-- #endif -->
+    <scroll-view v-if="!isShreach" :scroll-y="true" :scroll-top="scrollTop" :style="{ height: screenHeight + 'px' }">
+      <addressTop @addressClick="addressClick"></addressTop>
+      <addressList @addressClick="addressClick" title="热门城市" :viewModel="hotList"></addressList>
+      <addressSelect @scrollList="scrollList" :scroll-with-animation="true" :viewModel="viewModel" @addressClick="addressClick"></addressSelect>
+      <rightNav @scrollClick="scrollClick" :viewModel="viewModel"></rightNav>
+    </scroll-view>
+    <shreachList @addressClick="addressClick" :shreachList="shreachList" v-if="isShreach"></shreachList>
+  </view>
+</template>
+
+<script>
+import api from '@/service/api.js'
+import ala from '@/service/ala.js'
+import addressTop from './widgets/top'
+import addressList from './widgets/list'
+import rightNav from './widgets/right-nav'
+import shreachList from './widgets/share-list'
+import addressSelect from './widgets/select-city'
+import addressNav from '../subnvue/address/address'
+export default {
+  components: {
+    addressNav,
+    rightNav,
+    addressTop,
+    addressList,
+    shreachList,
+    addressSelect
+  },
+  data() {
+    return {
+      hotList: [],
+      viewModel: [],
+      async: false,
+      screenHeight: 0,
+      screenWidth: 0,
+      leftScroll: [], // 滚动距离列表
+      scrollTop: 0,
+      isShreach: false, // 搜索状态为true
+      shreachList: [] // 储存搜索结果
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screenHeight = ala.screenHeight()
+      this.screenWidth = ala.screenWidth()
+      var response = await api.addressCityIndex()
+      if (response) {
+        this.hotList = response[0]
+        response.splice(0, 1)
+        this.viewModel = response
+      }
+      // #ifdef APP-NVUE
+      this.screenHeight = this.screenHeight - 75
+      // #endif
+      // #ifndef APP-NVUE
+      this.screenHeight = this.screenHeight - 50
+      // #endif
+      this.shreachValue()
+      this.async = true
+    },
+    clickAddress(data) {
+      console.info('data', data)
+    },
+    scrollClick(index) {
+      if (index === null) {
+        this.scrollTop = 0
+      } else {
+        this.scrollTop = this.leftScroll[index]
+        // #ifdef APP-NVUE
+        this.scrollTop = this.scrollTop + 100
+        // #endif
+      }
+    },
+    // 获取滚动距离列表
+    scrollList(data) {
+      this.leftScroll = data
+    },
+    // 重新设置定位
+    addressClick(data) {
+      ala.localSet('user_recent_city', data)
+      uni.$emit('user_recent_city')
+      uni.navigateBack()
+    },
+    shreachValue() {
+      uni.$on('address_shreach_value', value => {
+        if (value.length > 0) {
+          this.isShreach = true
+          this.viewModel.forEach(element => {
+            element.list.forEach(childItem => {
+              console.info('childItem')
+              if (childItem.indexOf(value) > -1) {
+                this.shreachList.push(childItem)
+              }
+            })
+          })
+        } else {
+          this.isShreach = false
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.address-index {
+  // height: 100px;
+  // background-color: #3598DC;
+}
+</style>

@@ -1,0 +1,140 @@
+<template>
+	<view class="share-show">
+		<uni-popup ref="uniPopup">
+			<view class="share-show-cont" :style="{width: screenWidth + 'px'}">
+				<view class="share-show-cont-title" :style="{width: screenWidth - 20 + 'px'}">
+					<view class="share-show-cont-title-text">
+						<text class="share-show-cont-title-intro">分享</text>
+					</view>
+					<view class="share-show-cont-title-ul" :style="{width: screenWidth - 20 + 'px'}">
+						<view class="share-show-cont-title-list" @click="clickShare(item)" v-for="(item, index) in list" :key="index" :style="{width: (screenWidth - 40)/4 + 'px'}">
+							<view class="share-show-cont-title-list-image">
+								<uni-icons :style="item.icon" size="30" color="#000000"></uni-icons>
+							</view>
+							<text class="share-show-cont-title-list-text">{{item.name}}</text>
+						</view>
+					</view>
+				</view>
+				<view class="share-show-cont-bottom" @click="clickClose" :style="{width: screenWidth - 20 + 'px'}">
+					<text class="share-show-cont-bottom-intro">取消</text>
+				</view>
+			</view>
+		</uni-popup>
+	</view>
+</template>
+
+<script>
+	import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup'
+	import uniIcons from '@dcloudio/uni-ui/lib/uni-icons/uni-icons'
+	import ala from '@/service/ala'
+	export default {
+		components: {
+			uniPopup,
+			uniIcons
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				screenHeight: 0,
+				list: [],
+				shareType: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			open(type) {
+				this.shareType = type
+				this.$refs.uniPopup.open()
+			},
+			init() {
+				this.screenHeight = ala.screenHeight()
+				this.screenWidth = ala.screenWidth()
+				this.list = ala.shareScene2
+			},
+			clickClose() {
+				this.$refs.uniPopup.close()
+			},
+			clickShare(data) {
+				if (data.provider === 'save') {
+					ala.shareDown('https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2462146637,4274174245&fm=26&gp=0.jpg')
+				} else {
+					switch (this.shareType) {
+						case 0:
+						ala.share(data, '宝多多朋友圈', '这是什么鬼', 'http://localhost:2000/pages/nav/share/index')
+						break
+						case 1: 
+						ala.shareText(data, '宝多多朋友圈')
+						break
+						default:
+						ala.shareText(data, '宝多多朋友圈')
+						break
+					}
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.share-show{
+		&-cont{
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			padding: 0 10px;
+			height: 300px;
+			&-title{
+				padding: 10px;
+				padding-top: 0px;
+				background-color: #F0EFF2;
+				border-radius: 5px;
+				&-text{
+					text-align: center;
+					height: 20px;
+					margin-bottom: 10px;
+				}
+				&-intro{
+					margin-top: 5px;
+					text-align: center;
+					color: #343434;
+					font-size: 14px;
+				}
+				&-ul{
+					flex-direction: row;
+					flex-wrap: wrap;
+				}
+				&-list{
+					height: 80px;
+					justify-content: center;
+					align-items: center;
+					&-image{
+						width: 40px;
+						height: 40px;
+						background-color: #FFFFFF;
+						border-radius: 3px;
+					}
+					&-text{
+						margin-top: 5px;
+						font-size: 14px;
+						color: #434343;
+					}
+				}
+			}
+			&-bottom{
+				margin-top: 10px;
+				height: 50px;
+				background-color: #F0EFF2;
+				border-radius: 3px;
+				text-align: center;
+				&-intro{
+					text-align: center;
+					line-height: 50px;
+					color: #343434;
+					font-size: 14px;
+				}
+			}
+		}
+	}
+</style>

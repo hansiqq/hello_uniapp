@@ -1,0 +1,71 @@
+<template>
+  <view class="index-top-item">
+    <view v-for="(item, index) in list" :key="index" class="index-top-item-list">
+      <text class="index-top-item-test" :class="{ 'index-top-item-active': index === 0 }">{{ item }}</text>
+      <!-- #ifdef APP-PLUS-NVUE -->
+      <view class="index-top-item-list-bottom" :style="{ width: (screenWidth - 20) / 12 - 6 + 'px' }" v-if="index === 0"></view>
+      <!--  #endif  -->
+      <!-- #ifdef H5 || MP -->
+      <view class="index-top-item-list-bottom" :style="{ width: (screenWidth - 20) / 20 + 'px' }" v-if="index === 0"></view>
+      <!--  #endif  -->
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala.js'
+export default {
+  data() {
+    return {
+      screenWidth: '',
+      list: ['推荐', '招商', '直播', '体验', '培训', '采集']
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.index-top-item {
+  /* top:20upx; */
+  height: 30px;
+  padding: 0 10px;
+  background-color: #f82d20;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.index-top-item-list {
+  height: 30px;
+  line-height: 30px;
+  position: relative;
+}
+.index-top-item-list-bottom {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  /* #ifdef APP-NVUE */
+  left: 3px;
+  /* #endif */
+  /* #ifndef APP-NVUE */
+  left: 20%;
+  /* #endif */
+
+  background-color: #ffffff;
+  border-radius: 20px;
+}
+.index-top-item-test {
+  color: #ffffff;
+  font-size: 15px;
+}
+.index-top-item-active {
+  font-weight: 700;
+}
+</style>

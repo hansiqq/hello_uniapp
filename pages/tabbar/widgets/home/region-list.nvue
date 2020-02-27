@@ -1,0 +1,197 @@
+<template>
+  <view class="zk-product-list" :style="{ width: sreeWidth - 20 + 'px' }" v-if="async">
+    <view class="zk-product-list-head" :style="{ width: sreeWidth - 20 + 'px' }">
+      <text class="zk-product-list-head-test">{{ text }}</text>
+      <view class="zk-product-list-head-right">
+        <text class="zk-product-list-head-right-test">查看更多</text>
+      </view>
+    </view>
+    <view class="zk-product-list-ul" :style="{ width: sreeWidth - 20 + 'px' }">
+      <view class="zk-product-list-list">
+        <image src="https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=155086813,241513612&fm=26&gp=0.jpg" class="zk-product-list-image" />
+        <text class="zk-product-list-test">某某某**刚刚参与</text>
+      </view>
+      <view class="zk-product-list-list" style="margin-left: 20px;background-color: rgba(255,255,255,0.3);opacity: 0.5;">
+        <image src="https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1422289444,4250496656&fm=26&gp=0.jpg" class="zk-product-list-image" />
+        <text class="zk-product-list-test">某某某**刚刚参与</text>
+      </view>
+    </view>
+    <view class="zk-product-list-content">
+      <view v-for="(item, index) in viewModel" :key="index" class="zk-product-list-content-list" :style="{ width: (sreeWidth - 80) / 3 + 'px' }" @click="linkTo(item)">
+        <image :src="'http://bdd.5ug.com' + item.thumbnailUrl" :style="{ width: (sreeWidth - 80) / 3 + 'px' }" class="zk-product-list-content-list-img" />
+        <view class="zk-product-list-content-list-center">
+          <image src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2276557307,3692288178&fm=26&gp=0.jpg" class="zk-product-list-content-list-center-image" />
+          <text class="zk-product-list-content-list-bottom-test" style="margin-left: 5px;">李**参与</text>
+        </view>
+        <view class="zk-product-list-content-list-bottom">
+          <text class="zk-product-list-content-list-bottom-test"> 1.2万人围观</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala.js'
+export default {
+  props: {
+    text: {}
+  },
+  data() {
+    return {
+      sreeWidth: '',
+      viewModel: [],
+      async: false,
+      listPar: {
+        userId: '',
+        SortOrder: '', // 商品排序方式
+        Keyword: '', // 搜索关键字
+        MinPrice: '', // 最低价格
+        MaxPrice: '', // 最高价格
+        ClassIds: '', // 商品分类Id
+        TagIds: '', // 商品标签ID
+        ProductIds: '', // 商品Id
+        BrandId: '', // 商品品牌Id
+        PriceStyleId: '', //  商品模式
+        OrderType: '', // 排序方式
+        pageIndex: 1,
+        pageSize: 20
+      }
+    }
+  },
+  beforeMount() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.sreeWidth = ala.screenWidth()
+      ala.httpGet('api/product/list', this.listPar).then(async response => {
+        if (response) {
+          for (let i = 0; i < 3; i++) {
+            var ro = Math.round(Math.random() * 12)
+            this.viewModel.push(response.productItems[ro])
+          }
+        }
+      })
+      this.async = true
+    },
+    linkTo(item) {
+      ala.to(`/product/show?id=${item.id}`)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.zk-product-list {
+  height: 229px;
+  background-color: #e5330f;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.1);
+}
+.zk-product-list-head {
+  padding: 10px;
+  padding-bottom: 5px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.zk-product-list-head-test {
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 800;
+}
+.zk-product-list-head-right {
+  width: 80px;
+  height: 25px;
+  border-radius: 30px;
+  background-color: #fe493e;
+}
+.zk-product-list-head-right-test {
+  font-size: 12px;
+  color: #ffffff;
+  text-align: center;
+  line-height: 25px;
+}
+.zk-product-list-ul {
+  height: 42px;
+}
+.zk-product-list-list {
+  width: 125px;
+  height: 18px;
+  margin: 2px;
+  margin-left: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 30px;
+  flex-direction: row;
+  align-items: center;
+}
+.zk-product-list-image {
+  width: 14px;
+  height: 14px;
+  margin-left: 5px;
+  background-color: #007aff;
+  border-radius: 50%;
+}
+.zk-product-list-test {
+  font-size: 11px;
+  color: #ffffff;
+  margin-left: 10px;
+}
+.zk-product-list-content {
+  margin-top: 7px;
+  height: 141px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 15px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.zk-product-list-content-list {
+  height: 110px;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+.zk-product-list-content-list-img {
+  height: 110px;
+  border-radius: 5px;
+}
+.zk-product-list-content-list-center {
+  position: absolute;
+  right: 0;
+  top: 20px;
+  width: 80px;
+  height: 22px;
+  flex-direction: row;
+  align-items: center;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.zk-product-list-content-list-center-image {
+  width: 16px;
+  height: 16px;
+  margin-left: 5px;
+  background-color: #1aad19;
+  border-radius: 50%;
+}
+.zk-product-list-content-list-bottom {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 70px;
+  height: 22px;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.zk-product-list-content-list-bottom-test {
+  text-align: center;
+  color: #ffffff;
+  line-height: 22px;
+  font-size: 11px;
+}
+</style>

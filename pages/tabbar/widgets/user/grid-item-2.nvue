@@ -1,0 +1,100 @@
+<template>
+  <view class="grid-item-3" v-if="async">
+    <view class="grid-item-3-cont">
+      <view class="grid-item-3-ul" :style="{ width: screenWidth - 20 + 'px;' }">
+        <view class="grid-item-3-list" @click="linkTo(item)" v-for="(item, index) in formList" :key="index" :style="{ width: (screenWidth - 30) / 4 + 'px' }">
+          <image src="http://img95.699pic.com/photo/50010/7148.jpg_wh300.jpg" class="grid-item-3-image" />
+          <text class="grid-item-3-test">{{ item.name }}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala.js'
+export default {
+  data() {
+    return {
+      screenWidth: 0,
+      async: false,
+      formList: [
+        {
+          name: '商家沟通'
+        },
+        {
+          name: '商家管理'
+        },
+        {
+          name: '我的钱包'
+        },
+        {
+          name: '我的收藏',
+          url: '/pages/nav/collect/list'
+        },
+        {
+          name: '活动名额'
+        },
+        {
+          name: '营销中心'
+        },
+        {
+          name: '客服中心'
+        },
+        {
+          name: '个人设置',
+          url: '/pages/nav/user/info'
+        }
+      ]
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+      this.async = true
+    },
+    linkTo(item) {
+      if (item.url) {
+        ala.to(item.url)
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.grid-item-3 {
+  margin: 0 10px;
+  margin-top: 10px;
+}
+
+.grid-item-3-ul {
+  background-color: #ffffff;
+  border-radius: 3px;
+  padding: 5px 4px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.grid-item-3-list {
+  height: 80px;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-item-3-image {
+  width: 45px;
+  height: 45px;
+  background-color: #00c5dc;
+  border-radius: 50%;
+}
+
+.grid-item-3-test {
+  font-size: 13px;
+  color: #666666;
+  margin-top: 10px;
+}
+</style>

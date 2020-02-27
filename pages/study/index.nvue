@@ -1,0 +1,90 @@
+<template>
+	<view class="study">
+		<!-- #ifndef APP-NVUE -->
+		<topNav></topNav>
+		<view style="height: 85px;" v-if="currentIndex=== 0"></view>
+		<view style="height: 51px;" v-else></view>
+		<bottomNav></bottomNav>
+		<!-- #endif -->
+		<!-- #ifndef APP-NVUE -->
+		
+		<!-- #endif -->
+		<tabbar-index v-if="currentIndex===0"></tabbar-index>
+		<tabbar-two v-if="currentIndex===1"></tabbar-two>
+		<!-- <tabbar-three v-if="currentIndex===2"></tabbar-three> -->
+		<tabbar-user v-if="currentIndex===2"></tabbar-user>
+		<view style="height: 50px;"></view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	import bottomNav from '../subnvue/study/bottom'
+	import topNav from '../subnvue/study/top'
+	import tabbarIndex from './tabbar-index'
+	import tabbarTwo from './tabbar-two'
+	import tabbarThree from './tabbar-three'
+	import tabbarUser from './tabbar-user'
+	export default {
+		components: {
+			bottomNav,
+			topNav,
+			tabbarIndex,
+			tabbarTwo,
+			tabbarThree,
+			tabbarUser
+		},
+		data() {
+			return {
+				screenHeight: 0,
+				screenWidth: 0,
+				currentIndex: 0,
+				statusHeight: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			// 阻止滑动事件触发
+			stopMove(ev) {
+				console.info('sdf', ev)
+				return false
+			},
+			init() {
+				this.screenHeight = ala.screenHeight()
+				this.screenWidth = ala.screenWidth()
+				this.statusHeight = ala.statusHeight()
+				// 监听点击事件
+				this.subNav()
+				uni.$on('study_tab_click', data => {
+					this.currentIndex = data
+				})
+			},
+			subNav() {
+				// #ifdef APP-NVUE
+				var tabIndexNav = uni.getSubNVueById('studyTopNav')
+				var height = 115
+				if (this.currentIndex === 0) {
+					height = 115
+				} else {
+					height = this.statusHeight + 50
+				}
+				tabIndexNav.setStyle({
+					height: `${height}px`
+				})
+				// #endif
+			}
+		},
+		watch: {
+			currentIndex: {
+				deep: true,
+				handler() {
+					this.subNav()
+				}
+			}
+		}
+	}
+</script>
+
+<style></style>

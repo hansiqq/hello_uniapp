@@ -1,0 +1,56 @@
+@mixin borderRadius($width) {
+  -webkit-border-radius: $width;
+  -moz-border-radius: $width;
+  border-radius: $width;
+}
+
+@mixin border($width:1, $color: #000) {
+	border-width: $width+px;
+	border-color: $color;
+	border-style: solid;
+}
+
+@mixin borderLeft($width:1, $color: #000) {
+	border-left-width: $width+px;
+	border-left-style: solid;
+	border-left-color: $color;
+}
+
+@mixin borderRight($width:1, $color: #000) {
+	border-right-width: $width+px;
+	border-right-style: solid;
+	border-right-color: $color;
+}
+
+@mixin borderTop($width:1, $color: #000) {
+  border-top-width: $width+px;
+  border-top-style: solid;
+  border-top-color: $color;
+}
+
+@mixin borderBottom($width:1, $color: #000) {
+  border-bottom-width: $width+px;
+  border-bottom-style: solid;
+  border-bottom-color: $color;
+}
+
+
+.border-0 {
+	border-width: 0 !important;
+}
+
+.border-top-0 {
+	border-top-width: 0 !important;
+}
+
+.border-right-0 {
+	border-right-width: 0 !important;
+}
+
+.border-bottom-0 {
+  border-bottom-width: 0 !important;
+}
+
+.border-left-0 {
+  border-left-width: 0 !important;
+}

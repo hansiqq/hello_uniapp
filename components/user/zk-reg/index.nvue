@@ -1,0 +1,16 @@
+<template>
+  <zk-auto-form type="RecommendAddUser" @afterSave="afterSave"></zk-auto-form>
+</template>
+
+<script>
+export default {
+  mounted() {},
+  methods: {
+    init() {},
+    // 注册后处理
+    afterSave() {}
+  }
+}
+</script>
+
+<style lang="scss" scoped></style>

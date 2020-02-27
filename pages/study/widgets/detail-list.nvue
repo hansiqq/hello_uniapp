@@ -1,0 +1,45 @@
+<template>
+	<view class="detail-list">
+		<view class="detail-list-ul">
+			<text class="detail-list-ul-list" v-for="(item, index) in list" :class="{'detail-list-ul-active': index === 0}" :key="index">{{item}}</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				list: ['新人课', '主管课程', '经理课程', '总监课程']
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.detail-list{
+		&-ul{
+			height: 40px;
+			padding: 0 15px;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			&-list{
+				height: 35px;
+				line-height: 35px;
+				border-radius: 30px;
+				font-size: 14px;
+				padding: 0 15px;
+				color: #999999;
+				background-color: #F0F0F0;
+			}
+			&-active {
+				color: #F92E2C;
+				border-width: 1px;
+				border-style: solid;
+				border-color: #F92E2C;
+				background-color: #FEF5F6;
+			}
+		}
+	}
+</style>

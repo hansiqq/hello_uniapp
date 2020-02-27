@@ -1,0 +1,16 @@
+<template>
+  <view>
+    <!-- <productClass1></productClass1> -->
+    <productClass2></productClass2>
+  </view>
+</template>
+<script>
+// import productClass1 from './styles/product-class-1'
+import productClass2 from './styles/product-class-2'
+export default {
+  components: {
+    // productClass1,
+    productClass2
+  }
+}
+</script>

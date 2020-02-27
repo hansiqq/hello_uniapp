@@ -1,0 +1,76 @@
+<template>
+	<view class="share_detail" :style="{width: screenWidth + 'px', height: screenHeight + 'px'}">
+		<image :src="image" :style="{width: screenWidth*0.8 + 'px', height: screenHeight * 0.8 + 'px'}" class="share_detail-image" />
+		<view class="share_detail-bottom" :style="{width: screenWidth + 'px'}">
+			<view class="share_detail-bottom-left" :style="{width: screenWidth*0.8/2 + 'px'}">
+				<text class="share_detail-bottom-text">复制分享链接</text>
+			</view>
+			<view class="share_detail-bottom-right" :style="{width: screenWidth*0.8/2 + 'px'}">
+				<text class="share_detail-bottom-text">复制分享海报</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				screenHeight: 0,
+				image: ''
+			}
+		},
+		onLoad(options) {
+
+			if (options.image) {
+				this.image = 'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1141259048,554497535&fm=26&gp=0.jpg'
+				// this.image = JSON.parse(options.image)
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				this.screenHeight = ala.screenHeight()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.share_detail{
+		background-color: #FAFAFA;
+		padding-top: 20px;
+		align-items: center;
+		&-image{
+			border-radius: 5px;
+		}
+		&-bottom{
+			margin-top: 30px;
+			flex-direction: row;
+			justify-content: center;
+			&-left {
+				border-top-left-radius: 30px;
+				border-bottom-left-radius: 30px;
+				height: 35px;
+				background-image: linear-gradient(to right, #F52E16, #FC8803);
+			}
+			&-right {
+				border-top-right-radius: 30px;
+				border-bottom-right-radius: 30px;
+				height: 35px;
+				background-color: #343434;
+			}
+			&-text{
+				font-size: 14px;
+				color: #FFFFFF;
+				text-align: center;
+				line-height: 35px;
+			}
+		}
+	}
+</style>

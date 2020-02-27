@@ -1,0 +1,398 @@
+<template>
+  <view class="zk-order-list" :style="{ height: screenHeight + 'px', width: screenWidth + 'px' }">
+    <view class="uni-tab-bar">
+      <scroll-view id="tab-bar" :show-scrollbar="false" class="uni-swiper-tab" :style="{ width: screenWidth + 'px' }" scroll-x :scroll-left="scrollLeft">
+        <view style="flex-direction: row;justify-content: space-between;" class="uni-swiper-tab-ul">
+          <text v-for="(tab, index) in type.title" class="uni-swiper-tab-list" :key="index" :style="{ width: screenWidth / 6 + 'px' }" :class="[tabIndex == index ? 'uni-swiper-tab-list-active' : '']" :id="index" :data-current="index" @tap="tapTab">{{ tab.name }}</text>
+        </view>
+      </scroll-view>
+      <swiper :current="tabIndex" class="zk-order-list-box" duration="300" :style="{ width: screenWidth + 'px', height: scrollViewHeight + 'px' }" @change="changeTab">
+        <swiper-item v-for="(tabs, index1) in type.title" :key="index1" :style="{ width: screenWidth + 'px', height: scrollViewHeight + 'px' }">
+          <scroll-view scroll-y :style="{ width: screenWidth + 'px', height: scrollViewHeight + 'px' }">
+            <view class="zk-order-list-box-ul">
+              <view v-for="(conter, index2) in viewModel" :key="index2">
+                <view class="zk-order-list-box-list" v-for="(t, i) in conter.outOrderProducts" :key="i" :style="{ width: screenWidth - 20 + 'px' }">
+                  <view class="zk-order-list-box-list-title">
+                    <text class="zk-order-list-box-list-title-left">{{ conter.storeName }}</text>
+                    <text class="zk-order-list-box-list-title-right">{{ conter.orderStatuName }}</text>
+                  </view>
+                  <view class="zk-order-list-box-list-center" @click="isShow(conter.outOrderProducts, conter.id)">
+                    <image :src="t.thumbnailUrl" class="zk-order-list-box-list-center-left" />
+                    <view class="zk-order-list-box-list-center-right" :style="{ width: screenWidth - 140 + 'px' }">
+                      <text class="zk-order-list-box-list-center-right-title">{{ t.name }}</text>
+                      <text class="zk-order-list-box-list-center-right-intro">{{ t.propertyValueDesc }}</text>
+                      <view class="zk-order-list-box-list-center-right-bottom">
+                        <text class="zk-order-list-box-list-center-right-bottom-text">￥</text>
+                        <text class="zk-order-list-box-list-center-right-bottom-price">{{ t.displayPrice }}</text>
+                        <text class="zk-order-list-box-list-center-right-bottom-num">x{{ t.buyCount }}</text>
+                      </view>
+                    </view>
+                  </view>
+                  <view class="zk-order-list-box-list-priceText">
+                    <text class="zk-order-list-box-list-priceText-count">共{{ t.buyCount }}件商品</text>
+                    <text class="zk-order-list-box-list-priceText-price">合计:￥{{ conter.paymentAmount }}(含运费￥{{ conter.expressAmount }})</text>
+                  </view>
+
+                  <view class="zk-order-list-box-list-bottom" v-if="conter.orderStatus === 1">
+                    <text class="zk-order-list-box-list-bottom-left" @click="buy(conter.id)">付款</text>
+                    <text class="zk-order-list-box-list-bottom-right" @click="deleteCX(conter.id, index1, index2)">取消</text>
+                  </view>
+                </view>
+              </view>
+              <view class="zk-order-list-box-nodata" v-if="viewModel.length === 0" :style="{ height: screenHeight - 50 + 'px', width: screenWidth + 'px' }">
+                <view class="zk-order-list-box-nodata-icon">
+                  <x-icon name="icon-newss" size="32" color="#808080"></x-icon>
+                </view>
+                <text class="zk-order-list-box-nodata-text">暂无记录</text>
+              </view>
+            </view>
+          </scroll-view>
+        </swiper-item>
+      </swiper>
+    </view>
+    <x-pay ref="show_pay"></x-pay>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      widgetModel: '',
+      screenHeight: 0,
+      screenWidth: 0,
+      type: {
+        num: [99, 1, 2, 3, 4, 200],
+        // title: ['待付款', '待发货', '待收货', '待评价', '已关闭']
+        title: [
+          { name: '全部', value: [] },
+          { name: '待付款', value: [] },
+          { name: '待发货', value: [] },
+          { name: '待收货', value: [] },
+          { name: '评价', value: [] },
+          { name: '售后', value: [] }
+        ]
+      },
+      scrollLeft: 0,
+      tabIndex: 0,
+      isClickChange: false,
+      viewModel: [],
+      scrollViewHeight: 0,
+      orderStatus: 0,
+      parmenter: {
+        userId: ala.userId(),
+        OrderStatus: 0,
+        PageIndex: 1
+      },
+      notScrolltolower: true
+    }
+  },
+  props: {
+    widget: {}
+  },
+  mounted() {
+    this.isOrderStatus()
+    this.init()
+  },
+  onLoad() {
+    this.isOrderStatus()
+  },
+  methods: {
+    async init() {
+      var orderList = await ala.httpGet('api/Order/BuyOrderList', this.parmenter)
+      if (orderList) {
+        if (this.viewModel.length === 0) {
+          this.viewModel = orderList
+        } else {
+          this.viewModel = [...orderList, ...this.viewModel]
+        }
+        if (orderList.length < 20) {
+          this.notScrolltolower = false
+        } else {
+          this.notScrolltolower = true
+        }
+      }
+      this.screenHeight = ala.screenHeight()
+      this.screenWidth = ala.screenWidth()
+      this.scrollViewHeight = this.screenHeight - 40
+    },
+    isOrderStatus() {
+      if (!ala.strIsEmpty(this.widget.route.orderStatus)) {
+        var orderStatus = Number(this.widget.route.orderStatus)
+        this.parmenter.OrderStatus = orderStatus
+        if (orderStatus === 1) {
+          this.tabIndex = 1
+        } else if (orderStatus === 2) {
+          this.tabIndex = 2
+        } else if (orderStatus === 3) {
+          this.tabIndex = 3
+        } else if (orderStatus === 4) {
+          this.tabIndex = 4
+        } else if (orderStatus === 200) {
+          this.tabIndex = 5
+        }
+      }
+    },
+    scrolltolower() {
+      if (this.notScrolltolower) {
+        this.parmenter.PageIndex += 1
+        this.init()
+      }
+    },
+    async tapTab(e) {
+      // 点击tab-bar
+      if (this.tabIndex === e.target.dataset.current) {
+        return false
+      } else {
+        let tabBarScrollLeft = e.target.offsetLeft // 点击的时候记录并设置scrollLeft
+        this.scrollLeft = tabBarScrollLeft
+        this.isClickChange = true
+        this.tabIndex = e.target.dataset.current
+        this.parmenter.OrderStatus = e.target.dataset.current
+        this.parmenter.PageIndex = 1
+        this.viewModel = []
+       // this.init()
+      }
+    },
+    async changeTab(e) {
+      let index = e.detail.current
+      this.parmenter.OrderStatus = e.detail.current
+      this.parmenter.PageIndex = 1
+      this.viewModel = []
+      this.init()
+      if (this.isClickChange) {
+        this.tabIndex = index
+        this.isClickChange = false
+        return
+      }
+      //  let tabBar = await this.getElSize('tab-bar')
+      this.isClickChange = false
+      this.tabIndex = index // 一旦访问data就会出问题
+    },
+    getElSize(id) {
+      // 得到元素的size
+      // return new Promise((res, rej) => {
+      //   uni.createSelectorQuery().select('#' + id).fields({
+      //     size: true,
+      //     scrollOffset: true
+      //   }, (data) => {
+      //     res(data)
+      //   }).exec()
+      // })
+    },
+    //  支付订单
+    async buy(id) {
+      var para = {
+        userId: ala.userId(),
+        id: id
+      }
+      var buyInputResponse = await ala.httpGet('api/order/pay', para)
+      if (buyInputResponse) {
+        this.$refs.show_pay.$emit('payMethod', buyInputResponse.payId, buyInputResponse.payAmount, id) // 唤起支付窗口
+      }
+    },
+    // 取消订单
+    async deleteCX(id, tIndex, sIndex) {
+      var that = this
+      uni.showModal({
+        content: '确定取消',
+        success: function(res) {
+          if (res.confirm) {
+            that.getUrl(id, tIndex, sIndex)
+          } else if (res.cancel) {
+          }
+        }
+      })
+    },
+    async getUrl(id, tIndex, sIndex) {
+      let parmenter = {
+        userId: ala.userId(),
+        id: id
+      }
+      var deleteResponse = await ala.httpGet('api/order/cancel', parmenter)
+      if (deleteResponse) {
+        // this.type.title[tIndex].value.splice(sIndex, 1)
+        // this.init()
+        // ala.toastSuccess(deleteResponse.message)
+        var this_ = this
+        uni.showModal({
+          showCancel: false,
+          confirmText: '完成',
+          content: deleteResponse.message,
+          success: function(res) {
+            if (res.confirm) {
+              this_.init()
+            } else if (res.cancel) {
+            }
+          }
+        })
+      }
+    },
+    isShow(item, id) {
+      let buyProductInfo = [
+        {
+          userId: ala.userId(),
+          ProductSkuId: item[0].productSkuId,
+          Count: item[0].buyCount,
+          ProductId: item[0].productId,
+          storeId: item[0].storeId
+        }
+      ]
+      ala.localSet('buyProductInfo_order', buyProductInfo)
+      ala.to(`/order/show?id=${id}`)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.zk-order-list {
+  background-color: #f2f2f2;
+  &-box {
+    &-nodata {
+      justify-content: center;
+      align-items: center;
+      &-text {
+        font-size: 14px;
+        color: #808080;
+        text-align: center;
+      }
+      &-icon {
+        width: 32px;
+        height: 32px;
+      }
+    }
+    &-ul {
+      padding: 5px 10px;
+    }
+    &-list {
+      margin: 5px 0;
+      padding: 10px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      &-title {
+        height: 20px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        &-left {
+          font-size: 13px;
+        }
+        &-right {
+          font-size: 13px;
+          color: #999999;
+        }
+      }
+      &-center {
+        height: 100px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        &-left {
+          width: 90px;
+          height: 90px;
+          border-radius: 2px;
+        }
+        &-right {
+          height: 90px;
+          &-title {
+            font-size: 15px;
+            color: #333333;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            /* #ifndef APP-PLUS-NVUE */
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            /* #endif */
+            /* #ifdef APP-PLUS-NVUE */
+            lines: 2;
+            /* #endif */
+          }
+          &-intro {
+            margin: 8px 0;
+            font-size: 13px;
+            color: #999999;
+          }
+          &-bottom {
+            flex-direction: row;
+            align-items: center;
+            &-text {
+              color: #333333;
+              font-size: 12px;
+            }
+            &-num,
+            &-price {
+              font-size: 15px;
+              color: #333333;
+            }
+            &-num {
+              margin-left: 3px;
+            }
+          }
+        }
+      }
+      &-priceText {
+        margin-top: 15px;
+        flex-direction: row;
+        justify-content: flex-end;
+        &-price,
+        &-count {
+          font-size: 13px;
+          color: #333333;
+        }
+        &-count {
+          margin-right: 6px;
+        }
+      }
+      &-bottom {
+        margin-top: 10px;
+        height: 20px;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        &-right,
+        &-left {
+          height: 20px;
+          width: 50px;
+          line-height: 20px;
+          text-align: center;
+          color: $gl-themeColor;
+          border-radius: 30px;
+          border-color: $gl-themeColor;
+          border-width: 1px;
+          border-style: solid;
+          font-size: 13px;
+        }
+        &-right {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}
+
+/* 分割线 */
+
+.uni-tab-bar-list {
+}
+
+.uni-swiper-tab {
+  flex-direction: row;
+  background-color: $gl-light;
+  border-bottom: 1px solid $uni-border-color;
+  &-ul {
+    height: 40px;
+  }
+  &-list {
+    text-align: center;
+    font-size: 15px;
+    width: 60px;
+    line-height: 40px;
+    &-active {
+      color: $gl-themeColor;
+    }
+  }
+}
+</style>

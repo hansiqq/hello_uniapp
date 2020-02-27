@@ -1,0 +1,110 @@
+<template>
+	<view class="detail">
+		<view class="detail-title">
+			<text class="detail-title-left">视频课程</text>
+			<text class="detail-title-right">提高产品转化率，经营好“用户价值”</text>
+		</view>
+		<text class="detail-center">从多家网盘厮杀到一枝独秀，百度网盘的发展任重道远。本文作者结合产品价值链，对百度网盘的后续发展进行了思考分析，总结了3个迭代方</text>
+		<view class="detail-bottom">
+			<view class="detail-bottom-list" v-for="(item, index) in list" :key="index">
+				<image class="detail-bottom-list-image" :src="item.image" />
+				<text class="detail-bottom-list-text">{{item.name}}</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				list: [
+					{
+						name: '分享',
+						image: 'http://img.baoduoduo.club/study/detail-share.png'
+					},
+					{
+						name: '收藏',
+						image: 'http://img.baoduoduo.club/study/collect.png'
+					},
+					{
+						name: '下载',
+						image: 'http://img.baoduoduo.club/study/detail-dow.png'
+					},
+					{
+						name: '评论',
+						image: 'http://img.baoduoduo.club/study/detail-critic.png'
+					}
+				]
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.detail {
+		padding: 20px;
+		background-color: #FFFFFF;
+
+		&-title {
+			height: 30px;
+			flex-direction: row;
+			align-items: center;
+
+			&-left {
+				height: 25px;
+				font-size: 12px;
+				border-radius: 30px;
+				line-height: 25px;
+				padding: 0 12px;
+				color: #FF2833;
+				background-color: #FFEDEC;
+			}
+
+			&-right {
+				margin-left: 10px;
+				color: #202020;
+				font-weight: bold;
+				font-size: 14px;
+			}
+		}
+
+		&-center {
+			font-size: 12px;
+			color: #999999;
+			line-height: 25px;
+			margin: 10px 0;
+		}
+
+		&-bottom {
+			flex-direction: row;
+			justify-content: space-between;
+			&-list{
+				height: 50px;
+				width: 50px;
+				justify-content: center;
+				align-items: center;
+				&-image{
+					width: 20px;
+					height: 20px;
+				}
+				&-text{
+					margin-top: 3px;
+					color: #999999;
+					font-size: 14px;
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+</style>

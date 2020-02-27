@@ -1,0 +1,159 @@
+<template>
+	<view class="calendar-item">
+		<view class="calendar-item-cont">
+			<view class="calendar-item-cont-title">
+				<text class="calendar-item-cont-title-left">每日签到会有导师辅导</text>
+				<text class="calendar-item-cont-title-right">查看完整</text>
+			</view>
+			<view class="calendar-item-cont-bottom">
+				<view class="calendar-item-cont-cal-title">
+					<view class="calendar-item-cont-cal-title-ul" v-for="(item, index) in 6" :key="index">
+						<image src="http://img.baoduoduo.club/study/clock-ses.png" class="calendar-item-cont-cal-title-list" :id="`cal-title-list-${index}`" v-if="list[index]"/>
+						<view class="calendar-item-cont-cal-title-list" v-else :id="`cal-title-list-${index}`"></view>
+					</view>
+				</view>
+				<view class="calendar-item-cont-cal-center">
+					<view class="calendar-item-cont-cal-center-ul" v-for="(item, index) in list" :key="index">
+						<view class="calendar-item-cont-cal-center-list" :class="{'calendar-item-cont-cal-center-act_bor': item}"></view>
+						<view class="calendar-item-cont-cal-center-show" v-if="index != 5" :class="{'calendar-item-cont-cal-center-act_bg':list[index +1]}" :style="{width: shwoWidth + 'px'}"></view>
+					</view>
+				</view>
+				<view class="calendar-item-cont-cal-bottom">
+					<text class="calendar-item-cont-cal-bottom-list" :class="{'calendar-item-cont-cal-bottom-act': list[index]}" :style="{width: shwoWidth-15 + 'px'}" v-for="(item, index) in listText" :key="index">{{item}}</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				shwoWidth: 0,
+				list: [true, true, false, false, false, false],
+				listText: ['第31天', '今日', '明日', '第32天', '第33天', '第34天']
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			async init() {
+				this.$nextTick(async () => {
+					var data0 = await this.getQuery('#cal-title-list-0')
+					var data1 = await this.getQuery('#cal-title-list-1')
+					this.shwoWidth = data1.left - data0.left - 10
+					console.info('this.show', this.shwoWidth)
+				})
+			},
+			getQuery(type) {
+				return new Promise((resolve, reject) => {
+					var list0 = ala.getQuery(this, type)
+					list0.exec(res => {
+						// #ifdef APP-NVUE
+						resolve(res[0])
+						// #endif
+						// #ifndef APP-NVUE
+						resolve(res[0][0])
+						// #endif
+					})
+				})
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.calendar-item{
+		margin: 0 15px;
+		
+		
+		&-cont{
+			padding: 10px;
+			border-radius: 10px;
+			background-color: #FFFFFF;
+			&-title{
+				height: 30px;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+				&-left{
+					font-size: 15px;
+					color: #343434;
+				}
+				&-right{
+					height: 18px;
+					font-size: 12px;
+					padding: 0 7px;
+					line-height: 18px;
+					color: #FFFFFF;
+					border-radius: 30px;
+					background-image: linear-gradient(to right, #FF5050, #FE6E3C);
+				}
+			}
+			&-bottom{
+				padding: 10px 0;
+			}
+			&-cal {
+				&-title{
+					flex-direction: row;
+					justify-content: space-between;
+					align-items: center;
+					&-list{
+						width: 30px;
+						height: 30px;
+						background-color: #F0F0F0;
+						border-radius: 50%;
+					}
+				}
+				&-center{
+					flex-direction: row;
+					align-items: center;
+					margin-left: 10px;
+					&-ul{
+						padding: 8px 0;
+						padding-bottom: 0;
+						flex-direction: row;
+						align-items: center;
+					}
+					&-list {
+						width: 10px;
+						height: 10px;
+						border-radius: 50%;
+						border-width: 3px;
+						border-style: solid;
+						border-color: #F0F0F0;
+					}
+					&-show{
+						width: 10px;
+						height: 2px;
+						background-color: #F0F0F0;
+					}
+					&-act_bg {
+						
+						background-color: #F92E2C;
+					}
+					&-act_bor {
+						border-color: #F92E2C;
+					}
+				}
+				&-bottom{
+					flex-direction: row;
+					align-items: center;
+					justify-content: space-between;
+					&-list {
+						text-align: center;
+						font-size: 12px;
+						color: #999999;
+						text-decoration: underline;
+					}
+					&-act{
+						color: #F92E2C;
+					}
+				}
+			}
+		}
+	}
+</style>

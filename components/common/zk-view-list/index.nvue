@@ -1,0 +1,20 @@
+<template>
+  <view>
+	  <view-item1 v-if="type == 1"></view-item1>
+	  <view-item2 v-if="type== 2"></view-item2>
+  </view>
+</template>
+
+<script>
+	import viewItem1 from './styles/view-item-1'
+	import viewItem2 from './styles/view-item-2'
+	export default {
+		props: {
+			type: {}
+		},
+		components: {
+			viewItem1,
+			viewItem2
+		}
+	}
+</script>

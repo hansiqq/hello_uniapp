@@ -1,0 +1,57 @@
+<template>
+	<view class="source">
+		<view class="source-title" :style="{marginTop: statusBarHeight+'px'}">
+			<view class="source-title-left"></view>
+			<text class="source-title-center">分类</text>
+			<view class="source-title-right"></view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				statusBarHeight: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.source{
+		padding: 0 10px;
+		height: 150px;
+		background-image: linear-gradient(to right,#F52E16, #D3271F);
+		&-title{
+			height: 50px;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			&-left{
+				width: 25px;
+				height: 25px;
+				// background-color: #2AB4C0;
+			}
+			&-center{
+				font-size: 16px;
+				color: #FFFFFF;
+				line-height: 30px;
+				height: 30px;
+			}
+			&-right{
+				width: 40px;
+				height: 40px;
+				// background-color: #888888;
+			}
+		}
+	}
+</style>

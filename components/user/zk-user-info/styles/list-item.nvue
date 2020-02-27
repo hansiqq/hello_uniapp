@@ -1,0 +1,88 @@
+<template>
+  <view class="list-item" :style="{ width: screenWidth + 'px' }">
+    <view class="list-item-list" v-for="(item, index) in widget" :key="index" @click="listItemClick(item)">
+      <text class="list-item-list-left">{{ item.type }}</text>
+      <view class="list-item-list-right">
+        <text class="list-item-list-right-test" v-if="!item.isAct">{{ item.value }}</text>
+        <view class="list-item-list-right-image" v-else>
+          <image class="list-item-list-right-image-img" :src="item.value" alt="暂无图片" />
+        </view>
+        <view class="right-icon" v-if="item.show">
+          <i class="iconfont" :class="item.icon"></i>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  props: {
+    widget: {}
+  },
+  data() {
+    return {
+      screenWidth: 0
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+    },
+    listItemClick(item) {
+      if (item.infoType === 'loginOut') {
+        ala.userLogout()
+      }
+      if (item.infoType === 'editAddress') {
+        ala.to('/user/address')
+      }
+      if (item.infoType === 'localClear') {
+        ala.localClear()
+      }
+      if (item.url) {
+        ala.to(item.url)
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.list-item {
+  &-list {
+    height: 50px;
+    padding: 0 10px;
+    border-color: #f2f6fc;
+    border-bottom-width: 1px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    &-left {
+      font-size: 14px;
+    }
+    &-right {
+      flex-direction: row;
+      align-items: center;
+      &-image {
+        &-img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+        margin-right: 5px;
+      }
+      &-test {
+        font-size: 14px;
+      }
+    }
+  }
+}
+.iconfont{
+  font-size: 12px;
+}
+</style>

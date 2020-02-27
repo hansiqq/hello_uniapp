@@ -1,0 +1,66 @@
+<template>
+  <!-- v-if="productView && async" -->
+  <view class="show-thumbnail">
+    <view>
+      <swiper :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration" @change="siperChange" :style="{ height: winWidth + 'px', width: winWidth + 1 + 'px' }">
+        <swiper-item v-for="(item, index) in productView.productExtensions.productThums" :key="index">
+          <image :src="item.thumbnailUrl" :style="{ height: winWidth + 'px', width: winWidth + 1 + 'px' }" class="show-thumbnail-image" />
+        </swiper-item>
+      </swiper>
+	  <text class="show-thumbnail-num">{{num}}/{{productView.productExtensions.productThums.length}}</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  props: {
+    productView: {}
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.winWidth = ala.screenWidth()
+      this.async = true
+    },
+	siperChange(ev) {
+		this.num = ev.detail.current + 1
+	}
+  },
+  data() {
+    return {
+      indicatorDots: false,
+      autoplay: true,
+      interval: 3000,
+      duration: 1000,
+      winWidth: '',
+      async: false,
+	  num: 1
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.show-thumbnail {
+	position: relative;
+  &-image {
+  }
+  &-num{
+	  position: absolute;
+	  bottom: 10px;
+	  right: 10px;
+	  width: 40px;
+	  height: 20px;
+	  border-radius: 20px;
+	  font-size: 11px;
+	  line-height: 20px;
+	  color: #FFFFFF;
+	  text-align: center;
+	  background-color: rgba(0, 0, 0, 0.2);
+  }
+}
+</style>

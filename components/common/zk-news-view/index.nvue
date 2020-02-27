@@ -1,0 +1,24 @@
+<template>
+	<view>
+		<top></top>
+		<newsImage></newsImage>
+		<newsList></newsList>
+	</view>
+</template>
+
+<script>
+	import top from './styles/top'
+	import newsImage from './styles/image'
+	import newsList from './styles/news-list'
+	export default {
+		components: {
+			top,
+			newsImage,
+			newsList
+		}
+	}
+</script>
+
+<style>
+
+</style>

@@ -1,0 +1,20 @@
+<template>
+	<view>
+		<courseItem1 :viewModel="viewModel.links" v-if="viewModel.type == 1"></courseItem1>
+		<courseItem2 :viewModel="viewModel.links" v-if="viewModel.type == 2"></courseItem2>
+	</view>
+</template>
+
+<script>
+	import courseItem1 from './styles/course-item-1'
+	import courseItem2 from './styles/course-item-2'
+	export default {
+		props: {
+			viewModel: {}
+		},
+		components: {
+			courseItem1,
+			courseItem2
+		}
+	}
+</script>

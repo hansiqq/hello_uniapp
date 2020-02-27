@@ -1,0 +1,139 @@
+<template>
+  <view class="comment">
+    <text class="comment-title">圈落互动</text>
+    <text class="comment-title" @click="comment">评论</text>
+    <view class="comment-list" v-for="(item, index) in commentList" :key="index">
+      <view class="comment-list-left">
+        <x-image :isCircle="true" src="http://bdd.5ug.com/wwwroot/uploads/api/242-873-583/2020-02-13/5e44f082b4670c127c890f45.png" width="32" height="32"></x-image>
+      </view>
+      <view class="comment-list-right">
+        <view class="comment-list-right-title" :style="{ width: screeenWidth - 62 + 'px' }">
+          <text class="comment-list-right-title-text">{{ item.user.nickName }}</text>
+          <view class="comment-list-right-title-right">
+            <x-icon name="icon-homes" size="16" color="#E5312E"></x-icon>
+            <text class="comment-list-right-title-right-text" @click="giveThumpUp">{{ item.upCount }}</text>
+          </view>
+        </view>
+        <text class="comment-list-right-intro" :style="{ width: screeenWidth - 62 + 'px' }">{{ item.content }}</text>
+        <view class="comment-list-right-bottom">
+          <text class="comment-list-right-bottom-left">{{ getItem(item.createTime) }}</text>
+          <text class="comment-list-right-bottom-right" @click="reply(item.id, index)">回复Ta</text>
+        </view>
+        <view v-for="(reply, replyIndex) in item.replys" :key="replyIndex">
+          <text class="comment-list-right-intro" :style="{ width: screeenWidth - 62 + 'px' }">{{ reply.content }}</text>
+          <text class="comment-list-right-bottom-left">回复时间：{{ getItem(reply.createTime) }}</text>
+          <text class="comment-list-right-bottom-left">回复人：{{ reply.user.nickName }}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import api from '@/service/api.js'
+export default {
+  props: {
+    materialId: ''
+  },
+  data() {
+    return {
+      screeenWidth: 0,
+      commentList: [],
+      pageIndex: 1
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screeenWidth = ala.screenWidth()
+      var para = {
+        EntityId: this.materialId,
+        Key: 'Material'
+      }
+      var response = await api.entityPageList('Comments', this.pageIndex, para)
+      console.info('获取评论', response)
+      this.commentList = response.result
+      console.info('获取评论', this.commentList)
+    },
+    //  评论
+    async comment() {
+      var response = await api.comment('Material', this.materialId, '您说的太对了')
+      console.info('评论', response)
+      this.commentList.unshift(response)
+    },
+    // 回复
+    async reply(commentId, index) {
+      var response = await api.commentReply('Material', commentId, '评论回复您说的太精辟了，给您点赞')
+      console.info('评论回复', response)
+      this.commentList[index] = response
+    },
+    // 点赞
+    async giveThumpUp() {},
+    getItem(item) {
+      return ala.timeAgo(item)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.comment {
+  padding: 0 10px;
+  &-title {
+    padding-top: 10px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  &-list {
+    padding: 10px 0;
+    flex-direction: row;
+    border-color: #e5e5e5;
+    border-style: solid;
+    border-bottom-width: 1px;
+    &-left {
+      margin-right: 10px;
+    }
+    &-right {
+      &-title {
+        height: 32px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        &-text {
+          font-size: 14px;
+          color: #666666;
+        }
+        &-right {
+          width: 60px;
+          height: 30px;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-end;
+          &-text {
+            margin-left: 5px;
+            font-size: 14px;
+          }
+        }
+      }
+      &-intro {
+        padding: 5px 0;
+        font-size: 14px;
+      }
+      &-bottom {
+        flex-direction: row;
+        &-left {
+          font-size: 12px;
+          color: #666666;
+        }
+        &-right {
+          margin-left: 3px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+</style>

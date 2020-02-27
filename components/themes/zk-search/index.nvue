@@ -1,0 +1,17 @@
+<template>
+  <view>
+    <!-- <searchItem1></searchItem1> -->
+    <searchItem2></searchItem2>
+  </view>
+</template>
+
+<script>
+  import searchItem1 from './styles/search-item-1'
+  import searchItem2 from './styles/search-item-2'
+  export default {
+    components: {
+      searchItem1,
+      searchItem2
+    }
+  }
+</script>

@@ -1,0 +1,257 @@
+<template>
+  <view class="cart-item-2" v-if="async">
+    <view v-for="(storeItem, index) in widgetModel.storeItems" :key="index">
+      <view class="cart-item-2-store-title" :style="{ width: screenWidth + 'px' }">
+        <view class="cart-item-2-store-title-left" @click="storeClick(index)" :class="{ 'left-active': productStoreRadio[index] }">
+          <x-icon name="icon-testsu" size="20" color="#007AFF" v-if="productStoreRadio[index]"></x-icon>
+        </view>
+        <text class="cart-item-2-store-name">自营店铺</text>
+      </view>
+      <!-- 商品列表 -->
+      <uni-swipe-action style="margin-top: 5px;">
+        <uni-swipe-action-item @click="deleletClick(storeItem, productItem)" :options="options" class="cart-item-2-scroll-list" :style="{ width: screenWidth + 'px' }" v-for="(productItem, productIndex) in storeItem.productSkuItems" :key="productIndex">
+          <view class="cart-item-2-scroll-list-cont" :style="{ width: screenWidth + 'px' }">
+            <view class="cart-item-2-scroll-list-cont-left">
+              <view class="cart-item-2-scroll-list-cont-left-check" @click="radioClick(index, productIndex)" :class="{ 'cart-item-2-scroll-list-cont-left-check-active': productRadio[index][productIndex] }">
+                <x-icon name="icon-testsu" size="20" color="#007AFF" v-if="productRadio[index][productIndex]"></x-icon>
+              </view>
+            </view>
+            <view class="cart-item-2-scroll-list-cont-center" :style="{ width: screenWidth - 50 + 'px' }">
+              <image :src="productItem.thumbnailUrl" class="cart-item-2-scroll-list-cont-center-image" />
+              <view class="cart-item-2-scroll-list-cont-center-cont" :style="{ width: screenWidth - 122 + 'px' }">
+                <text class="cart-item-2-scroll-list-cont-center-cont-title">{{ productItem.name }}</text>
+                <text class="cart-item-2-scroll-list-cont-center-cont-intro">{{ productItem.propertyValueDesc }}</text>
+                <view class="cart-item-2-scroll-list-cont-center-cont-foot">
+                  <view class="cart-item-2-scroll-list-cont-center-cont-foot-left">
+                    <text class="cart-item-2-price">￥</text>
+                    <text class="cart-item-2-price">{{ productItem.price }}</text>
+                  </view>
+                  <view class="cart-item-2-scroll-list-cont-center-cont-foot-right">
+                    <text class="cart-item-2-num">x</text>
+                    <text class="cart-item-2-num">{{ productItem.buyCount }}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </uni-swipe-action-item>
+      </uni-swipe-action>
+    </view>
+    <cartSumbit :widget="widget" @change="radioChange" ref="cartSumbit" @save="save"></cartSumbit>
+  </view>
+</template>
+
+<script>
+import service from './service'
+import compatible from './compatible'
+import cartSumbit from './cart-sumbit'
+import ala from '@/service/ala'
+import uniSwipeAction from '@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action'
+import uniSwipeActionItem from '@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item'
+export default {
+  components: {
+    cartSumbit,
+    uniSwipeAction,
+    uniSwipeActionItem
+  },
+  props: {
+    widget: {}
+  },
+  data() {
+    return {
+      async: false,
+      screenWidth: 0,
+      screenHeight: 0,
+      widgetModel: {}, // 存储购物车返回数据
+      productRadio: [], // 所有商品的选框
+      productStoreRadio: [], // 所有店铺的选框
+      fuseWidth: 0, // 兼容h5，小程序宽度
+      options: [
+        {
+          text: '删除',
+          style: {
+            backgroundColor: '#f74c31'
+          }
+        }
+      ]
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      // 计算屏幕宽度
+      this.screenWidth = ala.screenWidth()
+      this.screenHeight = ala.screenHeight()
+      this.fuseWidth = compatible.screenWidth(this)
+      service.initCart(this)
+      this.async = true
+    },
+    // 商品点击
+    radioClick(storeIndex, productIndex) {
+      service.radioClick(this, {
+        storeIndex,
+        productIndex
+      })
+    },
+    // 店铺点击
+    storeClick(storeIndex) {
+      service.storeClick(this, storeIndex)
+    },
+    // 删除商品
+    deleletClick(store, product) {
+      service.deleletClick(this, {
+        store,
+        product
+      })
+    },
+    // 监听全选
+    radioChange(isRadio) {
+      service.radioChange(this, isRadio)
+    },
+    // 提交订单
+    save() {
+      service.save(this)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.cart-item-2 {
+  background-color: #f2f2f2;
+  padding-bottom: 10px;
+
+  &-bg {
+    background-color: #f2f2f2;
+    position: fixed;
+    z-index: -1;
+  }
+
+  &-price {
+    font-size: 12px;
+    color: $gl-themeColor;
+  }
+
+  &-num {
+    font-size: 12px;
+  }
+
+  background-color: #f2f2f2;
+
+  &-store-title {
+    height: 35px;
+    background-color: #ffffff;
+    border-bottom-width: 1px;
+    border-bottom-color: #e5e5e5;
+    border-bottom-style: solid;
+    flex-direction: row;
+    align-items: center;
+
+    &-left {
+      width: 20px;
+      height: 20px;
+      margin: 0 10px;
+      border-width: 1px;
+      border-color: #d6d6d6;
+      border-style: solid;
+      border-radius: 50%;
+    }
+  }
+
+  &-store-name {
+    font-size: 16px;
+  }
+
+  &-scroll-list {
+    margin: 5px 0;
+    &-cont {
+      margin-top: 10px;
+      height: 100px;
+      background-color: #ffffff;
+      flex-direction: row;
+      align-items: center;
+
+      &-right,
+      &-left {
+        width: 50px;
+        height: 100px;
+      }
+
+      &-right {
+        line-height: 100px;
+        text-align: center;
+        font-size: 16px;
+        color: #ffffff;
+        background-color: #f74c31;
+      }
+
+      &-left {
+        align-items: center;
+        justify-content: center;
+
+        &-check {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          border-width: 1px;
+          border-color: #d6d6d6;
+          border-style: solid;
+        }
+
+        &-check-active {
+          background-color: #00b26a;
+        }
+      }
+
+      &-center {
+        flex-direction: row;
+
+        &-image {
+          width: 72px;
+          height: 72px;
+          border-radius: 3px;
+        }
+
+        &-cont {
+          height: 72px;
+          padding: 0 10px;
+
+          &-title {
+            font-size: 14px;
+            // line-height: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* #ifndef APP-PLUS-NVUE */
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            /* #endif */
+            /* #ifndef APP-PLUS-NVUE */
+            lines: 2;
+            /* #endif */
+          }
+
+          &-intro {
+            color: #999;
+            font-size: 12px;
+          }
+
+          &-foot {
+            height: 20px;
+            flex-direction: row;
+            justify-content: space-between;
+
+            &-right,
+            &-left {
+              flex-direction: row;
+              align-items: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>

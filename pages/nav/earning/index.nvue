@@ -1,0 +1,30 @@
+<template>
+  <view>
+    <top></top>
+    <view class="earning-show">
+      <zk-view-list type="1"></zk-view-list>
+      <zk-view-list type="2"></zk-view-list>
+      <zk-view-list type="2"></zk-view-list>
+    </view>
+  </view>
+</template>
+
+<script>
+import top from './widgets/top'
+export default {
+  components: {
+    top
+  },
+  data() {
+    return {}
+  },
+  methods: {}
+}
+</script>
+
+<style lang="scss" scoped>
+.earning-show {
+  position: relative;
+  bottom: 30px;
+}
+</style>

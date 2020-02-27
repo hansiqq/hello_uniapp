@@ -1,0 +1,21 @@
+<template>
+  <view>
+    店主学习
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      ala.uniSubNVue('studyBottom')
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped></style>

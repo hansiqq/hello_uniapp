@@ -1,0 +1,83 @@
+<template>
+	<view class="calendar-top">
+		<view class="calendar-top-cont">
+			<view class="calendar-top-list" v-for="(item, index) in list" :key="index">
+				<text class="calendar-top-list-title">{{item.name}}</text>
+				<text class="calendar-top-list-intro" :class="{'calendar-top-list-act': index === 0}">{{item.num}}</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				list: [
+					{
+						name: '今日',
+						num: 3
+					},
+					{
+						name: '周一',
+						num: 4
+					},
+					{
+						name: '周二',
+						num: 5
+					},
+					{
+						name: '周三',
+						num: 6
+					},
+					{
+						name: '周四',
+						num: 7
+					},
+					{
+						name: '周五',
+						num: 8
+					},
+					{
+						name: '周六',
+						num: 9
+					}
+				]
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.calendar-top{
+		padding: 15px;
+		&-cont{
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+		}
+		&-list{
+			width: 50px;
+			height: 60px;
+			align-items: center;
+			&-title {
+				font-size: 15px;
+				color: #9494A0;
+			}
+			&-intro{
+				margin-top: 5px;
+				width: 28px;
+				height: 28px;
+				border-radius: 50%;
+				text-align: center;
+				line-height: 28px;
+				font-size: 16px;
+				font-weight: bold;
+			}
+			&-act {
+				background-color: #FD493D;
+				color: #FFFFFF;
+			}
+		}
+	}
+</style>

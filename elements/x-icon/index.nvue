@@ -1,0 +1,101 @@
+<template>
+  <view class="x-icon" v-if="async">
+    <!-- #ifndef APP-PLUS-NVUE -->
+    <i :class="iconName + '  icon iconfont ' + xClass" :style="'font-size:' + iconSize + 'px;color:' + iconColor + ';'"></i>
+    <!-- #endif -->
+    <!-- #ifdef APP-PLUS-NVUE -->
+    <text :class="iconName + ' iconfont brand' + xClass" :style="{ color: iconColor, 'font-size': iconSize + 'px' }"> {{ iconName }}</text>
+    <!-- #endif -->
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import iconJson from '@/static/iconfont/codes.json'
+export default {
+  name: 'x-icon',
+  props: {
+    icon: null,
+    name: {},
+    color: {},
+    size: {
+      default: 16
+    },
+    xClass: {}
+  },
+  beforeCreate() {
+    ala.appIcon()
+  },
+  onLoad() {
+    this.init()
+  },
+  mounted() {
+    this.init()
+  },
+  data() {
+    return {
+      async: true,
+      iconName: '',
+      iconColor: '',
+      iconSize: 16
+    }
+  },
+  methods: {
+    init() {
+      if (this.icon) {
+        this.iconSize = this.icon.size
+        if (ala.strIsEmpty(this.icon.icon)) {
+          this.iconName = this.icon.name
+        } else {
+          this.iconName = this.icon.icon
+        }
+      } else if (this.name !== 0 && !ala.strIsEmpty(this.name) && this.name !== '0') {
+        this.iconName = this.name
+        this.iconSize = this.size
+        this.iconColor = this.color
+      }
+      if (this.color !== undefined && this.color !== '') {
+        this.iconColor = this.color
+      }
+      // #ifdef APP-PLUS-NVUE
+      this.getAppIcon(this.iconName)
+      // #endif
+      this.async = true
+    },
+    watchWidget() {
+      this.async = false
+      this.init()
+      this.async = true
+    },
+    getAppIcon(CssName) {
+      var iconItem = iconJson.find(r => r.css === CssName)
+      if (iconItem) {
+        this.iconName = String.fromCodePoint(iconItem.codepoint)
+      }
+    }
+  },
+  watch: {
+    name: 'watchWidget',
+    src: 'watchWidget',
+    icon: 'watchWidget'
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.iconfont {
+  font-family: iconfont;
+}
+.x-icon {
+  justify-content: center;
+  align-items: center;
+}
+
+.i-color {
+  color: $gl-brand;
+}
+
+.themecolor {
+  color: $gl-themeColor !important;
+}
+</style>

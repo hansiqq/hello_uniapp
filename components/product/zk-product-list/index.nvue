@@ -1,0 +1,105 @@
+<template>
+  <view v-if="async" :style="{ width: width + 'px' }" class="zk-product-list">
+    <commonItem ref="commonItem" :viewModel="allDataList" :widget="widgetModel"></commonItem>
+  </view>
+</template>
+
+<script>
+import props from './props'
+import commonItem from './common-style.nvue'
+import pageItem from './page-style.nvue'
+import ala from '@/service/ala'
+export default {
+  components: {
+    commonItem,
+    pageItem
+  },
+  data() {
+    return {
+      async: false,
+      widgetModel: {},
+      width: '375',
+      allDataList: [], // 所有数据,每次刷新以后获取的数据叠加
+      viewModel: {}, // 视图模型
+      queryPara: {
+        pageIndex: 1,
+        pageSize: this.pageSize
+      } // 查询参数
+    }
+  },
+  props,
+  onLoad(option) {
+    this.option = option
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    // 下拉菜单事件
+    scrollView() {
+      this.init()
+    },
+    async init() {
+      var widgetPara = this.widget
+      if (widgetPara) {
+        this.queryPara = {
+          ...this.queryPara,
+          ...widgetPara.value
+        }
+        this.widgetModel = this.widget
+      } else {
+        this.widgetModel = {
+          value: props.widget
+        }
+      }
+      var response = await ala.httpGet('api/Product/List')
+      if (response) {
+        this.viewModel = response
+        this.allDataList = [...this.allDataList, ...this.viewModel.productItems]
+      }
+      this.width = ala.screenWidth()
+      this.async = true
+    },
+    scrolltolower() {
+      if (!this.loading.show) {
+        this.queryPara.pageIndex += 1
+        if (this.allDataList.length >= this.viewModel.data.recordCount) {
+          this.loading.show = true
+        } else {
+          this.init()
+        }
+      }
+    },
+    // 标签切换
+    async tapTab(tab, index) {
+      if (this.serachOption.tabIndex === index) {
+        return false
+      } else {
+        this.queryPara.pageIndex = 1
+        this.serachOption.tabIndex = index
+        let tabPara = {}
+        tabPara[tab.name] = tab.key
+        this.queryPara = {
+          ...this.queryPara,
+          ...tabPara
+        }
+        this.allDataList = []
+        this.init()
+      }
+    },
+    // 搜索
+    async search(par) {
+      this.queryPara.pageIndex = 1
+      this.queryPara = {
+        ...this.queryPara,
+        ...par
+      }
+      this.init()
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import './var.scss';
+</style>

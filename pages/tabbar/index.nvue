@@ -1,0 +1,60 @@
+<template>
+  <view class="index">
+    <!-- #ifndef APP-NVUE -->
+    <indexNav></indexNav>
+    <view style="height: 85px;"></view>
+    <!-- #endif -->
+    <!-- #ifdef APP-NVUE -->
+    <view style="height: 40px;"></view>
+    <!-- #endif -->
+    <indexSwiper></indexSwiper>
+    <zk-grid :widget="gridIndexNav"></zk-grid>
+    <view style="background-color: #BA1511;">
+      <alaList></alaList>
+      <region-list text="招商专区"></region-list>
+      <region-list text="体验专区"></region-list>
+      <region-list text="学习培训"></region-list>
+      <class-list></class-list>
+      <zk-product-area-class></zk-product-area-class>
+    </view>
+  </view>
+</template>
+
+<script>
+import indexNav from './subnvue/index-nav'
+import ala from '@/service/ala'
+import alaList from './widgets/home/list.nvue'
+import regionList from './widgets/home/region-list.nvue'
+import classList from './widgets/home/class-list.nvue'
+import productItem5 from './widgets/home/product-item-5.nvue'
+import indexSwiper from './widgets/home/swiper'
+import gridIndexNavJson from './json/zk-grid_index-nav.json'
+export default {
+  components: {
+    indexNav,
+    alaList,
+    regionList,
+    classList,
+    productItem5,
+    indexSwiper
+  },
+  data() {
+    return {
+      gridIndexNav: gridIndexNavJson
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      // #ifdef APP-NVUE
+      var indexNav = uni.getSubNVueById('indexNav')
+      indexNav.setStyle({
+        height: '115px'
+      })
+      // #endif
+    }
+  }
+}
+</script>

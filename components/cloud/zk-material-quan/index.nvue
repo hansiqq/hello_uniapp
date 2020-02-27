@@ -1,0 +1,84 @@
+<template>
+  <view>
+    <!-- #ifdef H5 -->
+    <materialNav></materialNav>
+    <!-- #endif -->
+    <navigationItem @changeClass="changeClass" ref="navigationItem"></navigationItem>
+    <!-- #ifdef H5 -->
+    <view style="height: 105px;"></view>
+    <!-- #endif -->
+    <!-- #ifdef APP-NVUE -->
+    <view style="height:60px;"></view>
+    <!-- #endif -->
+    <view style="padding: 10px;">
+      <x-image src="http://img.baoduoduo.club/images/quan/xinguan.png" height="120" :width="screenWidth - 20"></x-image>
+    </view>
+    <!--  -->
+    <text class="two-title" v-if="selectData">{{ selectData.class.name }}</text>
+    <materailProduct ref="materailProduct"></materailProduct>
+    <view style="height: 10px;background-color: #f0f0f0;"></view>
+  </view>
+</template>
+
+<script>
+import navigationItem from './widget/navigation-item'
+import materialNav from './subNvue/material-subNvue.nvue'
+import ala from '@/service/ala.js'
+import api from '@/service/api.js'
+import materailProduct from './widget/materail-product'
+export default {
+  components: {
+    navigationItem,
+    materialNav,
+    materailProduct
+  },
+  data() {
+    return {
+      screenWidth: 0,
+      selectData: null
+    }
+  },
+  mounted() {
+    this.init()
+    uni.$on('global_material_tab_click', async data => {
+      await this.load(data)
+    })
+  },
+  methods: {
+    async init() {
+      this.screenWidth = ala.screenWidth()
+    },
+    // 根据头部点击加载数据
+    async load(data) {
+      this.$nextTick(() => {
+        if (this.$refs.navigationItem) {
+          this.$refs.navigationItem.load(data)
+        }
+      })
+    },
+    // 改变分类
+    changeClass(data) {
+      this.selectData = data
+      this.$nextTick(() => {
+        if (this.$refs.materailProduct) {
+          this.$refs.materailProduct.load(data.class)
+        }
+      })
+      console.info('当前选择的分类信息', this.selectData)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.k-swiper {
+  font-size: $uni-font-size-lg;
+  color: $uni-color-primary;
+}
+.two-title {
+  padding: 10px;
+  padding-top: 20px;
+  font-size: 15px;
+  font-weight: 600;
+}
+</style>

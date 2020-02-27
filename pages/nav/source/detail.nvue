@@ -1,0 +1,379 @@
+<template>
+  <view class="detail" :style="{ width: screenWidth + 'px' }" v-if="async">
+    <!-- 头部信息 -->
+    <view class="detail-title">
+      <view class="detail-title-left">
+        <x-image :isCircle="true" src="http://bdd.5ug.com/wwwroot/uploads/api/242-873-583/2020-02-13/5e44f082b4670c127c890f45.png" width="40" height="40"></x-image>
+      </view>
+      <view class="detail-title-right" :style="{ width: screenWidth - 70 + 'px' }">
+        <view class="detail-title-right-left" :style="{ width: screenWidth - 240 + 'px' }">
+          <text class="detail-title-right-left-title">{{ materialModel.name }}</text>
+          <text class="detail-title-right-left-intro">{{ city }}{{ createTime }}</text>
+        </view>
+        <view class="detail-title-right-right">
+          <view class="detail-title-right-right-text" @click="downShare">
+            <x-icon name="icon-homes" size="16" color="#E5312E"></x-icon>
+            <text class="detail-title-right-right-text-text">下载发圈</text>
+          </view>
+          <text class="detail-title-right-right-collect">复制</text>
+        </view>
+      </view>
+    </view>
+    <!-- 圈落详情 -->
+    <view class="detail-detail" :style="{ width: screenWidth + 'px' }">
+      <text class="detail-detail-text">{{ materialModel.intro }}</text>
+      <view class="detail-detail-ul">
+        <image :src="'http://b-api.baoduoduo.club' + item.OriginalUrl" v-for="(item, index) in imageList" :key="index" class="detail-detail-list" :style="{ width: imageSize + 'px', height: imageSize + 'px' }" />
+      </view>
+    </view>
+    <!-- 商品信息 -->
+    <view class="detail-product" :style="{ width: screenWidth - 20 + 'px' }">
+      <image :src="product.thumbnailUrl" class="detail-product-left" />
+      <view class="detail-product-right" :style="{ width: screenWidth - 120 + 'px' }">
+        <view class="detail-product-right-title">
+          <x-icon name="icon-gs-car" size="16"></x-icon>
+          <text class="detail-product-right-title-text" :style="{ width: screenWidth - 185 + 'px' }">{{ product.name }}</text>
+        </view>
+        <view class="detail-product-right-center">
+          <view class="detail-product-right-price">
+            <text class="detail-product-right-price-left">劵后 ￥</text>
+            <text class="detail-product-right-price-right">{{ product.displayPrice }}</text>
+          </view>
+          <x-icon name="icon-gs-car" size="16"></x-icon>
+        </view>
+        <view class="detail-product-right-bottom">
+          <text class="detail-product-right-bottom-text">返现￥2.10</text>
+          <text class="detail-product-right-bottom-text">{{ product.soldCount }} 人已购买</text>
+        </view>
+      </view>
+    </view>
+    <!-- 商品折扣劵 -->
+    <view class="detail-coupon" :style="{ width: screenWidth - 20 + 'px' }">
+      <view class="detail-coupon-title">
+        <x-icon name="icon-info-user" size="20" color="#E21E17"></x-icon>
+      </view>
+      <view class="detail-coupon-ul">
+        <text class="detail-coupon-list">【原价】 ￥24.99元</text>
+        <text class="detail-coupon-list">【劵后加】 ￥19.99元</text>
+        <text class="detail-coupon-list">---------------------</text>
+        <text class="detail-coupon-list">复制这条口令，进入【tao宝】即可抢购</text>
+      </view>
+      <view class="detail-coupon-bottom">
+        <text class="detail-coupon-bottom-text">复制评论</text>
+      </view>
+    </view>
+    <!-- 分享 -->
+    <view class="detail-share" :style="{ width: screenWidth + 'px' }">
+      <view class="detail-share-bottom" :style="{ width: (screenWidth - 20) / 3 + 'px' }" @click="showShare">
+        <x-icon name="icon-info-user" size="16" color="#3C3A3D"></x-icon>
+        <text class="detail-share-bottom-text">分享</text>
+      </view>
+      <view class="detail-share-bottom" :style="{ width: (screenWidth - 20) / 3 + 'px' }">
+        <x-icon name="icon-info-user" size="16" color="#3C3A3D"></x-icon>
+        <text class="detail-share-bottom-text">888</text>
+      </view>
+    </view>
+    <view style="height: 10px; background-color: #f0f0f0;"></view>
+    <commentItem :materialId="materialModel.id"></commentItem>
+    <sourceShow ref="sourceShow"></sourceShow>
+    <x-share ref="xShare"></x-share>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import api from '@/service/api.js'
+import commentItem from '../widgets/source/comment'
+import sourceShow from './source_show'
+export default {
+  components: {
+    commentItem,
+    sourceShow
+  },
+  data() {
+    return {
+      screenWidth: 0,
+      id: '',
+      materialModel: {},
+      product: {},
+      imageList: [],
+      commentList: [],
+      async: false,
+      imageSize: 0,
+      city: '',
+      createTime: ''
+    }
+  },
+  onLoad(options) {
+    this.id = options.id
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screenWidth = ala.screenWidth()
+      var response = await api.entityById('Materials', this.id)
+      this.materialModel = response
+      var productResult = await api.Show(this.materialModel.entityId)
+      this.product = productResult
+      this.imageList = JSON.parse(this.product.detail.imageJson)
+      this.getImage()
+
+      // 设置时间和城市
+      this.city = ala.strSubStart(this.materialModel.fullName, '市').replace('省', ' ')
+      this.createTime = ala.timeAgo(this.materialModel.createTime)
+      this.async = true
+    },
+    // 图片展示大小
+    getImage() {
+      var length = this.imageList.length
+      var width = this.screenWidth - 20
+      switch (length) {
+        case 1:
+          this.imageSize = width
+          break
+        case 2 || 4:
+          this.imageSize = width / 2 - 7
+          break
+        case 3:
+          this.imageSize = width / 3 - 7
+          break
+        default:
+          this.imageSize = width / 3 - 7
+      }
+    },
+    // 下载发圈
+    downShare() {
+      this.$refs.sourceShow.open(this.imageList)
+    },
+    // 分享
+    showShare() {
+      this.$refs.xShare.open(1)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.detail {
+  padding: 20px 0;
+  // background-color: #F1EFF2;
+  /* 头部信息 */
+  &-title {
+    padding: 0 10px;
+    height: 50px;
+    flex-direction: row;
+    &-left {
+      margin-right: 10px;
+    }
+    &-right {
+      flex-direction: row;
+      &-left {
+        height: 45px;
+        &-title {
+          height: 25px;
+          line-height: 25px;
+          font-size: 15px;
+          font-weight: 600;
+        }
+
+        &-intro {
+          height: 25px;
+          line-height: 25px;
+          color: #979497;
+          font-size: 12px;
+        }
+      }
+      &-right {
+        height: 25px;
+        width: 170px;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        &-text {
+          padding: 0 10px;
+          background-color: #fff0f0;
+          border-radius: 30px;
+          flex-direction: row;
+          align-items: center;
+
+          &-icon {
+            width: 15px;
+            height: 15px;
+          }
+
+          &-text {
+            margin-left: 3px;
+            font-size: 14px;
+            color: #e13730;
+          }
+
+          margin-right: 5px;
+        }
+
+        &-collect {
+          padding: 0 10px;
+          line-height: 25px;
+          background-color: #f1eff0;
+          border-radius: 30px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  /* 图文信息 */
+  &-detail {
+    padding: 0 10px;
+    &-text {
+      font-size: 14px;
+    }
+
+    &-ul {
+      margin-top: 10px;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    &-list {
+      border-radius: 3px;
+    }
+  }
+  /* 商品信息 */
+  &-product {
+    margin: 0 10px;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #fbf8fb;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    &-left {
+      width: 70px;
+      height: 70px;
+      border-radius: 3px;
+      background-color: #36a3f7;
+    }
+
+    &-right {
+      height: 65px;
+      justify-content: space-between;
+
+      &-title {
+        height: 25px;
+        flex-direction: row;
+        align-items: center;
+        &-text {
+          margin-left: 5px;
+          font-size: 14px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          /* #ifdef APP-NVUE */
+          lines: 1;
+          /* #endif */
+          /* #ifndef APP-NVUE */
+          white-space: nowrap;
+          /* #endif */
+        }
+      }
+
+      &-center {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      &-bottom {
+        flex-direction: row;
+
+        &-text {
+          padding: 0 5px;
+          margin-right: 5px;
+          height: 18px;
+          border-color: #d23a34;
+          background-color: #ffefee;
+          border-style: solid;
+          border-width: 1px;
+          font-size: 10px;
+          color: #d23a34;
+          line-height: 18px;
+          border-radius: 3px;
+        }
+      }
+
+      &-price {
+        flex-direction: row;
+        align-items: flex-end;
+
+        &-left {
+          font-size: 12px;
+          color: #d23a34;
+        }
+
+        &-right {
+          color: #d23a34;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  /* 商品折扣劵 */
+  &-coupon {
+    margin: 0 10px;
+    margin-top: 10px;
+
+    padding: 10px;
+    background-color: #fbf8fb;
+    border-radius: 5px;
+    &-title {
+      flex-direction: row;
+    }
+    &-ul {
+      margin-top: 2px;
+    }
+    &-list {
+      font-size: 14px;
+      color: #555354;
+    }
+    &-bottom {
+      margin-top: 3px;
+      flex-direction: row;
+      justify-content: flex-end;
+      &-text {
+        height: 25px;
+        width: 70px;
+        line-height: 25px;
+        border-radius: 30px;
+        text-align: center;
+        font-size: 14px;
+        background-color: #e8e5e9;
+      }
+    }
+  }
+  /* 分享 */
+  &-share {
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    &-bottom {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      height: 30px;
+      width: 120px;
+      border-radius: 30px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: #dcd9dc;
+      &-text {
+        margin-left: 8px;
+        font-size: 16px;
+        color: #3c3a3d;
+        text-decoration: underline;
+      }
+      // justify-content: center;
+    }
+  }
+}
+</style>

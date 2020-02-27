@@ -1,0 +1,111 @@
+<template>
+  <view class="share_detail" :style="{ width: screenWidth + 'px', height: screenHeight + 'px' }">
+    <image :src="imageUrl" :style="{ width: screenWidth * 0.8 + 'px', height: screenHeight * 0.8 + 'px' }" class="share_detail-image" />
+    <view class="share_detail-bottom" :style="{ width: screenWidth + 'px' }" @click="clickShare(0)">
+      <view class="share_detail-bottom-left" :style="{ width: (screenWidth * 0.8) / 2 + 'px' }">
+        <text class="share_detail-bottom-text">复制分享链接</text>
+      </view>
+      <view class="share_detail-bottom-right" :style="{ width: (screenWidth * 0.8) / 2 + 'px' }" @click="clickShare(2)">
+        <text class="share_detail-bottom-text">复制分享海报</text>
+      </view>
+    </view>
+    <x-share ref="shareShow"></x-share>
+    <x-qrcode @showImage="showImage" ref="xQrcode"></x-qrcode>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      screenWidth: 0,
+      screenHeight: 0,
+      imageUrl: '',
+      viewModel: '',
+      widgetModel: ''
+    }
+  },
+  onLoad(options) {
+    if (options.data) {
+      this.viewModel = JSON.parse(options.data)
+    }
+    this.getImage()
+    this.getQrcode()
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+      this.screenHeight = ala.screenHeight()
+    },
+    clickShare(type) {
+      if (type === 2) {
+        this.$refs.xQrcode.init(this.widgetModel)
+      } else {
+        this.$refs.shareShow.open(type, this.widgetModel.swiperModel)
+      }
+    },
+    getImage() {
+      if (this.viewModel.image.substr(0, 1) === '/') {
+        this.imageUrl = ala.baseConfig().host + this.viewModel.image.substr(1)
+      }
+    },
+    // 获取二维码信息
+    async getQrcode() {
+      var response = await ala.qrcode(this.viewModel.qrCodeBackImage)
+      if (response) {
+        var para = {
+          backgroundUrl: this.imageUrl,
+          qrcodeList: JSON.parse(response.setting),
+          swiperModel: this.viewModel
+        }
+        this.widgetModel = para
+      }
+    },
+    // 分享图片
+    showImage(data) {
+      var para = {
+        imageUrl: data.tempFilePath
+      }
+      this.$refs.shareShow.open(2, para)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.share_detail {
+  background-color: #fafafa;
+  padding-top: 20px;
+  align-items: center;
+  &-image {
+    border-radius: 5px;
+  }
+  &-bottom {
+    margin-top: 30px;
+    flex-direction: row;
+    justify-content: center;
+    &-left {
+      border-top-left-radius: 30px;
+      border-bottom-left-radius: 30px;
+      height: 35px;
+      background-image: linear-gradient(to right, #f52e16, #fc8803);
+    }
+    &-right {
+      border-top-right-radius: 30px;
+      border-bottom-right-radius: 30px;
+      height: 35px;
+      background-color: #343434;
+    }
+    &-text {
+      font-size: 14px;
+      color: #ffffff;
+      text-align: center;
+      line-height: 35px;
+    }
+  }
+}
+</style>

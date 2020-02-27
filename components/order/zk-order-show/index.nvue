@@ -1,0 +1,465 @@
+<template>
+  <view class="order-show" v-if="async">
+    <view class="order-show-title" :style="{ width: screenWidth + 'px' }">
+      <view class="order-show-title-left">
+        <x-icon class="order-show-title-left-icon" name="icon-address" size="25"></x-icon>
+      </view>
+      <view class="order-show-title-right" :style="{ width: screenWidth - 55 + 'px' }">
+        <view class="order-show-title-right-title">
+          <text class="order-show-title-right-title-left">{{ address.name }}</text>
+          <text class="order-show-title-right-title-right">{{ address.mobile }}</text>
+        </view>
+        <text class="order-show-title-right-bottom">{{ address.addressDescription }}</text>
+      </view>
+    </view>
+    <view class="order-show-store">
+      <text class="order-show-store-left">{{ viewModel.storeName }}</text>
+      <text class="order-show-store-right">{{ state }}</text>
+    </view>
+    <view v-for="(item, index) in viewModel.productSkuItems" :key="index">
+      <view class="order-show-product" :style="{ width: screenWidth + 'px' }">
+        <image :src="item.thumbnailUrl" class="order-show-product-left" />
+        <view class="order-show-product-right" :style="{ width: screenWidth - 100 + 'px' }">
+          <view class="order-show-product-right-title" :style="{ width: screenWidth - 110 + 'px' }">
+            <text class="order-show-product-right-title-left" :style="{ width: (screenWidth - 110) * 0.7 + 'px' }">{{ item.name }}</text>
+            <view class="order-show-product-right-title-right" :style="{ width: (screenWidth - 110) * 0.3 + 'px' }">
+              <text class="order-show-product-price" v-if="showMember">￥ {{ item.price }}</text>
+              <text class="order-show-product-price" style="color:#c81432" v-else>￥ {{ item.displayPrice }}</text>
+              <text class="order-show-product-text">x{{ item.buyCount }}</text>
+            </view>
+          </view>
+          <text class="order-show-product-right-intro">{{ item.propertyValueDesc }}</text>
+        </view>
+      </view>
+    </view>
+    <view class="order-show-count">
+      <view class="order-show-count-list" v-if="showMember">
+        <text class="order-show-count-list-text">会员优惠({{ gradeName }})</text>
+        <text class="order-show-count-list-text">￥{{ discounts }}</text>
+      </view>
+      <view class="order-show-count-list">
+        <text class="order-show-count-list-text">商品总价</text>
+        <text class="order-show-count-list-text">￥{{ parseFloat(viewModel.totalAmount - viewModel.expressAmount).toFixed(1) }}</text>
+      </view>
+      <view class="order-show-count-list">
+        <text class="order-show-count-list-text">运费</text>
+        <text class="order-show-count-list-text">￥{{ viewModel.expressAmount }}</text>
+      </view>
+      <view class="order-show-count-list">
+        <text class="order-show-count-list-text">实付款(含运费)</text>
+        <text class="order-show-count-list-text order-show-count-list-color" v-if="showMember">￥{{ viewModel.totalAmount }}</text>
+        <text class="order-show-count-list-text order-show-count-list-color" v-else>￥{{ viewModel.paymentAmount }}</text>
+      </view>
+    </view>
+    <!-- <view></view> -->
+    <view class="order-show-detail">
+      <text class="order-show-detail-title">订单信息</text>
+      <view class="order-show-detail-list">
+        <text class="order-show-detail-list-left">订单编号:</text>
+        <text class="order-show-detail-list-right">{{ viewModel.serial }}</text>
+      </view>
+      <view class="order-show-detail-list">
+        <text class="order-show-detail-list-left">总金额:</text>
+        <text class="order-show-detail-list-right">￥{{ viewModel.totalAmount }}</text>
+      </view>
+      <view class="order-show-detail-list">
+        <text class="order-show-detail-list-left">现金支付:</text>
+        <text class="order-show-detail-list-right">￥{{ viewModel.paymentAmount }}</text>
+      </view>
+      <view class="order-show-detail-list">
+        <text class="order-show-detail-list-left">总数量:</text>
+        <text class="order-show-detail-list-right">{{ viewModel.totalCount }}</text>
+      </view>
+      <view class="order-show-detail-list">
+        <text class="order-show-detail-list-left">创建时间:</text>
+        <text class="order-show-detail-list-right">{{ viewModel.createTime }}</text>
+      </view>
+      <view class="order-show-detail-list" v-if="viewModel.paymentType !== '0'">
+        <text class="order-show-detail-list-left">付款时间:</text>
+        <text class="order-show-detail-list-right">{{ viewModel.payTime }}</text>
+      </view>
+      <view class="order-show-detail-list" v-if="viewModel.paymentType !== '0'">
+        <text class="order-show-detail-list-left">付款方式:</text>
+        <text class="order-show-detail-list-right">{{ viewModel.paymentType }}</text>
+      </view>
+      <view class="order-show-detail-list" v-if="LeaveMessage">
+        <text class="order-show-detail-list-left">买家留言:</text>
+        <text class="order-show-detail-list-right">{{ LeaveMessage }}</text>
+      </view>
+    </view>
+    <view class="order-show-bottom" :style="{ width: screenWidth + 'px' }" v-if="buttomShow">
+      <text class="order-show-bottom-left" v-for="(buts, butsIndex) in viewModel.methods" :key="butsIndex" @click="getButtom(buts)" v-show="tenementFool">{{ buts.name }}</text>
+    </view>
+    <x-pay ref="show_pay"></x-pay>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import host from '@/service/config.js'
+
+export default {
+  data() {
+    return {
+      async: false,
+      widgetModel: '',
+      address: '',
+      viewModel: '',
+      showPay: false,
+      state: '',
+      paymentButton: '',
+      cancelButton: '',
+      buttomShow: true,
+      showPassword: true,
+      layerBool: false,
+      affirmApi: '',
+      paymentCode: '',
+      gradeName: null,
+      discounts: 0,
+      tenementFool: true,
+      showMember: true,
+      LeaveMessage: '',
+      screenWidth: 0
+    }
+  },
+  props: {
+    widget: {}
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screenWidth = ala.screenWidth()
+      let parameter = {
+        id: this.widget.route.id
+      }
+      var orderShowResponse = await ala.httpGet('api/Order/GetOrder', parameter)
+      this.gradeName = ala.user().gradeName
+      if (orderShowResponse) {
+        this.viewModel = orderShowResponse
+        if (this.viewModel !== undefined) {
+          this.address = this.viewModel.order.orderExtension.userAddress
+          if (this.viewModel.orderStatus === 1) {
+            this.state = '待付款'
+            this.showPay = true
+          } else if (this.viewModel.orderStatus === 2) {
+            this.state = '待发货'
+          } else if (this.viewModel.orderStatus === 3) {
+            this.state = '待收货'
+          } else if (this.viewModel.orderStatus === 4) {
+            this.state = '待评价'
+          } else if (this.viewModel.orderStatus === 10) {
+            this.state = '待分享'
+          } else if (this.viewModel.orderStatus === 50) {
+            this.state = '退款/退货中'
+          } else if (this.viewModel.orderStatus === 51) {
+            this.state = '待退款'
+          } else if (this.viewModel.orderStatus === 200) {
+            this.state = '订单关闭'
+          } else if (this.viewModel.orderStatus === 201) {
+            this.state = '订单关闭，已退款'
+          }
+        }
+        var gradePrice = 0
+        this.viewModel.productSkuItems.forEach(item => {
+          if (item.platformPrice !== 0) {
+            gradePrice = gradePrice + (item.platformPrice - item.price)
+          }
+        })
+        this.discounts = gradePrice.toFixed(2)
+      } else {
+        ala.to('/order/list')
+      }
+      if (this.viewModel.methods.length !== 0) {
+        this.paymentButton = this.viewModel.methods[0]
+        this.cancelButton = this.viewModel.methods[1]
+      } else {
+        this.buttomShow = false
+      }
+      this.async = true
+      for (var i = 0; i < this.viewModel.methods.length; i++) {
+        if (this.viewModel.methods[i].type === 'Refund') {
+        }
+      }
+      if (host.themeId === '5d26e11a064c25053c9b3def') {
+        this.showMember = false
+      }
+      this.LeaveMessage = orderShowResponse.order.orderExtension.message.buyerMessage
+    },
+    changePassword: function() {
+      this.showPassword = !this.showPassword
+    },
+    layerCenrt() {
+      this.layerBool = false
+    },
+
+    getButtom(value) {
+      if (value.type === 'Pay') {
+        this.buy()
+      } else if (value.type === 'Cancel') {
+        this.getCancel(value.method)
+      } else if (value.type === 'Confirm') {
+        this.layerBool = true
+        this.confirmReceipt(value.method)
+      } else if (value.type === 'ExpressInfo') {
+        this.checkLogistics(value.method)
+      } else if (value.type === 'AfterSale' || value.type === 'Refund') {
+        this.returned(value)
+      } else if (value.type === 'UserRefundInfo') {
+        this.refundDetail(value)
+      }
+    },
+    //  支付订单
+    async buy() {
+      var para = {
+        id: this.viewModel.id,
+        userId: ala.userId()
+      }
+      var buyInputResponse = await ala.httpGet('api/order/pay', para)
+      if (buyInputResponse) {
+        this.$refs.show_pay.$emit('payMethod', buyInputResponse.payId, buyInputResponse.payAmount, buyInputResponse.orderIds)
+      }
+    },
+    async getCancel(api) {
+      var para = {
+        userId: ala.userId(),
+        id: this.viewModel.id
+      }
+      var repones = await ala.httpGet(api, para)
+      var this_ = this
+      uni.showModal({
+        showCancel: true,
+        content: '确认取消',
+        success: function(res) {
+          if (res.confirm) {
+            if (repones) {
+              ala.toastSuccess(repones.message)
+              this_.init()
+            }
+          }
+        }
+      })
+    },
+    async confirmReceipt(api) {
+      this.affirmApi = api
+    },
+    async checkLogistics(api) {
+      ala.to('/pages/index?path=order_logistics_list&id=' + this.viewModel.id)
+    },
+    async returned(value) {
+      ala.localSet('OrderDetails', this.viewModel)
+      ala.to(`/order/refund?id=${this.viewModel.id}&type=${value.type}`)
+      // ala.to('/order/refund&id=' + this.viewModel.id + '&type=' + value.type)
+    },
+    async layerAffirm() {
+      var para = {
+        userId: ala.user().id,
+        entityId: this.viewModel.id,
+        payPassword: this.paymentCode
+      }
+      var repones = await ala.httpPost(this.affirmApi, para)
+      if (repones) {
+        ala.toastSuccess('确认收货成功')
+        this.layerBool = false
+        var this_ = this
+        setTimeout(function() {
+          this_.init()
+        }, 100)
+      }
+    },
+    async refundDetail(value) {
+      ala.to('/order/refund&id=' + this.viewModel.id + '&type=' + value.type)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.order-show {
+  background-color: #f7f7f7;
+  &-title {
+    height: 70px;
+    background-color: #ffffff;
+    flex-direction: row;
+    align-items: center;
+    &-left {
+      width: 25px;
+      height: 25px;
+      margin: 0 15px;
+      &-icon {
+        height: 25px;
+      }
+    }
+    &-right {
+      height: 45px;
+      padding-right: 10px;
+      justify-content: space-between;
+      &-title {
+        flex-direction: row;
+        justify-content: space-between;
+        &-left {
+          font-size: 14px;
+        }
+        &-right {
+          font-size: 14px;
+          color: #999999;
+        }
+      }
+      &-bottom {
+        font-size: 13px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        /* #ifdef APP-PLUS-NVUE */
+        lines: 1;
+        /* #endif */
+        /* #ifndef APP-PLUS-NVUE */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        /* #endif */
+      }
+    }
+  }
+  &-store {
+    padding: 0 10px;
+    margin-top: 10px;
+    height: 30px;
+    background-color: #ffffff;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    &-left {
+      font-size: 14px;
+    }
+    &-right {
+      font-size: 14px;
+      color: $gl-themeColor;
+    }
+  }
+  &-product {
+    height: 100px;
+    background-color: #f0f0f0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    &-left {
+      width: 80px;
+      height: 80px;
+      background-color: #00c5dc;
+    }
+    &-right {
+      padding-left: 10px;
+      height: 80px;
+      &-title {
+        flex-direction: row;
+        align-items: center;
+        &-left {
+          font-size: 14px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          /* #ifndef APP-PLUS-NVUE */
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          /* #endif */
+          /*  #ifdef APP-PLUS-NVUE */
+          lines: 2;
+          /* #endif */
+        }
+        &-right {
+        }
+      }
+      &-intro {
+        margin-top: 3px;
+        font-size: 12px;
+        color: #999999;
+      }
+    }
+    &-price {
+      font-size: 13px;
+      text-align: right;
+    }
+    &-text {
+      font-size: 13px;
+      color: #999999;
+      text-align: right;
+    }
+  }
+  &-count {
+    padding: 5px 15px;
+    background-color: #ffffff;
+    &-list {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      height: 25px;
+      &-text {
+        font-size: 14px;
+      }
+      &-color {
+        color: $gl-themeColor;
+      }
+    }
+  }
+  &-detail {
+    margin-top: 10px;
+    background-color: #ffffff;
+    padding: 10px 15px;
+    border-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #e4e7ed;
+    &-title {
+      font-size: 14px;
+      height: 14px;
+      line-height: 14px;
+      border-left-color: $gl-themeColor;
+      border-left-width: 2px;
+      border-style: solid;
+      padding-left: 5px;
+    }
+    &-list {
+      margin-top: 5px;
+      height: 25px;
+      flex-direction: row;
+      align-items: center;
+      &-left {
+        width: 90px;
+        font-size: 12px;
+        color: #606266;
+      }
+      &-right {
+        color: #606266;
+        font-size: 12px;
+      }
+    }
+  }
+  &-bottom {
+    border-top-width: 1px;
+    border-top-color: #f2f2f2;
+    border-top-style: solid;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    width: 100px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #ffffff;
+    &-left {
+      margin: 0 10px;
+      font-size: 14px;
+      color: $gl-themeColor;
+      border-radius: 30px;
+      border-width: 1px;
+      border-style: solid;
+      text-align: center;
+      border-color: $gl-themeColor;
+      line-height: 28px;
+      padding: 0 10px;
+    }
+  }
+}
+</style>

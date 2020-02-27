@@ -1,0 +1,96 @@
+<template>
+	<view class="show-list">
+		<view class="show-list-cont">
+			<image class="show-list-cont-left" src="http://img.baoduoduo.club/study/artor.png" />
+			<view class="show-list-cont-right">
+				<view class="show-list-cont-right-title" :style="{width: screenWidth- 75 + 'px'}">
+					<view class="show-list-cont-right-title-left">
+						<text class="show-list-cont-right-title-text">宝多多总部_某某大咖</text>
+						<text class="show-list-cont-right-title-intro">关注会员： 0.9万</text>
+					</view>
+					<view class="show-list-cont-right-title-right">
+						<view class=""></view>
+						<text class="show-list-cont-right-title-right-text">关注大咖</text>
+					</view>
+				</view>
+				<text class="show-list-cont-right-bottom" :style="{width: screenWidth- 75 + 'px'}">
+					大咖介绍:  从多家网盘厮杀到一枝独秀，百度网盘的发展任重道远 本文作者结合产品价值链，对百度网盘的后续发展进
+				</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.show-list{
+		padding: 20px 10px;
+		&-cont{
+			flex-direction: row;
+			&-left{
+				width: 45px;
+				height: 45px;
+				border-radius: 50%;
+			}
+			&-right{
+				margin-left: 10px;
+				&-title{
+					flex-direction: row;
+					justify-content: space-between;
+					&-text{
+						font-size: 16px;
+						color: #343434;
+						font-weight: bold;
+					}
+					&-intro {
+						margin-top: 5px;
+						font-size: 11px;
+						color: #999999;
+					}
+					&-left{
+						height: 45px;
+						justify-content: space-between;
+					}
+					&-right {
+						height: 25px;
+						background-color: #FFEFEE;
+						padding: 0 10px;
+						border-radius: 30px;
+						flex-direction: row;
+						align-items: center;
+						&-text{
+							color: #F92E2C;
+							font-size: 14px;
+						}
+					}
+				}
+				&-bottom{
+					/* #ifndef APP-NVUE */ 
+					margin-top: 10px;
+					/* #endif */ 
+					font-size: 11px;
+					color: #999999;
+					line-height: 25px;
+				}
+			}
+		}
+	}
+</style>

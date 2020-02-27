@@ -1,0 +1,30 @@
+<template>
+  <view>
+	  <!-- #ifndef APP-NVUE -->
+	  <fourNav></fourNav>
+	  <view style="height: 45px;"></view>
+	  <!-- #endif -->
+    <zk-news-view></zk-news-view>
+  </view>
+</template>
+
+<script>
+	import fourNav from './subnvue/four-nav'
+export default {
+	components: {
+		fourNav
+	},
+  data() {
+    return {}
+  },
+  onLoad() {},
+  methods: {}
+}
+</script>
+
+<!-- <style lang="scss" scoped>
+.test {
+  font-size: $uni-font-size-lg;
+  color: $uni-color-primary;
+}
+</style> -->

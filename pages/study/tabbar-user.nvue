@@ -1,0 +1,24 @@
+<template>
+	<view>
+		<userTop></userTop>
+		<swiperNews></swiperNews>
+		<userList></userList>
+	</view>
+</template>
+
+<script>
+	import userTop from './widgets/tab-user-top'
+	import userList from './widgets/tab-user-list'
+	import swiperNews from './widgets/swiper-news'
+	export default {
+		components: {
+			userTop,
+			swiperNews,
+			userList
+		}
+	}
+</script>
+
+<style>
+
+</style>

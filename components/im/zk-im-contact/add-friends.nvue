@@ -1,0 +1,226 @@
+<template>
+  <view class="add-adds">
+    <view class="add-adds_popup" :class="{'adds_popup-active':addsFool}">
+      <view class="adds-head">
+        <view class="head_icon" @click="addsFool=false">
+          <x-icon name="icon-white" color="#585858" size="18"></x-icon>
+        </view>
+        <view class="head_center">添加好友</view>
+      </view>
+      <view class="adds-contion">
+        <view class="mine-box">
+          <view class="mine-box_p">
+            <view class="mine-one">
+              <img class="mine-one_img" src="http://bdd.5ug.com/wwwroot/uploads/api/242-873-583/2020-01-15/5e1e7bb70046d1badc4b3a9f.jpg" />
+            </view>
+            <view class="mine-two">我的二维码</view>
+            <view class="mine-intro">扫一扫，加我为好友</view>
+          </view>
+          <view class="mine-box_p">
+            <view class="mine-one">
+              <img class="mine-one_img" src="http://bdd.5ug.com/wwwroot/uploads/api/242-873-583/2020-01-15/5e1e7bb70046d1badc4b3a9f.jpg" />
+            </view>
+            <view class="mine-two">我的淘口令</view>
+            <view class="mine-intro">发到微信，加好友</view>
+          </view>
+        </view>
+        <view style="height:20upx;background:#f3f3f3;"></view>
+        <view class="adds_ul">
+          <view class="adds_li" v-for="(item,index) in 3" :key="index">
+            <view class="adds_li-I">
+              <img class="adds_li-img" src="http://bdd.5ug.com/wwwroot/uploads/api/242-873-583/2020-01-15/5e1e7bb70046d1badc4b3a9f.jpg" />
+            </view>
+            <view class="adds_li-text">
+              <view class="text-box">
+                <view class="adds-p1">新的好友{{index+1}}</view>
+                <view class="adds-intro">添加通讯录的好友</view>
+              </view>
+            </view>
+            <view>
+              <x-icon name="icon-jiantou" color="#999999" size="12"></x-icon>
+            </view>
+          </view>
+        </view>
+        <view style="height:20upx;background:#f3f3f3;"></view>
+        <view class="add-list">
+          <view class="add-list_head">可能认识的人</view>
+          <view class="add-list_ul">
+            <view class="add-list_li" v-for="(fItem,fIndex) in 6" :key="fIndex">
+              <view class="list_li-left">
+                <img class="list_li-img" src="http://bdd.5ug.com/wwwroot/uploads/api/242-873-583/2020-01-15/5e1e7bb70046d1badc4b3a9f.jpg" />
+              </view>
+              <view class="list_li-right">
+                <view class="text-p1">追风的猎人{{fIndex}}</view>
+                <view class="text-p1 text-p2">可能认识的人</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  export default {
+    data () {
+      return {
+        addsFool: false
+      }
+    },
+    methods: {
+      show () {
+        this.addsFool = true
+      }
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+	// #ifndef APP-PLUS  
+  // app-plus-css
+  .add-adds {
+    .add-adds_popup {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      z-index: 999;
+      transform: translateY(100%);
+      transition: all 0.3s ease;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      .adds-head {
+        height: 90rpx;
+        background: #f3f3f3;
+        display: flex;
+        align-items: center;
+        padding: 0rpx 20rpx;
+        .head_center {
+          color: #585858;
+          flex: 1;
+          min-width: 0;
+          padding: 0rpx 30rpx;
+        }
+      }
+      .adds-contion {
+        flex: 1;
+        min-height: 0;
+        .mine-box {
+          display: flex;
+          .mine-box_p {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30rpx 0rpx;
+            .mine-one {
+              width: 40rpx;
+              height: 40rpx;
+              border-radius: 6rpx;
+              overflow: hidden;
+              .mine-one_img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+            .mine-two {
+              font-size: 28rpx;
+              margin-top: 15rpx;
+              line-height: 40rpx;
+            }
+            .mine-intro {
+              font-size: 20rpx;
+              color: #999999;
+              line-height: 30rpx;
+            }
+          }
+          .mine-box_p + .mine-box_p {
+            border-left: 1px solid #f7f7f7;
+          }
+        }
+        .adds_ul {
+          .adds_li {
+            padding: 22rpx 20rpx;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f7f7f7;
+            .adds_li-I {
+              width: 70rpx;
+              height: 70rpx;
+              border-radius: 10rpx;
+              overflow: hidden;
+              .adds_li-img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+            .adds_li-text {
+              flex: 1;
+              min-width: 0;
+              padding-left: 20rpx;
+              font-size: 30rpx;
+              color: #575556;
+              .text-box {
+                padding-top: 8rpx;
+                .adds-p1 {
+                  line-height: 30rpx;
+                  font-size: 30rpx;
+                }
+                .adds-intro {
+                  font-size: 20rpx;
+                  color: #999999;
+                }
+              }
+            }
+          }
+        }
+        .add-list {
+          .add-list_head {
+            padding: 10rpx 20rpx;
+            color: #575556;
+            border-bottom: 1px solid #f7f7f7;
+          }
+          .add-list_ul {
+            .add-list_li {
+              display: flex;
+              align-items: center;
+              border-bottom: 1px solid #f7f7f7;
+              padding: 20rpx;
+              .list_li-left {
+                width: 70rpx;
+                height: 70rpx;
+                border-radius: 20rpx;
+                overflow: hidden;
+                .list_li-img {
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+              .list_li-right {
+                padding: 0rpx 20rpx;
+                .text-p1 {
+                  line-height: 36rpx;
+                  font-size: 28rpx;
+                }
+                .text-p2 {
+                  font-size: 18rpx;
+                  color: #999999;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .adds_popup-active {
+      transform: translateY(0);
+    }
+  }
+  // app-plus-css
+  // #endif
+</style>

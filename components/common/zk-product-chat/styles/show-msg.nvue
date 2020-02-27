@@ -1,0 +1,168 @@
+<template>
+	<view class="show-msg">
+		<view>
+			<scroll-view :scroll-y="true" :scroll-top="scrollTop" :scroll-with-animation="true" :show-scrollbar="false" class="show-msg-cont" :style="{width: screenWidth * 0.55 + 'px'}">
+				<view id="scroll-view-id-show">
+					<view class="show-msg-ul"></view>
+					<view v-for="(item, index) in newsList" :key="index">
+						<view class="show-msg-list" :class="{'show-msg-list-active':tabIndex-3 == index}" v-if="index < tabIndex">
+							<view class="show-msg-list-cont">
+								<text class="show-msg-list-cont-left">{{item.nickName}}</text>
+								<text v-if="item.actionType === 1" class="show-msg-list-cont-right show-msg-list-cont-share">喜欢了这个商品</text>
+								<text v-if="item.actionType === 2" class="show-msg-list-cont-right show-msg-list-cont-share">分享了这件商品</text>
+								<text v-if="item.actionType === 3" class="show-msg-list-cont-right show-msg-list-cont-share">收藏了这个商品</text>
+								<text v-if="item.actionType === 4" class="show-msg-list-cont-right show-msg-list-cont-beingBuy">正在去买</text>
+								<text v-if="item.actionType === 5" class="show-msg-list-cont-right show-msg-list-cont-buy">已购买</text>
+								<view class="show-msg-list-cont-link" v-if="item.actionType === 1">
+									<image class="show-msg-list-cont-link-image" src="http://img.baoduoduo.club/study/tab-2-title.png" />
+								</view>
+							</view>
+						</view>
+					</view>
+					
+				</view>
+			</scroll-view>
+		</view>
+		<view class="show-msg-show" :style="{width: screenWidth * 0.55 + 'px'}"></view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		props: {
+			viewModel: {}
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				statusHeight: 0,
+				newsList: [],
+				tabIndex: 1,
+				scrollTop: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				this.statusHeight = ala.statusHeight()
+				this.newsList = this.viewModel.actions
+				this.getTime()
+			},
+			getTime() {
+				var timer = setInterval(() => {
+					this.tabIndex += 1
+					this.queryDom()
+					if (this.tabIndex === this.newsList.length) {
+						clearInterval(timer)
+					}
+				}, 1500)
+			},
+			queryDom() {
+				var response = ala.getQuery(this, '#scroll-view-id-show')
+				response.exec(res => {
+					// #ifndef APP-NVUE
+					this.scrollTop = res[0][0].height
+					// #endif
+					// #ifdef APP-NVUE
+					this.scrollTop = res[0].height
+					// #endif
+				})
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	.show-msg {
+		position: fixed;
+		left: 0;
+		bottom: 60px;
+		/* #ifndef APP-NVUE */
+		z-index: 90;
+
+		/* #endif */
+		&-show{
+			position: absolute;
+			top: 0;
+			height: 80px;
+			/* #ifndef APP-NVUE */
+			z-index: 100;
+			/* #endif */ 
+		}
+		&-cont {
+			height: 80px;
+		}
+		
+		&-ul{
+			height: 80px;
+		}
+		
+		
+		&-list {
+			flex-direction: row;
+			margin-bottom: 10px;
+			margin-left: 10px;
+			height: 30px;
+			&-active{
+				opacity: 0.6;
+			}
+			&-cont {
+				background-color: #000000;
+				height: 30px;
+				border-radius: 30px;
+				flex-direction: row;
+				align-items: center;
+				position: relative;
+				
+				&-link{
+					position: absolute;
+					top: 0;
+					right: 0;
+					height: 12px;
+					width: 12px;
+					z-index: 909;
+					background-color: #FF5365;
+					border-radius: 50%;
+					align-items: center;
+					justify-content: center;
+					&-image{
+						width: 10px;
+						height: 10px;
+					}
+				}
+
+				&-left {
+					margin-left: 10px;
+					font-size: 12px;
+					color: #FFFFFF;
+				}
+
+				&-right {
+					position: relative;
+					left: 0.3px;
+					margin-left: 10px;
+					height: 30px;
+					padding: 0 15px;
+					color: #FFFFFF;
+					line-height: 30px;
+					font-size: 12px;
+					border-radius: 30px;
+				}
+				&-buy {
+					background-image: linear-gradient(to right, #FB2F60, #FF0911);
+				}
+				&-beingBuy{
+					background-image: linear-gradient(to right, #FB7130, #FFB808);
+				}
+				&-share{
+					margin-left: 0;
+					padding-left: 10px;
+				}
+			}
+		}
+	}
+</style>

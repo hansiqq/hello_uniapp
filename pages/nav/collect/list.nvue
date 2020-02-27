@@ -1,0 +1,11 @@
+<template>
+  <view>
+    <zk-user-collect></zk-user-collect>
+  </view>
+</template>
+
+<script>
+export default {}
+</script>
+
+<style lang="scss" scoped></style>

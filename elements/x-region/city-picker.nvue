@@ -1,0 +1,161 @@
+<template>
+  <view>
+    <uni-popup ref="uniPopup" type="bottom">
+      <view class="city-picker">
+        <view class="city-picker-cont" :style="{ width: screenWidth + 'px' }">
+          <view class="city-picker-cont-title">
+            <text class="city-picker-cont-title-left" @click="pickerCancel()">取消</text>
+            <text class="city-picker-cont-title-right" @click="pickerConfirm">确定</text>
+          </view>
+          <view class="city-picker-view" :style="{ width: screenWidth + 'px' }">
+            <picker-view indicator-style="height: 40px;" class="city-picker-view-city" :style="{ width: screenWidth + 'px' }" :value="pickerValue" @change="pickerChange">
+              <picker-view-column>
+                <view v-for="(item, index) in provinceDataList" :key="index">
+                  <text class="city-picker-view-city-text">{{ item.label }}</text>
+                </view>
+              </picker-view-column>
+              <picker-view-column>
+                <view class="picker-item" v-for="(item, index) in cityDataList" :key="index">
+                  <text class="city-picker-view-city-text">{{ item.label }}</text>
+                </view>
+              </picker-view-column>
+              <picker-view-column>
+                <view class="picker-item" v-for="(item, index) in areaDataList" :key="index">
+                  <text class="city-picker-view-city-text">{{ item.label }}</text>
+                </view>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </uni-popup>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import service from './service'
+import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup'
+export default {
+  components: {
+    uniPopup
+  },
+  model: {
+    prop: 'dataModel'
+  },
+  data() {
+    return {
+      async: false,
+      screenWidth: 0,
+      screenHeight: 0,
+      pickerValue: this.dataModel,
+      provinceDataList: [], // 全国省份列表
+      cityDataList: [], // 当前省份中的城市列表
+      areaDataList: [], // 当前城市的区域列表
+      addressModel: {}, // 存储系列化后的地址列表
+      cityText: ''
+    }
+  },
+  props: {
+    dataModel: {},
+    pickerValueDefault: {
+      type: Array,
+      default() {
+        return [0, 0, 0]
+      }
+    }, // 设置默认值
+    /* 主题色 */
+    themeColor: String,
+    showMessage: {
+      default: false
+    },
+    model: {}
+  },
+  watch: {
+    pickerValueDefault() {
+      this.init()
+    },
+    pickerValue(val) {
+      this.$emit('input', val)
+    }
+  },
+  mounted() {
+    this.screenHeight = ala.screenHeight()
+    this.screenWidth = ala.screenWidth()
+  },
+  created() {
+    this.init()
+  },
+  methods: {
+    // 初始化
+    async init() {
+      this.pickerValue = this.pickerValueDefault
+      service.initAddress(this)
+    },
+    // 控制显示隐藏
+    show() {
+      this.$refs.uniPopup.open()
+    },
+    // 取消按钮
+    pickerCancel() {
+      this.$refs.uniPopup.close()
+      service._$emit(this, 'onCancel')
+    },
+    // 点击确认按钮
+    pickerConfirm(e) {
+      this.cityText = this.provinceDataList[this.pickerValue[0]].label + ' ' + this.cityDataList[this.pickerValue[1]].label + ' ' + this.areaDataList[this.pickerValue[2]].label
+      this.$refs.uniPopup.close()
+      service._$emit(this, 'onConfirm', e)
+    },
+    showPickerView() {
+      this.showPicker = true
+    },
+    pickerChange(e) {
+      service.pickerChange(this, e)
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.city-picker {
+  &-cont {
+    height: 282px;
+    background-color: #ffffff;
+    &-title {
+      height: 44px;
+      background-color: #ffffff;
+      border-bottom-color: #e5e5e5;
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+      flex-direction: row;
+      padding: 0 15px;
+      justify-content: space-between;
+      align-items: center;
+      &-left {
+        font-size: 15px;
+        color: #888888;
+      }
+      &-right {
+        font-size: 15px;
+        color: #1aad19;
+      }
+    }
+  }
+  &-view {
+    height: 238px;
+    background-color: rgba(250, 250, 250, 0.5);
+    &-city {
+      height: 238px;
+      &-text {
+        text-align: center;
+        font-size: 16px;
+        line-height: 40px;
+        text-overflow: ellipsis;
+        //  white-space: nowrap;
+        lines: 1;
+      }
+    }
+  }
+}
+</style>

@@ -1,0 +1,195 @@
+<template>
+  <view class="number-numbox uni-numbox">
+    <text class="uni-numbox-minus" :class="{ 'uni-numbox-disabled': disableSubtract }" @click="_calcValue('subtract')">-</text>
+    <input class="uni-numbox-value" type="number" :disabled="disabled" :value="inputValue" />
+    <text class="uni-numbox-plus" :class="{ 'uni-numbox-disabled': disableAdd }" @click="_calcValue('add')">+</text>
+  </view>
+</template>
+<script>
+import ala from '@/service/ala'
+export default {
+  name: 'number-box',
+  props: {
+    value: {
+      type: Number,
+      default: 0
+    },
+    min: {
+      type: Number,
+      default: -Infinity
+    },
+    max: {
+      type: Number,
+      default: Infinity
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    multiplication: {
+      type: Number
+    }
+  },
+  data() {
+    return {
+      inputValue: this.value,
+      isAdd: true,
+      isSubtract: true,
+      disableSubtract: false,
+      disableAdd: false
+      // max: 24
+    }
+  },
+  watch: {
+    value(val) {
+      this.inputValue = val
+    },
+    inputValue(val) {
+      this.$emit('change', val)
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {},
+    _calcValue(type) {
+      if (type === 'subtract') {
+        if (!ala.strIsEmpty(this.multiplication)) {
+          var nums = this.inputValue - this.multiplication
+          if (nums < this.min) {
+            ala.toastWarn('不能小于购买最小数量')
+          } else {
+            this.inputValue -= this.multiplication
+          }
+        } else {
+          this.inputValue -= 1
+        }
+      } else if (type === 'add') {
+        if (!ala.strIsEmpty(this.multiplication)) {
+          if (this.max === 'Infinity' || this.max === 0) {
+            this.inputValue += this.multiplication
+          } else {
+            var num = this.inputValue + this.multiplication
+            if (num > this.max) {
+              ala.toastWarn('超出购买最大数量')
+            } else {
+              this.inputValue += this.multiplication
+            }
+          }
+        } else {
+          this.inputValue += 1
+        }
+      }
+    }
+    // _getDecimalScale () {
+    //   let scale = 1
+    //   // 浮点型
+    //   if (~~this.step !== this.step) {
+    //     scale = Math.pow(10, (this.step + '').split('.')[1].length)
+    //   }
+    //   return scale
+    // },
+    // _onBlur (event) {
+    //   let value = event.detail.value
+    //   if (!value) {
+    //     this.inputValue = 0
+    //     return
+    //   }
+    //   value = +value
+    //   if (value > this.max) {
+    //     value = this.max
+    //   } else if (value < this.min) {
+    //     value = this.min
+    //   }
+    //   this.inputValue = value
+    // },
+    // onChang (val) {
+    //   this.inputValue = Number(val.detail.value.replace(/\D/g, ''))
+    // }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.uni-numbox {
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 35px;
+  position: relative;
+  border-radius: 3px;
+  /* #ifdef APP-PLUS-NVUE */
+  height: 38px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #e5e5e5;
+  /* #endif */
+  &-minus,
+  &-plus {
+    margin: 0;
+    background-color: #f9f9f9;
+    width: 40px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #555555;
+    position: relative;
+    font-size: 18px;
+  }
+
+  &-minus {
+    border-width: 0;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+
+  &-plus {
+    border-width: 0;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+
+  &-value {
+    position: relative;
+    background-color: #ffffff;
+    width: 40px;
+    height: 35px;
+    text-align: center;
+  }
+  &-disabled {
+    color: #c0c0c0;
+  }
+}
+
+.uni-numbox::after {
+  // content: '';
+  position: absolute;
+  transform-origin: center;
+  // pointer-events: none;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  border-width: 1px;
+  border-color: #c8c7cc;
+  border-style: solid;
+  transform: scale(0.5);
+}
+.uni-numbox-value::after {
+  // content: '';
+  position: absolute;
+  transform-origin: center;
+  // pointer-events: none;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  border-style: solid;
+  border-color: #cccccc;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  transform: scale(0.5);
+}
+</style>

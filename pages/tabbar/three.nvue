@@ -1,0 +1,27 @@
+<template>
+  <zk-product-class></zk-product-class>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      list: {}
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {}
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.buttom {
+  width: 100px;
+  height: 30px;
+  background-color: #007aff;
+}
+</style>

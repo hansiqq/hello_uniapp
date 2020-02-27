@@ -1,0 +1,84 @@
+<template>
+  <view class="product-list-3" :style="{ width: screenWidth + 'px' }">
+    <view class="product-list-3-cont" :style="{ width: (screenWidth - 30) / 2 + 'px' }" v-for="(item, index) in viewModel" :key="index" @click="linkto(item)">
+      <image class="product-list-3-cont-image" :src="'http://bdd.5ug.com' + item.thumbnailUrl" :style="{ width: (screenWidth - 30) / 2 - 20 + 'px', height: (screenWidth - 30) / 2 - 20 + 'px' }" />
+      <text class="product-list-3-cont-title">{{ item.name }}</text>
+      <view class="product-list-3-cont-foot">
+        <text class="product-list-3-cont-foot-price">￥{{ item.price }}</text>
+        <text class="product-list-3-cont-foot-lastprice">￥{{ item.marketPrice }}</text>
+      </view>
+    </view>
+  </view>
+</template>
+.
+
+<script>
+import ala from '@/service/ala'
+export default {
+  props: {
+    viewModel: {}
+  },
+  data() {
+    return {
+      screenWidth: ''
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+    },
+    toProductShow(item) {},
+    // 下拉菜单事件
+    scrollView() {},
+    linkto(item) {
+      ala.to(`/product/show?id=${item.id}`)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.product-list-3 {
+  padding: 5px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  &-cont {
+    margin: 5px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 1px 15px 1px rgba(69, 65, 78, 0.1);
+    &-title {
+      overflow: hidden;
+      margin-top: 10px;
+      text-overflow: ellipsis;
+      /* #ifdef APP-PLUS-NVUE */
+      lines: 2;
+      /* #endif */
+      /* #ifndef APP-PLUS-NVUE */
+      // white-space: nowrap;
+      /* #endif */
+      font-size: 15px;
+      // font-weight: 600;
+    }
+    &-foot {
+      margin-top: 10px;
+      flex-direction: row;
+      align-items: center;
+      &-price {
+        // font-weight: 600;
+        font-size: 18px;
+        color: #ee2c28;
+      }
+      &-lastprice {
+        font-size: 12px;
+        margin-left: 5px;
+        color: #999;
+        text-decoration: line-through;
+      }
+    }
+  }
+}
+</style>

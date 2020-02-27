@@ -1,0 +1,84 @@
+{
+	"study": [{
+			"name": "中阶期锻造",
+			"intro": "完成前36天的连续打卡，即可开启坚持~",
+			"show": false
+		},
+		{
+			"name": "高阶期锻造",
+			"intro": "完成前72天的连续打卡，开启高阶冲刺阶段",
+			"show": false
+		}
+	],
+	"rank": [{
+			"title": "学习牛人榜",
+			"intro": "根据大区排行展示6位",
+			"links": [{
+					"name": "^c^枚",
+					"image": "http://img.baoduoduo.club/study/clock-icon-1.png",
+					"rank": "No.1",
+					"opt": 1
+				},
+				{
+					"name": "stone",
+					"image": "http://img.baoduoduo.club/study/clock-icon-2.png",
+					"rank": "No.2",
+					"opt": 0.9
+				},
+				{
+					"name": "zhelis",
+					"image": "http://img.baoduoduo.club/study/clock-icon-3.png",
+					"rank": "No.3",
+					"opt": 0.8
+				},
+				{
+					"name": "^7^bzbang",
+					"image": "http://img.baoduoduo.club/study/clock-icon-4.png",
+					"rank": "No.4",
+					"opt": 0.7
+				},
+				{
+					"name": "露7&&",
+					"image": "http://img.baoduoduo.club/study/clock-icon-5.png",
+					"rank": "No.5",
+					"opt": 0.7
+				}
+			]
+		},
+		{
+			"title": "奖励牛人榜",
+			"intro": "根据大区排行展示6位",
+			"links": [{
+					"name": "^c^枚",
+					"image": "http://img.baoduoduo.club/study/clock-icon-1.png",
+					"rank": "No.1",
+					"opt": 1
+				},
+				{
+					"name": "stone",
+					"image": "http://img.baoduoduo.club/study/clock-icon-2.png",
+					"rank": "No.2",
+					"opt": 0.9
+				},
+				{
+					"name": "zhelis",
+					"image": "http://img.baoduoduo.club/study/clock-icon-3.png",
+					"rank": "No.3",
+					"opt": 0.8
+				},
+				{
+					"name": "^7^bzbang",
+					"image": "http://img.baoduoduo.club/study/clock-icon-4.png",
+					"rank": "No.4",
+					"opt": 0.7
+				},
+				{
+					"name": "露7&&",
+					"image": "http://img.baoduoduo.club/study/clock-icon-5.png",
+					"rank": "No.5",
+					"opt": 0.7
+				}
+			]
+		}
+	]
+}

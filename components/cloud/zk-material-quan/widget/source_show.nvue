@@ -1,0 +1,158 @@
+<template>
+	<view class="source_show">
+		<uni-popup ref="uniPopup">
+			<view class="source_show-cont" :style="{width: screenWidth - 100 + 'px'}">
+				<view class="source_show-cont-title">
+					<text class="source_show-cont-title-text">素材下载</text>
+				</view>
+				<view class="source_show-cont-center">
+					<view class="source_show-cont-center-title">
+						<text class="source_show-cont-center-title-text">已下载</text>
+						<text class="source_show-cont-center-title-text source_show-cont-center-title-active">{{downNum}} / {{imageList.length}}</text>
+						<text class="source_show-cont-center-title-text">个</text>
+					</view>
+					<view class="source_show-cont-center-ul">
+						<view class="source_show-cont-center-list" :class="{'source_show-cont-center-first':index == 0, 'source_show-cont-center-end': index == imageList.length-1 }" :style="{width: (screenWidth-120)/imageList.length + 'px'}" v-for="(item, index) in imageList" :key="index" v-if="item.isShow"></view>
+					</view>
+				</view>
+				<text class="source_show-cont-bottom" @click="downCancel">{{downNum == imageList.length? '下载完成' : '取消下载'}}</text>
+			</view>
+		</uni-popup>
+	</view>
+</template>
+
+<script>
+	import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup'
+	import ala from '@/service/ala'
+	export default {
+		components: {
+		  uniPopup
+		},
+		data() {
+			return {
+				imageList: [],
+				downNum: 0,
+				screenWidth: 0,
+				screenHeight: 0,
+				downloadTask: [] ,// 取消下载事件使用
+				text: '取消下载'
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenHeight = ala.screenHeight()
+				this.screenWidth = ala.screenWidth()
+			},
+			open(data) {
+				if (data) {
+					this.imageList = data
+				}
+				this.$refs.uniPopup.open()
+				setTimeout(() => {
+					this.downClick()
+				}, 300)
+			},
+			downClick() {
+				this.imageList.forEach((element, index) => {
+					var data = uni.downloadFile({
+					    url: 'http://b-api.baoduoduo.club' + element.OriginalUrl, 
+					    success: (res) => {
+					        if (res.statusCode === 200) {
+								uni.saveImageToPhotosAlbum({	
+									filePath: res.tempFilePath,
+									success: () => {
+										this.$set(element, 'isShow', true)
+										if (this.downNum < this.imageList.length) {
+											this.downNum += 1
+										}
+									}
+								})
+					        }
+					    }
+					})
+					this.downloadTask.push(data)
+				})
+			},
+			// 完成
+			downCancel() {
+				if (this.downNum !== this.imageList.length) {
+					if (this.downloadTask) {
+						this.downloadTask.forEach(element => {
+							element.abort()
+						})
+					}
+				}
+				this.$refs.uniPopup.close()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.source_show{
+		position: fixed;
+		padding: 50px;
+		&-cont {
+			border-radius: 10px;
+			background-color: #FFFFFF;
+			&-title{
+				border-top-left-radius: 10px;
+				border-top-right-radius: 10px;
+				height: 60px;
+				background-image: linear-gradient(to right, #FD2A58, #FF060C);
+				&-text{
+					text-align: center;
+					line-height: 60px;
+					font-size: 14px;
+					color: #FFFFFF;
+				}
+			}
+			&-center{
+				&-title {
+					margin: 10px 0;
+					flex-direction: row;
+					height: 40px;
+					align-items: center;
+					justify-content: center;
+					&-text{
+						font-size: 14px;
+					}
+					&-active{
+						color: #FE162E;
+					}
+				}
+				&-ul{
+					margin: 0 10px;
+					height: 15px;
+					border-radius: 30px;
+					background-color: #FFEFEE;
+					flex-direction: row;
+				}
+				&-list {
+					width: 100px;
+					height: 15px;
+					background-color: #FE0000;
+				}
+				&-first {
+					border-top-left-radius: 30px;
+					border-bottom-left-radius: 30px;
+				}
+				&-end {
+					border-top-right-radius: 30px;
+					border-bottom-right-radius: 30px;
+				}
+				
+			}
+			&-bottom{
+				margin-top: 30px;
+				font-size: 14px;
+				color: #BB0402;
+				text-align: center;
+				padding-bottom: 15px;
+			}
+		}
+	}
+</style>

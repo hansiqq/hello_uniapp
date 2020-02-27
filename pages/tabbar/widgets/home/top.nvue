@@ -1,0 +1,135 @@
+<template>
+  <view class="homepage-head">
+    <!-- #ifndef APP-PLUS-NVUE -->
+    <view class="homepage-head-show" :style="{ width: screenWidth + 'px;' }"></view>
+    <view class="homepage-head-title" :style="{ width: screenWidth + 'px' }">
+      <view class="homepage-head-title-left">
+        <view class="homepage-left-test test-icon"> </view>
+        <text class="left-test-hidden" @click="addressClick">番禺区a</text>
+        <view class="homepage-head-title-content">
+          <view class="homepage-search"></view>
+          <text class="homepage-search-test">搜索商品红包优惠券</text>
+        </view>
+      </view>
+      <view class="right">
+        <view class="homepage-head-right-icon"></view>
+        <view class="homepage-head-right-icon"></view>
+      </view>
+    </view>
+    <!-- #endif -->
+    <!-- #ifndef APP-NVUE -->
+    <view style="height: 50px;"></view>
+    <!-- #endif -->
+    <list-item></list-item>
+  </view>
+</template>
+
+<script>
+import listItem from './top-item.nvue'
+import ala from '@/service/ala'
+export default {
+  components: {
+    listItem
+  },
+  data() {
+    return {
+      screenWidth: ''
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+    },
+    addressClick() {
+      ala.to('/pages/address/index')
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.homepage-head-show {
+  /* #ifdef APP-PLUS-NVUE */
+  height: 30px;
+  /* #endif */
+  /* #ifdef MP-WEIXIN */
+  height: var(--status-bar-height);
+  /* #endif */
+  background-color: #f82d20;
+}
+.homepage-head-title {
+  height: 50px;
+  /* #ifndef APP-NVUE */
+  position: fixed;
+  z-index: 99;
+  /* #endif */
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f82d20;
+  padding: 0 10px;
+}
+.homepage-left-test {
+  color: #ffffff;
+  font-size: 14px;
+}
+.homepage-head-title-left {
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.test-icon {
+  width: 20px;
+  height: 20px;
+  background-color: #1bbc9b;
+}
+.left-test-hidden {
+  margin-left: 5px;
+  width: 40px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* #ifdef APP-PLUS-NVUE */
+  lines: 1;
+  /* #endif */
+
+  // white-space: nowrap;
+}
+.homepage-head-title-content {
+  width: 180;
+  height: 25px;
+  background-color: #ffffff;
+  border-radius: 30upx;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 10px;
+}
+.homepage-search {
+  width: 40upx;
+  height: 40upx;
+  background-color: #00c5dc;
+}
+.homepage-search-test {
+  font-size: 12px;
+  margin-left: 5upx;
+  color: #a3a3a3;
+}
+.right {
+  width: 160upx;
+  height: 50upx;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.homepage-head-right-icon {
+  width: 50upx;
+  height: 50upx;
+  background-color: #1bbc9b;
+}
+</style>

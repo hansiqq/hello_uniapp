@@ -1,0 +1,167 @@
+<template>
+	<view class="user-top">
+		<view class="user-top-show">
+			<image class="user-top-show-image" src="http://img.baoduoduo.club/study/tab-user-top.png" :style="{width: screenWidth + 'px'}" />
+		</view>
+		<view class="user-top-cont">
+			<view class="user-top-cont-left">
+				<image src="http://img.baoduoduo.club/study/clock-artr.png" class="user-top-cont-left-image" />
+			</view>
+			<view class="user-top-cont-right" :style="{width: screenWidth - 75 + 'px'}">
+				<text class="user-top-cont-right-title">左侧默认头像</text>
+				<view class="user-top-cont-right-center">
+					<view>
+						<view class="user-top-cont-right-center-intro">
+							<view class="user-top-cont-right-center-left">
+								<image class="user-top-cont-right-center-left-image" src="http://img.baoduoduo.club/study/tab-user-vip.png" />
+								<text class="user-top-cont-right-center-left-text">Lv.1</text>
+							</view>
+							<view class="user-top-cont-right-center-right">
+								<view class="user-top-cont-right-center-right-active"></view>
+							</view>
+						</view>
+						<text class="user-top-cont-right-bottom">再学习10课程升级且答题及格可升级</text>
+					</view>
+					<view class="user-top-cont-right-center-clock" @click="linkTo">
+						<image class="user-top-cont-right-center-image" src="http://img.baoduoduo.club/study/tab-2-title.png" />
+						<text class="user-top-cont-right-center-text">打卡</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			},
+			linkTo() {
+				ala.to('/pages/study/clock')
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.user-top{
+		position: relative;
+		height: 125px;
+		&-show{
+			position: absolute;
+			top: 0;
+			left: 0;
+			&-image{
+				height: 125px;
+			}
+		}
+		&-cont{
+			padding-left: 30px;
+			height: 100px;
+			flex-direction: row;
+			align-items: center;
+			&-left{
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				margin-right: 10px;
+				&-image {
+					width: 50px;
+					height: 50px;
+					border-radius: 50%;
+				}
+			}
+			
+			&-right {
+				height: 60px;
+				&-title{
+					font-size: 16px;
+					color: #FFFFFF;
+					font-weight: bold;
+				}
+				&-center{
+					height: 40px;
+					flex-direction: row;
+					justify-content: space-between;
+					align-items: center;
+					&-intro{
+						flex-direction: row;
+						align-items: center;
+						margin-bottom: 5px;
+					}
+					&-left{
+						height: 14px;
+						flex-direction: row;
+						justify-content: center;
+						align-items: center;
+						padding: 0 7px;
+						background-image:  linear-gradient(to right, #464A78, #353C5B);
+						border-radius: 30px;
+						&-image {
+							margin-top: 3px;
+							margin-right: 3px;
+							width: 7px;
+							height: 7px;
+						}
+						&-text{
+							font-size: 10px;
+							color: #FBCDA9;
+						}
+					}
+					&-right{
+						margin-left: 5px;
+						width: 100px;
+						height: 5px;
+						background-color: #FFDBC1;
+						border-radius: 30px;
+						position: relative;
+						&-active{
+							position: absolute;
+							top: 0;
+							left: 0;
+							height: 5px;
+							width: 50px;
+							border-radius: 30px;
+							background-image:  linear-gradient(to right, #464A78, #353C5B);
+						}
+					}
+					&-clock{
+						height: 25px;
+						width: 80px;
+						border-bottom-left-radius: 30px;
+						border-top-left-radius: 30px;
+						background-color: #FFFFFF;
+						flex-direction: row;
+						align-items: center;
+					}
+					&-image{
+						margin-left: 8px;
+						height: 16px;
+						width: 16px;
+						border-radius: 50%;
+					}
+					&-text{
+						margin-left: 5px;
+						font-size: 10px;
+						color: #F92E2C;
+					}
+				}
+				&-bottom{
+					font-size: 10px;
+					color: #FFFFFF;
+				}
+			}
+		}
+	}
+</style>

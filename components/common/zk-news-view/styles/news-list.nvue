@@ -1,0 +1,131 @@
+<template>
+	<view class="news-list">
+		<view class="news-list-cont" :class="{'news-list-active': index === listIndex}" @click.stop="lickList(index)" @longpress="longClick(item, index)" v-for="(item, index) in testList" :key="index">
+			<image class="news-list-cont-image" :src="item.image" />
+			<view class="news-list-cont-right" :style="{width: screenWidth - 80 + 'px'}">
+				<view class="news-list-cont-right-left">
+					<text class="news-list-cont-right-left-test">{{item.name}}</text>
+					<text class="news-list-cont-right-left-bottom">{{item.intro}}</text>
+				</view>
+				<view class="news-list-cont-right-right" v-if="index !== listIndex">
+					<text class="news-list-cont-right-right-time">12:00</text>
+					<text class="news-list-cont-right-right-num">5</text>
+				</view>
+				<view class="news-list-cont-right-show" v-else @click="delClick(item)">
+					<image class="news-list-cont-right-show-image" src="http://img.baoduoduo.club/material/delete.png" />
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	import testJson from './test.json'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				testList: testJson,
+				listIndex: -1
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			},
+			longClick(data, index) {
+				this.listIndex = index
+			},
+			lickList(index) {
+				if (index !== this.listIndex) {
+					this.listIndex = -1
+				}
+			},
+			async delClick(item) {
+				var isTrue = await ala.showModal('删除', '确认删除此消息提示？')
+				if (isTrue) {
+					this.testList.splice(this.listIndex, 1)
+					this.listIndex = -1
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.news-list{
+		&-active {
+			background-color: #FFEDF1;
+		}
+		&-cont {
+			padding: 15px;
+			flex-direction: row;
+			align-items: center;
+			border-bottom-width: 1px;
+			border-bottom-style: solid;
+			border-bottom-color: #F2F2F4;
+			&-image{
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				
+			}
+			&-right{
+				margin-left: 10px;
+				height: 45px;
+				justify-content: space-between;
+				flex-direction: row;
+				&-left{
+					height: 45px;
+					justify-content: space-between;
+					&-test{
+						font-size: 16px;
+						color: #343434;
+						font-weight: bold;
+					}
+					&-bottom {
+						color: #9494A0;
+						font-size: 11px;
+					}
+				}
+				&-right{
+					justify-content: space-between;
+					align-items: flex-end;
+					&-time {
+						color: #9494A0;
+						font-size: 11px;
+					}
+					&-num {
+						text-align: center;
+						margin-right: 10px;
+						height: 18px;
+						line-height: 18px;
+						width: 18px;
+						background-color: #FD493D;
+						border-radius: 50%;
+						color: #FFFFFF;
+						font-size: 13px;
+						
+					}
+				}
+				&-show {
+					width: 30px;
+					height: 45px;
+					background-color: #FD493D;
+					border-radius: 5px;
+					align-items: center;
+					justify-content: center;
+					&-image{
+						width: 18px;
+						height: 18px;
+					}
+				}
+			}
+			
+		}
+	}
+</style>

@@ -1,0 +1,38 @@
+<template>
+  <view class="zk-html" v-if="widget">
+    <rich-text :nodes="widget.value.dataEditor"></rich-text>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      widgetModel: ''
+    }
+  },
+  props: {
+    widget: {}
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.widgetModel = await ala.themeWidget(this.widget)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+// #ifndef APP-PLUS
+// app-plus-css
+
+.zk-html {
+  font-size: $uni-font-size-base;
+}
+// app-plus-css
+// #endif
+</style>

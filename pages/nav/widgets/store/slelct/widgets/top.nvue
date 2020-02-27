@@ -1,0 +1,62 @@
+<template>
+	<view class="select-top">
+		<text class="select-top-list" v-for="(item, index) in list" :class="{'select-top-active': index == navIndex}" @click="clickNav(index)" :key="index">{{item.name}}</text>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				list: [
+					{
+						name: '爆品优选'
+					},
+					{
+						name: '每日一推'
+					},
+					{
+						name: '清仓库存'
+					}
+				],
+				navIndex: 0
+			}
+		},
+		methods: {
+			clickNav(index) {
+				this.navIndex = index
+				this.$emit('changeNav', index)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.select-top{
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		position: -webkit-sticky;
+		/* #endif */
+		position: sticky;
+		top: var(--window-top);
+		height: 40px;
+		z-index: 999;
+		background-color: #9F1315;
+		flex-direction: row;
+		justify-content: space-around;
+		align-items: center;
+		&-list{
+			font-size: 14px;
+			height: 25px;
+			width: 80px;
+			border-radius: 30px;
+			text-align: center;
+			line-height: 25px;
+			color: #FFFFFF;
+		}
+		&-active{
+			background-color: #FFFFFF;
+			color: #FF0619;
+		}
+	}
+</style>

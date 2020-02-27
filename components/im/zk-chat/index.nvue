@@ -1,0 +1,50 @@
+<template>
+  <view class="zk-chart" v-if="async">
+    <chatTitle @showproduct="showproduct"></chatTitle>
+    <chatMessage ref="chatMessage"></chatMessage>
+    <chatFoot @changeSend="changeSend"></chatFoot>
+  </view>
+</template>
+
+<script>
+  import chatTitle from './module/chat-title'
+  import chatMessage from './module/chat-message'
+  import chatFoot from './module/chat-foot'
+  import action from './actions'
+  export default {
+    components: {
+      chatTitle,
+      chatMessage,
+      chatFoot
+    },
+    data () {
+      return {
+        async: false
+      }
+    },
+    mounted () {
+      this.init()
+    },
+    methods: {
+      init () {
+        action.open(this)
+        this.async = true
+      },
+      showproduct (data) {
+        this.$refs.chatMessage.showproduct(data)
+      },
+      changeSend (para) {
+        this.$refs.chatMessage.changeSend(para)
+      }
+    }
+  }
+</script>
+
+
+<style lang="scss" scoped>
+	// #ifndef APP-PLUS  
+  // app-plus-css
+  @import "./var.scss";
+  // app-plus-css
+  // #endif
+</style>

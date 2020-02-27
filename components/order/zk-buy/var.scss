@@ -1,0 +1,129 @@
+.order-buy {
+  &-ul {
+  }
+  &-list {
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    &-left {
+      width: 85px;
+      height: 85px;
+    }
+    &-right {
+      height: 85px;
+      justify-content: space-around;
+      padding-left: 10px;
+      &-title {
+        font-size: 12px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        /* #ifndef APP-PLUS-NVUE */
+        display: -webkit-box !important;
+        word-break: break-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        /* #endif */
+        /* #ifdef APP-PLUS-NVUE */
+        lines: 2;
+        /* #endif */
+      }
+      &-intro {
+        font-size: 12px;
+        color: $uni-color-title;
+      }
+      &-bottom {
+        flex-direction: row;
+        align-items: center;
+        &-price {
+          color: $gl-brand;
+          font-size: 14px;
+          font-weight: bold;
+        }
+        &-count {
+          color: $uni-color-title;
+          font-size: 13px;
+        }
+      }
+    }
+  }
+  /* 备注 */
+  &-remarks {
+    height: 30px;
+    padding: 0 15px;
+    flex-direction: row;
+    align-items: center;
+    &-left {
+      font-size: 14px;
+    }
+    &-right {
+      font-size: 14px;
+      margin-left: 5px;
+    }
+  }
+  /*  */
+  &-account {
+    &-list {
+      padding: 5px 15px;
+      flex-direction: row;
+      justify-content: space-between;
+      &-right,
+      &-left {
+        font-size: 13px;
+      }
+      &-right {
+        color: $gl-themeColor;
+      }
+    }
+  }
+  /*  */
+  &-bottom_placeholder {
+    height: 50px;
+  }
+  &-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #e5e5e5;
+    background-color: #ffffff;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    &-left {
+      padding-left: 15px;
+      flex-direction: row;
+      &-text {
+        font-size: 14px;
+      }
+      &-price {
+        margin-left: 5px;
+        flex-direction: row;
+        &-right,
+        &-left {
+          font-size: 14px;
+          color: $gl-themeColor;
+        }
+        &-left {
+          padding-top: 4px;
+        }
+        &-right {
+          font-size: 18px;
+        }
+      }
+    }
+    &-right {
+      width: 120px;
+      height: 50px;
+      background-color: $gl-themeColor;
+      text-align: center;
+      line-height: 50px;
+      font-size: 16px;
+      color: #ffffff;
+      &.disabled {
+        background-color: #ffffff;
+      }
+    }
+  }
+}

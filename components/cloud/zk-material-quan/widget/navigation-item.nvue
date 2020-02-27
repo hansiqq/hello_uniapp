@@ -1,0 +1,194 @@
+<template>
+  <view>
+    <view class="navigation-item" :style="{ width: screenWidth + 'px' }">
+      <view class="navigation-item-left" :style="{ width: screenWidth - 60 + 'px' }">
+        <view class="navigation-item-list" @click="changeClass(null, -1)">
+          <x-icon name="icon-qrcode" color="#F92E29" size="12"></x-icon>
+          <text class="navigation-item-list-text" :class="{ 'navigation-item-list-active-text': tabIndex === -1 }">全部</text>
+        </view>
+        <view class="navigation-item-list" @click="changeClass(item, index)" v-if="index < 3" :class="{ 'navigation-item-list-active-bg': index === tabIndex }" v-for="(item, index) in selectData.result" :key="item.key">
+          <x-icon name="icon-qrcode" color="#F92E29" size="12"></x-icon>
+          <text class="navigation-item-list-text" :class="{ 'navigation-item-list-active-text': index === tabIndex }">{{ item.name }}</text>
+        </view>
+      </view>
+      <x-icon name="icon-qrcode" size="20" color="#989599" @click.native="showPopup"></x-icon>
+    </view>
+    <uni-popup ref="uniPopup" type="top">
+      <view class="navigation-show">
+        <view class="navigation-show-title">
+          <text class="navigation-show-title-left">全部</text>
+          <x-icon name="icon-directory" size="20" @click.native="close()" color="#000000"></x-icon>
+        </view>
+        <view class="navigation-show-ul" :style="{ width: screenWidth - 30 + 'px' }">
+          <view class="navigation-show-ul-list" @click="changeClass(item, index)" :class="{ 'navigation-show-ul-list-active-bg': index === tabIndex }" v-for="(item, index) in selectData.result" :key="index">
+            <x-icon name="icon-qrcode" color="#F92E29" size="12"></x-icon>
+            <text class="navigation-show-ul-list-text" :class="{ 'navigation-show-ul-list-active-text': index === tabIndex }">{{ item.name }}</text>
+          </view>
+        </view>
+      </view>
+    </uni-popup>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala.js'
+import api from '@/service/api.js'
+import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup'
+export default {
+  components: {
+    uniPopup
+  },
+  data() {
+    return {
+      screenWidth: 0,
+      selectData: {
+        result: [],
+        type: {}
+      }, // 当前选的分类
+      tabIndex: -1
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      this.screenWidth = ala.screenWidth()
+    },
+    async load(data) {
+      this.selectData = data
+      this.tabIndex = -1 // 默认选择全部
+      var data = {
+        id: 0,
+        name: '全部'
+      }
+      this.changeClass(data, this.tabIndex)
+    },
+    showPopup() {
+      this.$refs.uniPopup.open()
+    },
+    close() {
+      this.$refs.uniPopup.close()
+    },
+    changeClass(item, index) {
+      if (!item) {
+        item = {
+          name: '全部',
+          id: 0
+        }
+      }
+      this.tabIndex = index
+      var data = {
+        type: this.selectData.type,
+        class: item
+      }
+      this.$emit('changeClass', data)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.navigation-item {
+  position: fixed;
+  z-index: 9;
+  /* #ifdef H5 */
+  top: 45px;
+  /* #endif */
+  //
+  height: 60px;
+  background-color: #ffffff;
+  padding: 0 10px;
+  box-shadow: 0px 4px 10px -4px rgba(0, 0, 0, 0.2);
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  &-right {
+    width: 25px;
+    height: 25px;
+  }
+  &-left {
+    flex-direction: row;
+    align-items: center;
+  }
+  &-list {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: #f0f0f0;
+    border-radius: 30px;
+    padding: 5px 8px;
+    margin-right: 5px;
+    &-icon {
+      width: 12px;
+      height: 12px;
+      align-items: center;
+      justify-content: center;
+      &-text {
+        height: 12px;
+        width: 12px;
+      }
+    }
+    &-text {
+      margin-left: 3px;
+	  font-size: 12px;
+	  color: #343434;
+    }
+    &-active-bg {
+      background-color: #ffefee !important;
+    }
+    &-active-text {
+      color: #fa4544;
+    }
+  }
+}
+.navigation-show {
+  background-color: #ffffff;
+  padding: 0 15px;
+  &-title {
+    height: 30px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    &-left {
+      font-size: 14px;
+    }
+    &-right {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  &-ul {
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    &-list {
+      flex-direction: row;
+      align-items: center;
+      background-color: #f0f0f0;
+      border-radius: 30px;
+      padding: 5px 8px;
+      margin-bottom: 10px;
+      // margin-right: 5px;
+      &-icon {
+        width: 12px;
+        height: 12px;
+        align-items: center;
+        justify-content: center;
+      }
+      &-text {
+        margin-left: 3px;
+        font-size: 13px;
+      }
+      &-active-bg {
+        background-color: #ffefee !important;
+      }
+      &-active-text {
+        color: #fa4544;
+      }
+    }
+  }
+}
+</style>

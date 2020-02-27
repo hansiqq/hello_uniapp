@@ -1,0 +1,35 @@
+[
+  {
+    "name": "微信好友",
+    "provider": "weixin",
+    "scene": "WXSceneSession",
+    "icon": "icon-home"
+  },
+  {
+    "name": "微信朋友圈",
+    "provider": "weixin",
+    "scene": "WXSenceTimeline",
+    "icon": "icon-home"
+  },
+  {
+    "name": "微信好友",
+    "scene": "weixin",
+    "icon": "icon-home"
+  },
+  {
+    "name": "微信好友",
+    "scene": "weixin",
+    "icon": "icon-home"
+  },
+  {
+    "name": "微信好友",
+    "scene": "weixin",
+    "icon": "icon-home"
+  },
+  {
+    "name": "微信收藏",
+    "provider": "weixin",
+    "scene": "WXSceneFavorite",
+    "icon": "icon-home"
+  }
+]

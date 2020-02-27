@@ -1,0 +1,49 @@
+<template>
+	<view class="tabbar-two">
+		<tabbarTwoTop></tabbarTwoTop>
+		<view style="height: 10px;background-color: #F9F9F9;"></view>
+		<text class="tabbar-two-title">我已学习</text>
+		<zk-course-list :viewModel="detailList"></zk-course-list>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	import tabbarTwoTop from './widgets/tabbar-two-top'
+	import detailJson from './json/detail-tab.json'
+	export default {
+		components: {
+			tabbarTwoTop
+		},
+		data() {
+			return {
+				statusHeight: 0,
+				detailList: detailJson
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.statusHeight = ala.statusHeight()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.tabbar-two{
+		&-cont{
+			width: 100px;
+		}
+		&-title{
+			height: 45px;
+			line-height: 45px;
+			color: #202020;
+			font-weight: bold;
+			font-size: 18px;
+			padding-left: 15px;
+		}
+	}
+</style>

@@ -1,0 +1,80 @@
+<template>
+	<view class="address-hot" v-if="viewModel">
+		<text class="address-hot-title">{{title}}</text>
+		<view class="address-hot-ul">
+			<view class="address-hot-list" @click="addressClick(item)" :style="{width: (screenWidth - 40) / 3 -12 + 'px'}" v-for="item in viewModel.list" :key="item">
+				<text class="address-hot-list-text">{{item}}</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		props: {
+			title: {},
+			viewModel: {}
+		},
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			},
+			addressClick(data) {
+				this.$emit('addressClick', data)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.address-hot{
+		background-color: #F4F4F4;
+		&-title{
+			color: #9C9C9C;
+			height: 40px;
+			padding: 0 15px;
+			font-size: 15px;
+			line-height: 40px;
+			font-weight: 600;
+		}
+		&-ul{
+			padding: 0 15px;
+			padding-right: 30px;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+		&-list {
+			height: 40px;
+			border-width: 1px;
+			border-style: solid;
+			border-color: #F1F1F1;
+			border-radius: 5px;
+			margin: 0 4.5px;
+			margin-bottom: 10px;
+			background-color: #FFFFFF;
+			&-text{
+				line-height: 40px;
+				padding: 0 2px;
+				font-size: 16px;
+				text-align: center;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				/* #ifdef APP-NVUE */
+				lines: 1;
+				 /* #endif */ 
+				 /* #ifndef APP-NVUE */
+				white-space: nowrap;
+				  /* #endif */ 
+			}
+		}
+	}
+</style>

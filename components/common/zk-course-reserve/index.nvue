@@ -1,0 +1,22 @@
+<template>
+	<view>
+		<calendarTop></calendarTop>
+		<reserveCont></reserveCont>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	import calendarTop from './styles/calendar-top'
+	import reserveCont from './styles/cont'
+	export default {
+		components: {
+			calendarTop,
+			reserveCont
+		}
+	}
+</script>
+
+<style>
+
+</style>

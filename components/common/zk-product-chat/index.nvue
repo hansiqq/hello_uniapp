@@ -1,0 +1,122 @@
+<template>
+	<view class="zk-product-chat" v-if="async">
+		<showDetail ref="showDetail"></showDetail>
+		<chatTop :viewModel="viewModel"></chatTop>
+		<chatVideo :viewModel="viewModel"></chatVideo>
+		<chatBottom :viewModel="viewModel"></chatBottom>
+		<showMsg :viewModel="viewModel.videoInteract"></showMsg>
+		<view :style="{height: statusHeight + 50 + 'px' }"></view>
+		<scroll-view :scroll-y="true" :scroll-top="scrollTop" :show-scrollbar="false" :scroll-with-animation="true" :style="{width: screenWidth + 'px', height:screenHeight - (100+statusHeight) + 'px'}" class="zk-product-chat-scroll">
+			<view id="scoll-view-id" class="zk-product-chat-ul">
+				<view v-for="(item, index) in msgList" :key="index">
+					<view v-if="index < tabIndex" class="zk-product-chat-list">
+						<view class="zk-product-chat-list-left"></view>
+						<news-list @showPop="showPop" :viewModel="item"></news-list>
+					</view>
+				</view>
+			</view>
+		</scroll-view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	import api from '@/service/api.js'
+	import newsList from './styles/news-list'
+	import chatVideo from './styles/video'
+	import chatTop from './styles/top'
+	import chatBottom from './styles/bottom'
+	import showMsg from './styles/show-msg'
+	import showDetail from './styles/show-detail'
+	export default {
+		components: {
+			newsList,
+			chatVideo,
+			chatTop,
+			chatBottom,
+			showMsg,
+			showDetail
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				screenHeight: 0,
+				statusHeight: 0,
+				scrollTop: 0,
+				tabIndex: 0,
+				viewModel: '',
+				async: false,
+				msgList: []
+			}
+		},
+		mounted() {
+			console.info('zhehsi weism ne ')
+			this.init()
+		},
+		methods: {
+			async init() {
+				this.screenHeight = ala.screenHeight()
+				this.screenWidth = ala.screenWidth()
+				this.statusHeight = ala.statusHeight()
+				 var response = await api.shopVideoInteractShow('5e4f9dcc809d9d31942f7167')
+				 if (response) {
+					 this.viewModel = response
+					 this.msgList = response.videoInteract.messages
+				 }
+				 console.info('数据请求失败', response)
+				 this.async = true
+				 this.getTime()
+			},
+			getTime() {
+				var timer = setInterval(() => {
+					this.tabIndex += 1
+					this.queryDom()
+					if (this.tabIndex === this.msgList.length) {
+						clearInterval(timer)
+					}
+				}, 1500)
+			},
+			queryDom() {
+				var response = ala.getQuery(this, '#scoll-view-id')
+				response.exec(res => {
+					// #ifndef APP-NVUE
+					this.scrollTop = res[0][0].height
+					// #endif
+					// #ifdef APP-NVUE
+					this.scrollTop = res[0].height
+					// #endif
+				})
+			},
+			showPop(data) {
+				this.$refs.showDetail.init(data)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+.zk-product-chat {
+  &-scroll {
+    background-color: #f8f8f8;
+  }
+  &-cont {
+    height: 400px;
+    width: 100px;
+    background-color: #00c5dc;
+  }
+  &-ul {
+    padding: 10px;
+  }
+  &-list {
+    margin-bottom: 10px;
+    flex-direction: row;
+    &-left {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background-color: #00c5dc;
+      margin-right: 10px;
+    }
+  }
+}
+</style>

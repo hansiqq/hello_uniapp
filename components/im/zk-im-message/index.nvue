@@ -1,0 +1,12 @@
+<template>
+  <view class="zk-im-message">消息通知</view>
+</template>
+
+<script>
+  import listItem from './styles/list-item'
+  export default {
+    components: {
+      listItem
+    }
+  }
+</script>

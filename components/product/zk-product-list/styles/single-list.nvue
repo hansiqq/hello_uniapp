@@ -1,0 +1,135 @@
+<template>
+  <view class="zk-product-common">
+    <view class="zk-product-common-list" v-for="(item, index) in viewModel" :key="index" @click="linkTo(item)">
+      <view class="zk-product-common-left">
+        <image class="zk-product-common-image" :src="'http://bdd.5ug.com' + item.thumbnailUrl" />
+      </view>
+      <view class="zk-product-common-right" :style="{ width: screenWidth - 143 + 'px' }">
+        <view>
+          <text class="zk-product-common-right-title">{{ item.name }}</text>
+          <text class="zk-product-common-right-intro">库存 {{ item.stock }}</text>
+        </view>
+        <text class="zk-product-common-right-nologin">￥{{ item.price }}</text>
+        <view class="zk-product-common-right-foot">
+          <!-- v-if="false" -->
+          <view class="zk-product-common-right-foot-a">
+            <text class="zk-product-common-right-foot-qiang">抢</text>
+            <text class="zk-product-common-right-foot-price">￥{{ item.price }}</text>
+          </view>
+          <text class="zk-product-common-right-foot-hot">立即抢购</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  props: {
+    viewModel: {}
+  },
+  data() {
+    return {
+      screenWidth: ''
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+    },
+    // 下拉菜单事件
+    scrollView() {},
+    linkTo(item) {
+      console.info('sss', item)
+      ala.to(`/product/show?id=${item.id}`)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.zk-product-common {
+  padding: 10px 10px 0 10px;
+  &-list {
+    margin: 10px 0;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    width: 100%;
+    //  box-sizing: border-box;
+    flex-direction: row;
+  }
+  &-left {
+  }
+  &-image {
+    width: 103px;
+    height: 103px;
+    border-radius: 3px;
+  }
+  &-right {
+    padding: 0 10px;
+    overflow: hidden;
+    justify-content: space-between;
+    &-title {
+      font-weight: 700;
+      font-size: 17px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      /* #ifndef APP-PLUS-NVUE */
+      // white-space: nowrap;
+      /* #endif */
+      /* #ifdef APP-PLUS-NVUE */
+      lines: 1;
+      /* #endif */
+    }
+    &-intro {
+      color: #666666;
+      font-size: 14px;
+    }
+    &-nologin {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #ed3927;
+      font-weight: bold;
+    }
+    &-foot {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      &-a {
+        flex-direction: row;
+        align-items: center;
+      }
+      &-qiang {
+        color: #fff;
+        width: 20px;
+        height: 20px;
+        background-color: #fe6759;
+        text-align: center;
+        border-radius: 50%;
+        font-size: 12px;
+        margin-right: 5px;
+      }
+      &-price {
+        font-size: 19px;
+        color: #ed3927;
+        font-weight: bold;
+      }
+      &-hot {
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        padding: 0.4px 11px;
+        background-image: linear-gradient(#ff4848, #ff7b64);
+        border-radius: 13px;
+        font-size: 14px;
+        color: #fff;
+      }
+    }
+  }
+}
+</style>

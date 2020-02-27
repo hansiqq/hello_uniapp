@@ -1,0 +1,73 @@
+<template>
+	<view class="share-button">
+		<view class="share-button-ul" :style="{width: screenWidth - 120 + 'px'}">
+			<view class="share-button-left" :style="{width: (screenWidth - 120)/2 + 'px'}" @click="clickShare(0)">
+				<text class="share-button-text">复制分享链接</text>
+			</view>
+			<view class="share-button-right" :style="{width: (screenWidth - 120)/2 + 'px'}" @click="clickShare(2)">
+				<text class="share-button-text">复制分享海报</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				screenHeight: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				this.screenHeight = ala.screenHeight()
+			},
+			clickShare(type) {
+				this.$emit('clickShare', type)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.share-button{
+		position: fixed;
+		bottom: 30px;
+		/*  #ifdef APP-PLUS */
+		bottom: 50px;
+		/* #endif */ 
+		left: 0;
+		padding: 0 60px;
+		&-ul{
+			display: flex;
+		}
+		&-text{
+			font-size: 14px;
+			color: #FFFFFF;
+		}
+		&-left{
+			background-image: linear-gradient(to right, #F52E16, #FC8803);
+			border-top-left-radius: 30px;
+			border-bottom-left-radius: 30px;
+			height: 35px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		&-right{
+			background-color: #343434;
+			border-top-right-radius: 30px;
+			border-bottom-right-radius: 30px;
+			height: 35px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+</style>

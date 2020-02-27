@@ -1,0 +1,81 @@
+<template>
+  <view class="x-password">
+    <text class="x-password-label" v-if="label" :style="{ color: colorIndex ? 'red' : '' }">{{ label }}</text>
+    <input class="x-password-input x-password-password-input" v-model="viewModel" :style="{ width: screenWidth - 150 + 'px' }" type="password" v-if="showPassword" :maxlength="6" :placeholder="placeHolder" @input="changeInput" />
+    <input class="x-password-input" v-model="viewModel" type="test" :style="{ width: screenWidth - 150 + 'px' }" v-if="!showPassword" :placeholder="placeHolder" @input="changeInput" />
+    <view class="x-password-icon uni-icon uni-icon-eye" :class="!showPassword ? 'uni-active' : ''" @click="showPassword = !showPassword"></view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala.js'
+export default {
+  model: {
+    prop: 'dataModel',
+    event: 'change'
+  },
+  props: {
+    dataModel: {},
+    label: {},
+    isNum: {
+      default: false
+    }, // 默认为false ，为true时只能输入数字密码
+    placeHolder: {}
+  },
+  data() {
+    return {
+      viewModel: null,
+      showPassword: true, // 是否显示密码，点击后显示密码
+      colorIndex: '',
+      screenWidth: ''
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.screenWidth = ala.screenWidth()
+      this.viewModel = this.dataModel
+      if (this.viewModel === null || this.viewModel === undefined) {
+        this.viewModel = ''
+      }
+    },
+    isNumber(type = false) {
+      if (this.isNum) {
+        var rep = /^[0-9]*$/
+        if (rep.test(this.viewModel) === true) {
+          if (type) {
+            if (this.viewModel.length >= 6) {
+              this.viewModel = this.viewModel.substr(0, 6)
+            }
+          } else {
+            return 6
+          }
+        }
+      }
+    },
+    changeInput(ev) {
+      if (this.isNum) {
+        var rep = /^[0-9]*$/
+        if (rep.test(this.viewModel) !== true) {
+          this.viewModel = this.viewModel.slice(0, this.viewModel.length - 1)
+        }
+      }
+    }
+  },
+  watch: {
+    viewModel: {
+      deep: true,
+      handler(val) {
+        this.isNumber(true)
+        this.$emit('change', this.viewModel)
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import './var.scss';
+</style>

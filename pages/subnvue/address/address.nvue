@@ -1,0 +1,123 @@
+<template>
+	<view class="address-nav">
+		<view class="address-nav-title" :style="{height: 50 + statusHeight + 'px', paddingTop: statusHeight + 'px'}">
+			<view class="address-nav-black" @click="blackClick">
+				<x-icon name="icon-black" size="18" color="#ffffff"></x-icon>
+			</view>
+			<view class="address-nav-center" :style="{width: screenWidth * 0.6 + 'px'}">
+				<x-icon name="icon-seek" size="16" color="#bfbfbf" style="margin-left: 5px;"></x-icon>
+				<input class="address-nav-center-input" v-model="value" @input="changeInput" placeholder="城市/拼音" :style="{width: screenWidth * 0.6-40 + 'px'}" />
+			</view>
+		</view>
+		<view class="address-nav-bottom" v-if="false">
+			<view class="address-nav-bottom-left" :style="{width: screenWidth/2 + 'px'}">
+				<text class="address-nav-bottom-left-text address-nav-bottom-active">国内</text>
+			</view>
+			<view class="address-nav-bottom-right" :style="{width: screenWidth/2 + 'px'}">
+				<text class="address-nav-bottom-right-text">国际/港澳台</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0,
+				screenHeight: 0,
+				statusHeight: 0,
+				value: ''
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.statusHeight = ala.statusHeight()
+				this.screenHeight = ala.screenHeight()
+				this.screenWidth = ala.screenWidth()
+			},
+			blackClick() {
+				uni.navigateBack()
+			},
+			changeInput(ev) {
+				uni.$emit('address_shreach_value', ev.detail.value)
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.address-nav {
+		&-title{
+			flex-direction: row;
+			background-color: #EF2D15;
+			position: relative;
+			justify-content: center;
+			align-items: center;
+		}
+		&-black {
+			width: 25px;
+			height: 25px;
+			position: absolute;
+			/* #ifndef APP-NVUE */
+			top: 12px;
+			 /* #endif */ 
+			border-radius: 50%;
+			left: 10px;
+		}
+		&-center{
+			height: 25px;
+			background-color: #FFFFFF;
+			border-radius: 10px;
+			flex-direction: row;
+			align-items: center;
+			&-left{
+				margin-left: 5px;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				background-color: #1BA39C;
+			}
+			&-input{
+				margin-left: 10px;
+				font-size: 12px;
+			}
+		}
+		&-bottom{
+			height: 40px;
+			background-color: #FFFFFF;
+			flex-direction: row;
+			&-left{
+				height: 40px;
+				align-items: center;
+				&-text{
+					width: 38px;
+					text-align: center;
+					height: 40px;
+					line-height: 40px;
+					font-size: 16px;
+				}
+			}
+			&-right {
+				height: 40px;
+				align-items: center;
+				&-text{
+					width: 90px;
+					text-align: center;
+					height: 40px;
+					line-height: 40px;
+					font-size: 16px;
+				}
+			}
+			&-active{
+				border-bottom-width: 2px;
+				border-bottom-style: solid;
+				border-bottom-color: #EF2D15;
+			}
+		}
+	}
+</style>

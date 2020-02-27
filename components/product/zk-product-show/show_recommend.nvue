@@ -1,0 +1,63 @@
+<template>
+  <view>
+    <view class="show-recommend">
+      <text class="show-recommend-title" id="showIntro">推荐商品</text>
+      <view style="background-color: #F7F7F7;">
+        <zk-product-list ref="product_item" :widget="list" :showPrice="isFrontShowPrice"></zk-product-list>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      isFrontShowPrice: true,
+      isLoading: false,
+      list: {
+        value: {
+          productType: 3
+        }
+      }
+    }
+  },
+  props: {
+    widget: {},
+    productView: {}
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      var _this = this
+      setTimeout(async () => {
+        let par = { productId: this.productView.id, userId: ala.userId() }
+        if (this.widget && this.widget.value && this.widget.valuepriceStyleId) {
+          par.priceStyleId = this.widget.value.priceStyleId
+        }
+        var list = await ala.httpGet('Api/Product/GetRelation', par)
+        var data = {
+          productItems: list
+        }
+        _this.$refs.product_item.$emit('toProductItem', data)
+        _this.isFrontShowPrice = _this.productView.isFrontShowPrice
+      }, 1000)
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.show-recommend {
+  &-title {
+    height: 35px;
+    color: #000;
+    text-align: center;
+    line-height: 35px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+}
+</style>

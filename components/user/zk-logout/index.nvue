@@ -1,0 +1,57 @@
+<template>
+  <view class="zk-logout"> </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  data() {
+    return {
+      widgetModel: ''
+    }
+  },
+  props: {
+    widget: {}
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init() {
+      ala.localRemove('wechat_logincount')
+      this.widgetModel = await ala.themeWidget(this.widget)
+      uni.showModal({
+        title: '',
+        content: '是否退出登录',
+        showCancel: true,
+        confirmText: '确定',
+        success: val => {
+          if (val.confirm) {
+            ala.localRemove(ala.userKey())
+            ala.localRemove('wechat_openId') // 移除当前openId
+            uni.reLaunch({
+              url: '/pages/tabbar/index'
+            })
+          }
+          if (val.cancel) {
+            uni.reLaunch({
+              url: '/'
+            })
+          }
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+// #ifndef APP-PLUS
+// app-plus-css
+
+.zk-logout {
+  font-size: $uni-font-size-base;
+}
+// app-plus-css
+// #endif
+</style>

@@ -1,0 +1,38 @@
+.widget_border {
+  padding: 0;
+  // width: 100%;
+  flex-direction: column;
+
+  .border-header {
+    height: 32px;
+    line-height: 32px;
+    vertical-align: middle;
+    text-align: left;
+    flex-wrap: nowrap;
+    display: flex;
+    align-items: center;
+    padding: 0px 10px;
+
+    .border-header-icon {
+      vertical-align: middle;
+      padding: 0 5px 0 0px;
+      color: $uni-text-color;
+    }
+
+    .border-header-title {
+      font-size: $uni-font-size-base;
+      letter-spacing: 2px;
+      color: $uni-text-color;
+      margin-right: 5px;
+    }
+
+    .border-header-desc {
+      font-size: $uni-font-size-base;
+      color: $uni-color-title;
+    }
+
+    .border-header-tools {
+      font-size: $uni-font-size-base;
+    }
+  }
+}

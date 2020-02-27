@@ -1,0 +1,45 @@
+<template>
+	<view class="source-detail" :style="{width: screenWidth - 70 + 'px'}">
+		<view>
+			<text class="source-detail-text"></text>
+		</view>
+		<!-- <view ></view> -->
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	export default {
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.source-detail{
+		&-text {
+			font-size: 14px;
+			height: 25px;
+			line-height: 25px;
+		}
+		&-ul {
+			margin-top: 10px;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+		&-list {
+			border-radius: 3px;
+		}
+	}
+</style>

@@ -1,0 +1,90 @@
+<template>
+	<view class="bottom" :style="{width: screenWidth + 'px'}">
+		<view class="bottom-cont">
+			<view class="bottom-left" :style="{width: (screenWidth - 30) * 0.62 + 'px'}">
+				<text class="bottom-left-title">￥69.99/69宝币</text>
+				<text class="bottom-left-bottom">课程价值￥9999.00</text>
+			</view>
+			<view class="bottom-right" :style="{width: (screenWidth - 30) * 0.38 + 'px'}">
+				<text class="bottom-right-title">价值9万免费课程</text>
+				<text class="bottom-right-bottom">免费学习</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.bottom{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		height: 60px;
+		padding: 0 15px;
+		/* #ifndef APP-NVUE */
+		 z-index: 99;
+		/* #endif */ 
+		background-color: #FFFFFF;
+		box-shadow: 0px -8px 15px -8px rgba($color: #000000, $alpha: 0.1);
+		&-cont{
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			height: 60px;
+		}
+		&-left{
+			height: 40px;
+			border-top-left-radius: 30px;
+			border-bottom-left-radius: 30px;
+			border-color: #F0F0F0;
+			border-width: 1px;
+			border-right-width: 0;
+			align-items: center;
+			justify-content: center;
+			&-title{
+				font-size: 15px;
+				color: #FF0619;
+			}
+			&-bottom{
+				font-size: 14px;
+				color: #999999;
+				text-decoration: line-through;
+			}
+		}
+		&-right{
+			height: 40px;
+			background-image: linear-gradient(to right, #F42E14, #FF8A00);
+			border-top-right-radius: 30px;
+			border-bottom-right-radius: 30px;
+			align-items: center;
+			justify-content: center;
+			&-title{
+				color: #FFFFFF;
+				font-size: 11px;
+			}
+			&-bottom{
+				color: #FFFFFF;
+				font-size: 18px;
+				font-weight: bold;
+			}
+		}
+	}
+</style>

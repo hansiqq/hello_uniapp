@@ -1,0 +1,82 @@
+{
+  "value": {
+    "gridForm": {
+      "gridType": 2,
+      "gridCount": 4,
+      "gridList": [
+        {
+          "icon": {},
+          "image": "http://img.baoduoduo.club/study/tab-index6.png",
+          "isEnable": true,
+          "link": {
+            "url": "/pages/study/index",
+            "name": "服务专区"
+          }
+        },
+        {
+          "icon": {},
+          "image": "http://img.baoduoduo.club/study/tab-index7.png",
+          "isEnable": true,
+          "link": {
+            "url": "pages/nav/share/index",
+            "name": "培训专区"
+          }
+        },
+        {
+          "icon": {},
+          "image": "http://img.baoduoduo.club/study/tab-index8.png",
+          "isEnable": true,
+          "link": {
+            "name": "管理专区",
+            "url": "/pages/nav/store/profit"
+          }
+        },
+        {
+          "icon": {},
+          "image": "http://img.baoduoduo.club/study/tab-index5.png",
+          "isEnable": true,
+          "link": {
+            "name": "招商专区",
+            "url": "/pages/nav/optimization/index"
+          }
+        },
+        {
+          "icon": {},
+          "image": "http://img.baoduoduo.club/study/tab-index2.png",
+          "isEnable": true,
+          "link": {
+            "name": "大咖讲堂",
+            "url": "/pages/nav/store/live"
+          }
+        },
+        {
+          "icon": {},
+          "image": "http://img.baoduoduo.club/study/tab-index1.png",
+          "isEnable": true,
+          "link": {
+            "name": "每日打卡",
+            "url": "/pages/nav/community/group"
+          }
+        },
+        {
+          "icon": {},
+          "image": "http://img.baoduoduo.club/study/tab-index3.png",
+          "isEnable": true,
+          "link": {
+            "name": "导师推荐",
+            "url": "/pages/nav/community/source"
+          }
+        },
+        {
+          "icon": {},
+          "image": "http://img.baoduoduo.club/study/tab-index4.png",
+          "isEnable": true,
+          "link": {
+            "name": "资料下载",
+            "url": "/pages/nav/community/live"
+          }
+        }
+      ]
+    }
+  }
+}

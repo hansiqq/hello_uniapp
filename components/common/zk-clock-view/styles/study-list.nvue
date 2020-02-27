@@ -1,0 +1,63 @@
+<template>
+	<view class="study-list">
+		<view class="study-list-cont">
+			<view class="study-list-cont-left">
+				<text class="study-list-cont-left-title">{{viewModel.name}}</text>
+				<text class="study-list-cont-left-intro">{{viewModel.intro}}</text>
+			</view>
+			<view class="study-list-cont-right">
+				<view class="study-list-cont-right-left"></view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props: {
+			viewModel: {}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.study-list{
+		margin: 0 15px;
+		margin-bottom: 10px;
+		&-cont{
+			background-color: #FFFFFF;
+			border-radius: 5px;
+			padding: 15px 10px;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.1);
+			&-left {
+				height: 45px;
+				justify-content: space-between;
+				&-title{
+					font-size: 15px;
+					color: #343434;
+					font-weight: bold;
+				}
+				&-intro{
+					font-size: 14px;
+					color: #999999;
+				}
+			}
+			&-right{
+				width: 50px;
+				padding: 5px;
+				background-color: #F0F0F0;
+				border-radius: 30px;
+				&-left{
+					width: 20px;
+					height: 20px;
+					border-radius: 50%;
+					background-color: #FFFFFF;
+				}
+			}
+			
+		}
+	}
+</style>

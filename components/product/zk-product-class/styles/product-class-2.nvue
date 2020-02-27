@@ -1,0 +1,215 @@
+<template>
+  <view class="product-class" :style="{ width: screenWidth + 'px', height: screenHeight + 'px', paddingTop: '40px' }" v-if="viewModel">
+    <view class="product-class-left" :style="{ height: screenHeight + 'px' }">
+      <scroll-view :show-scrollbar="false" scroll-y :style="{ height: screenHeight + 'px' }">
+        <view class="product-class-left-list" :class="{ 'product-class-left-list-active': index == leftIndex }" @click="leftClick(item, index)" v-for="(item, index) in viewModel" :key="index">
+          <text class="product-class-left-list-text" :class="{ 'product-class-left-list-textActive': index == leftIndex }">{{ item.name }}</text>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="product-class-right" :style="{ width: screenWidth - 100 + 'px' }">
+      <scroll-view :show-scrollbar="false" scroll-y @scroll="scrollChange" :scroll-top="scrollTop" scroll-with-animation :style="{ height: screenHeight + 'px', width: screenWidth + 'px' }">
+        <view>
+          <image :style="{ width: screenWidth - 120 + 'px' }" src="https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3758616094,217032655&fm=26&gp=0.jpg" class="product-class-right-image" />
+          <view class="product-class-right-ul" :style="{ width: screenWidth - 120 + 'px' }">
+            <view class="product-class-right-list right-scroll-list" :id="`right-scroll-list-${index}`" v-for="(item, index) in viewModel" :key="index">
+              <text class="product-class-right-list-title">{{ item.name }}</text>
+              <view class="product-class-right-list-cont">
+                <view class="product-class-right-list-cont-list" :class="{ 'product-class-right-list-cont-btnBor': 5 < index, 'product-class-right-list-cont-rghBor': index % 3 == 2 }" v-for="(childItem, index) in item.childClass" :key="index" :style="{ width: (screenWidth - 130) / 3 + 'px', height: (screenWidth - 120) / 3 + 'px' }">
+                  <image :src="childItem.icon" :style="{ width: (screenWidth - 150) / 3 + 'px', height: (screenWidth - 150) / 3 + 'px' }" />
+                </view>
+              </view>
+            </view>
+          </view>
+          <view :style="{ height: screenHeight - (screenWidth - 70) + 'px' }"></view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</template>
+
+<script>
+import ala from '@/service/ala'
+import active from './action.js'
+
+// #ifdef APP-NVUE
+const dom = weex.requireModule('dom')
+// #endif
+export default {
+  data() {
+    return {
+      height: 0, // scroll-item高度
+      width: 0,
+      leftIndex: 0,
+      rightScroll: [0], // 右侧滚动位置
+      scrollTop: 0,
+      viewModel: null,
+      screenHeight: 0,
+      screenWidth: 0,
+      list: [],
+      scrollRes: ''
+    }
+  },
+  mounted() {
+    this.init()
+    setTimeout(() => {
+      this.getQuery()
+    }, 1000)
+  },
+  methods: {
+    async init() {
+      this.screenHeight = ala.screenHeight()
+      this.screenWidth = ala.screenWidth()
+      var para = {
+        userId: ala.userId()
+      }
+      this.viewModel = await ala.httpGet('api/product/class', para)
+    },
+    leftClick(item, index) {
+      this.leftIndex = index
+      // #ifdef APP-NVUE
+      this.scrollTop = this.rightScroll[index] + 2
+      // #endif
+      // #ifndef APP-NVUE
+      this.scrollTop = this.rightScroll[index]
+      // #endif
+    },
+    // 滚动条滚动距离, 获取下标值
+    scrollChange(ev) {
+      if (this.rightScroll) {
+        var scrollTop = ev.detail.scrollTop
+        // #ifndef APP-NVUE
+        for (let i = 0, j = 1; i < this.rightScroll.length; i++, j++) {
+          if (j < this.rightScroll.length) {
+            if (this.rightScroll[i] === scrollTop) {
+              this.leftIndex = i
+            } else if (this.rightScroll[0] > scrollTop) {
+              this.leftIndex = i
+            } else if (this.rightScroll[this.rightScroll.length - 1] < scrollTop || this.rightScroll[this.rightScroll.length - 1] - 10 < scrollTop) {
+              this.leftIndex = this.rightScroll.length - 1
+            } else if (this.rightScroll[i] < scrollTop && this.rightScroll[j] > scrollTop) {
+              this.leftIndex = i
+            }
+          }
+        }
+        // #endif
+        // #ifdef APP-NVUE
+        for (let i = 0, j = 1; i < this.rightScroll.length; i++, j++) {
+          if (j < this.rightScroll.length) {
+            if (this.rightScroll[0] > scrollTop) {
+              this.leftIndex = 0
+            } else if (this.rightScroll[i] < scrollTop && this.rightScroll[j] > scrollTop) {
+              this.leftIndex = i
+            } else if (this.rightScroll[this.rightScroll.length - 1] < scrollTop) {
+              this.leftIndex = this.rightScroll.length - 1
+            }
+          }
+        }
+        // #endif
+      }
+    },
+    getQuery() {
+      // #ifndef APP-NVUE
+      var rightScroll = active.getQuery(this, '.right-scroll-list')
+      rightScroll.exec(res => {
+        this.scrollRes = res
+        if (res[0] && res[0].length > 0) {
+          res[0].forEach((element, index) => {
+            if (index > 0) {
+              this.rightScroll.push(element.top - 10)
+            }
+          })
+        }
+      })
+      // #endif
+      // #ifdef APP-NVUE
+      for (let i = 0; i < this.viewModel.length; i++) {
+        var rightScroll = active.getQuery(this, `#right-scroll-list-${i}`)
+        rightScroll.exec(res => {
+          this.rightScroll.push(res[0].top - 10)
+        })
+      }
+      this.rightScroll.shift()
+      // #endif
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.product-class {
+  position: fixed;
+  left: 0;
+  top: 0;
+  flex-direction: row;
+  &-left {
+    padding-top: 20px;
+    width: 100px;
+    background-color: #f0f0f0;
+    &-scroll {
+      position: fixed;
+      width: 100px;
+      background-color: #00c5dc;
+    }
+    &-list {
+      width: 100px;
+      height: 45px;
+      justify-content: center;
+      &-text {
+        padding-left: 10px;
+        height: 18px;
+        font-size: 14px;
+        color: #383838;
+        font-family: 'Lucida Sans';
+      }
+      &-textActive {
+        border-style: solid;
+        border-left-color: #fd483d;
+        border-left-width: 4px;
+        font-weight: 600;
+      }
+      &-active {
+        background-color: #ffffff;
+      }
+    }
+  }
+  &-right {
+    padding: 10px;
+    &-image {
+      height: 100px;
+      border-radius: 5px;
+    }
+    &-list {
+      margin-top: 10px;
+      &-title {
+        height: 30px;
+        line-height: 30px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      &-cont {
+        padding: 5px;
+        background-color: #ffffff;
+        border-radius: 3px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        box-shadow: 0 1px 15px 1px rgba(69, 65, 78, 0.1);
+        &-list {
+          justify-content: center;
+          align-items: center;
+          border-color: #f8f8f8;
+          border-style: solid;
+          border-bottom-width: 1px;
+          border-right-width: 1px;
+        }
+        &-btnBor {
+          border-bottom-width: 0;
+        }
+        &-rghBor {
+          border-right-width: 0;
+        }
+      }
+    }
+  }
+}
+</style>

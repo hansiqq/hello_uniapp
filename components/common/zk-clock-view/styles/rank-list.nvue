@@ -1,0 +1,113 @@
+<template>
+	<view class="rank-list">
+		<view class="rank-list-cont">
+			<text class="rank-list-title">{{viewModel.title}}</text>
+			<text class="rank-list-intro">{{viewModel.intro}}</text>
+			<view class="rank-list-center">
+				<text class="rank-list-center-text" :class="{'rank-list-center-text-act': index !== 0}" v-for="(item, index) in list" :key="index">{{item}}</text>
+			</view>
+			<view class="rank-list-bottom">
+				<view class="rank-list-bottom-list" :style="{opacity: item.opt}" v-for="(item, index) in viewModel.links" :key="index">
+					<view class="rank-list-bottom-list-title">
+						<image class="rank-list-bottom-list-image" :src="item.image" />
+						<text class="rank-list-bottom-list-text">{{item.name}}</text>
+					</view>
+					<text class="rank-list-bottom-list-rank">{{item.rank}}</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props: {
+			viewModel: {}
+		},
+		data() {
+			return {
+				list: ['每日榜', '本周榜', '本月榜']
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.rank-list{
+		margin: 0 15px;
+		margin-bottom: 10px;
+		&-title{
+			height: 25px;
+			line-height: 25px;
+			color: #343434;
+			font-size: 16px;
+			font-weight: bold;
+		}
+		&-intro{
+			height: 20px;
+			line-height: 20px;
+			color: #999999;
+			font-size: 12px;
+		}
+		&-center{
+			margin-top: 20px;
+			flex-direction: row;
+			align-items: center;
+			&-text{
+				height: 22px;
+				line-height: 22px;
+				font-size: 15px;
+				color: #FFFFFF;
+				font-weight: bold;
+				padding: 0 8px;
+				border-radius: 30px;
+				background-image: linear-gradient(to right, #FF5050, #FE6E3C);
+				margin-right: 20px;
+				&-act{
+					opacity: 0.7;
+				}
+			}
+		}
+		&-bottom{
+			margin-top: 20px;
+			margin-bottom: 10px;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			&-list{
+				width: 60px;
+				height: 70px;
+				justify-content: space-between;
+				align-items: center;
+				&-image{
+					width: 30px;
+					height: 30px;
+					border-radius: 50%;
+				}
+				&-title{
+					align-items: center;
+				}
+				&-text {
+					font-size: 11px;
+					color: #999999;
+				}
+				&-rank{
+					width: 45px;
+					height: 16px;
+					font-size: 11px;
+					border-radius: 30px;
+					color: #FFFFFF;
+					line-height: 16px;
+					text-align: center;
+					background-image: linear-gradient(to right, #FF5050, #FE6E3C);
+				}
+			}
+		}
+		&-cont {
+			background-color: #FFFFFF;
+			border-radius: 5px;
+			padding: 10px;
+			box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.1);
+		}
+	}
+</style>

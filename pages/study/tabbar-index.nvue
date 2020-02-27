@@ -1,0 +1,48 @@
+<template>
+	<view>
+		<studySwiper></studySwiper>
+		<zk-grid :widget="gridIndexNav"></zk-grid>
+		<swiperNews></swiperNews>
+		<zk-swiper></zk-swiper>
+		<studyList :viewModel="list"></studyList>
+	</view>
+</template>
+
+<script>
+	import topNav from '../subnvue/study/top'
+	import zkGrid from './json/zk-grid.json'
+	import swiperNews from './widgets/swiper-news'
+	import studyList from './widgets/list'
+	import listJson from './json/list.json'
+	import studySwiper from './widgets/swiper'
+	import ala from '@/service/ala'
+	export default {
+		components: {
+			topNav,
+			swiperNews,
+			studyList,
+			studySwiper 
+		},
+		data() {
+		  return {
+		    screenHeight: 0,
+			  gridIndexNav: zkGrid,
+			  list: listJson,
+			  screenWidth: 0,
+			  currentIndex: 0
+		  }
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenHeight = ala.screenHeight()
+			}
+		}
+	}
+</script>
+
+<style>
+
+</style>

@@ -1,0 +1,53 @@
+<template>
+  <image :src="image" v-lazy v-if="async" :class="{ 'image-circle': isCircle }" :style="{ height: height + 'px', width: width + 'px', padding: padding + 'px' }" />
+</template>
+
+<script>
+import ala from '@/service/ala'
+export default {
+  name: 'x-image',
+  props: {
+    src: {},
+    height: {
+      default: 100
+    },
+    width: {
+      default: 100
+    },
+    padding: {
+      default: 0
+    },
+    isCircle: {
+      default: false
+    }
+  },
+  data() {
+    return {
+      image: {},
+      async: false
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      if (this.src) {
+        if (this.src.indexOf('://') !== -1) {
+          this.image = this.src
+        } else {
+          this.image = ala.host + this.src
+          this.image = this.image.replace('//wwwroot', '/wwwroot')
+        }
+      }
+      this.async = true
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.image-circle {
+  border-radius: 50%;
+}
+</style>

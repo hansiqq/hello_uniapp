@@ -1,0 +1,15 @@
+<template>
+	<view>
+		<zk-course-reserve></zk-course-reserve>
+	</view>
+</template>
+
+<script>
+	export default {
+		
+	}
+</script>
+
+<style>
+
+</style>

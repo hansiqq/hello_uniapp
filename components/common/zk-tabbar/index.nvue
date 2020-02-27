@@ -1,0 +1,89 @@
+<template>
+	<view class="study-bottom" :style="{ width: screenWidth + 'px' }">
+		<view class="study-bottom-list" @click="tabClick(index)" v-for="(item, index) in viewModel" :key="index">
+			<image class="study-bottom-list-title" :src="tabIndex===index? item.selectImage:item.image" />
+			<text class="study-bottom-list-text" :class="{'study-bottom-list-active': tabIndex === index}">{{ item.name }}</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	import ala from '@/service/ala'
+	export default {
+		props: {
+			viewModel: {}
+		},
+		data() {
+			return {
+				list: [{
+						name: '学习',
+						image: '/static/tabbar/t32.png',
+						selectImage: '/static/tabbar/t32-hover.png'
+					},
+					{
+						name: '我的课程',
+						image: '/static/tabbar/t45.png',
+						selectImage: '/static/tabbar/t45-hover.png'
+					},
+					{
+						name: '我的',
+						image: '/static/tabbar/t23.png',
+						selectImage: '/static/tabbar/t23-hover.png'
+					}
+				],
+				screenWidth: 0,
+				tabIndex: 0
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+			},
+			tabClick(index) {
+				this.$emit('click_tab', index)
+				this.tabIndex = index
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.study-bottom {
+		height: 50px;
+		background-color: #fffeff;
+		flex-direction: row;
+		justify-content: space-between;
+		padding: 0 20px;
+		/* #ifndef APP-NVUE */
+		position: fixed;
+		bottom: 0;
+		z-index: 99;
+		/* #endif */
+		box-shadow: 0px -8px 15px -8px rgba($color: #000000, $alpha: 0.1);
+
+		&-list {
+			width: 60px;
+			height: 50px;
+			align-items: center;
+			justify-content: center;
+
+			&-title {
+				width: 25px;
+				height: 25px;
+				// background-color: #00c5dc;
+			}
+
+			&-text {
+				font-size: 12px;
+				color: #999999;
+			}
+
+			&-active {
+				color: #F92E2C;
+			}
+		}
+	}
+</style>

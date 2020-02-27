@@ -1,0 +1,79 @@
+.zk-reg {
+  &-title {
+    height: 50px;
+    line-height: 50px;
+    color: #e95a40;
+    font-size: 15px;
+    font-weight: 600;
+    padding-left: 10px;
+    border-bottom-color: #f6f6f6;
+    border-bottom-width: 1px;
+  }
+  &-group {
+    &-list {
+      height: 45px;
+      border-bottom-color: #f6f6f6;
+      border-bottom-width: 1px;
+      flex-direction: row;
+      margin-left: 10px;
+      &-left {
+        width: 80px;
+        height: 45px;
+        line-height: 50px;
+        font-size: 13px;
+      }
+      &-right {
+        height: 45px;
+        padding-right: 10px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        &-input {
+          width: 100px;
+          height: 20px;
+          font-size: 13px;
+        }
+        &-verification {
+          width: 85px;
+          height: 35px;
+          line-height: 35px;
+          text-align: center;
+          color: #ffffff;
+          font-size: 14px;
+          background-color: $gl-brand;
+        }
+      }
+    }
+  }
+  &-tips {
+    padding: 10px;
+    &-title {
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 3px;
+      &-text {
+        font-size: 12px;
+        &.active {
+          color: $gl-themeColor;
+          // text-decoration: underline;
+        }
+      }
+    }
+    &-intro {
+      flex-direction: row;
+      &-text {
+        font-size: 12px;
+      }
+    }
+  }
+  &-btn {
+    padding: 10px 15px;
+  }
+  &-bottom-text {
+    font-size: 14px;
+    color: #999999;
+    text-decoration: underline;
+    text-align: right;
+    padding-right: 15px;
+  }
+}

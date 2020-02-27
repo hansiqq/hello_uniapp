@@ -1,0 +1,131 @@
+<template>
+	<cover-view class="video" :style="{width: screenWidth + 'px'}" v-if="isVideo">
+		<view class="video-cont">
+			<view class="video-cont-cont">
+				<video id="myVideo" @play="playVideo" :show-center-play-btn="true" :style="{width: screenWidth + 'px', height: 230 + 'px'}" :show-fullscreen-btn="false" :src="'http://b-api.baoduoduo.club' + viewModel.videoInteract.video"></video>
+			</view>
+			<view class="video-cont-title" :style="{width: screenWidth + 'px', top: statusHeight + 'px'}">
+				<view class="video-cont-title-left">
+					<image src="http://img.baoduoduo.club/study/left.png" class="video-cont-title-left-image" />
+				</view>
+				<view class="video-cont-title-right" @click="hidVideo">
+					<image src="http://img.baoduoduo.club/study/left.png" class="video-cont-title-right-image" />
+				</view>
+			</view>
+			<view class="video-cont-bottom" :style="{width: screenWidth + 'px'}">
+				<text class="video-cont-bottom-left" :style="{width: (screenWidth-20) * 0.55 + 'px'}">{{viewModel.productItem.name}}</text>
+				<text class="video-cont-bottom-right">4.06万人观看</text>
+			</view>
+		</view>
+	</cover-view>
+</template>
+
+<script>
+	import ala from '@/service/ala.js'
+	export default {
+		props: {
+			viewModel: {}
+		},
+		data() {
+			return {
+				screenWidth: 0,
+				statusHeight: 0,
+				isVideo: true
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = ala.screenWidth()
+				this.statusHeight = ala.statusHeight()
+				console.info('this.viewModel', this.viewModel)
+			},
+			playVideo() {
+				console.info('开始了')
+			},
+			// 关闭视频
+			hidVideo() {
+				console.info('weismne')
+				this.isVideo = false
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.video{
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 230px;
+		z-index: 9999999999999;
+		&-cont{
+			&-title{
+				position: fixed;
+				top: 0;
+				left: 0;
+				/* #ifndef APP-NVUE */ 
+				z-index: 90;
+				/* #endif */ 
+				height: 35px;
+				padding: 0 10px;
+				justify-content: space-between;
+				flex-direction: row;
+				align-items: center;
+				&-right,
+				&-left{
+					width: 25px;
+					height: 25px;
+					background-color: #1BA39C;
+					background-color: rgba($color: #000000, $alpha: 0.7);
+					border-radius: 50%;
+					justify-content: center;
+					align-items: center;
+				}
+				&-left {
+					&-image {
+						width: 8px;
+						height: 14px;
+					}
+				}
+				&-right {
+					&-image {
+						width: 8px;
+						height: 14px;
+					}
+				}
+			}
+			&-bottom{
+				position: absolute;
+				height: 40px;
+				bottom: 0;
+				left: 0;
+				padding: 0 10px;
+				/* #ifndef APP-NVUE */
+				z-index: 9999;
+				/* #endif */ 
+				align-items: center;
+				flex-direction: row;
+				justify-content: space-between;
+				&-left{
+					font-size: 16px;
+					color: #FFFFFF;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					/* #ifdef APP-NVUE */ 
+					lines: 1;
+					/* #endif */ 
+					/* #ifndef APP-NVUE */
+					 white-space: nowrap;
+					/* #endif */ 
+				}
+				&-right{
+					font-size: 14px;
+					color: #FFFFFF;
+				}
+			}
+		}
+	}
+</style>
