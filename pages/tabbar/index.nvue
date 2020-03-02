@@ -2,11 +2,11 @@
   <view class="index">
     <!-- #ifndef APP-NVUE -->
     <indexNav></indexNav>
-    <view style="height: 85px;"></view>
+    <view style="height: 188rpx;"></view>
     <!-- #endif -->
-    <!-- #ifdef APP-NVUE -->
-    <view style="height: 40px;"></view>
-    <!-- #endif -->
+   <!-- #ifdef APP-NVUE -->
+    <view style="height: 40px;"></view> 
+  <!-- #endif -->
     <indexSwiper></indexSwiper>
     <zk-grid :widget="gridIndexNav"></zk-grid>
     <view style="background-color: #BA1511;">
@@ -51,7 +51,7 @@ export default {
       // #ifdef APP-NVUE
       var indexNav = uni.getSubNVueById('indexNav')
       indexNav.setStyle({
-        height: '115px'
+        height: '100px'
       })
       // #endif
     }

@@ -1,81 +1,98 @@
 <template>
-  <view class="swiper-item-6" :style="{ width: screenWidth + 'px;' }">
-    <view class="swiper-item-6-show" :style="{width: screenWidth + 'px'}">
-		<image src="/static/image/home/swiper-bg.png" :style="{width: screenWidth + 'px'}" class="swiper-item-6-show-image" />
+	<view class="swiper-item-6" :style="{ width: screenWidth + 'px;' }">
+		<view class="swiper-item-6-show" :style="{width: screenWidth + 'px'}">
+			<image src="/static/image/home/swiper-bg.png" :style="{width: screenWidth + 'px'}" class="swiper-item-6-show-image" />
+		</view>
+		<view class="swiper-item-6-cont">
+			<swiper class="swiper-item-6-cont-ul" :autoplay="true" :circular="true" :indicator-dots="true"
+			 indicator-active-color="#c91230" indicator-color="#ebedf0" :style="{ height: 288 + 'rpx' }">
+				<swiper-item v-for="(item, index) in swiperList" :key="index">
+					<view :title="item.name" @click="goLinks(item.url.value)">
+						<image :src="item.image" :alt="item.intro" class="swiper-item-6-image" style="z-index: 2" :style="{ width: 696 + 'rpx' }" />
+					</view>
+				</swiper-item>
+			</swiper>
+		</view>
 	</view>
-	<view class="swiper-item-6-cont">
-      <swiper class="swiper-item-6-cont-ul" :autoplay="true" :circular="true" :indicator-dots="true" indicator-active-color="#c91230" indicator-color="#ebedf0" :style="{ height: 160 + 'px;' }">
-        <swiper-item v-for="(item, index) in swiperList" :key="index">
-          <view :title="item.name" @click="goLinks(item.url.value)">
-            <image :src="item.image" :alt="item.intro" class="swiper-item-6-image" style="z-index: 2" :style="{ width: screenWidth - 20 + 'px' }" />
-          </view>
-        </swiper-item>
-      </swiper>
-    </view>
-  </view>
 </template>
 
 <script>
-import base from '@/service/ala.js'
-export default {
-  data() {
-    return {
-      screenWidth: '',
-      swiperList: [
-        {
-          image: 'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1391960522,3944688945&fm=15&gp=0.jpg'
-        },
-        {
-          image: 'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=359648438,4114288232&fm=26&gp=0.jpg'
-        },
-        {
-          image: 'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1391960522,3944688945&fm=15&gp=0.jpg'
-        },
-        {
-          image: 'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1391960522,3944688945&fm=15&gp=0.jpg'
-        },
-        {
-          image: 'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1391960522,3944688945&fm=15&gp=0.jpg'
-        }
-      ]
-    }
-  },
-  mounted() {
-    this.init()
-  },
-  methods: {
-    init() {
-      this.screenWidth = base.screenWidth()
-    }
-  }
-}
+	import base from '@/service/ala.js'
+	export default {
+		data() {
+			return {
+				screenWidth: '',
+				swiperList: [{
+						image: 'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1391960522,3944688945&fm=15&gp=0.jpg'
+					},
+					{
+						image: 'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=359648438,4114288232&fm=26&gp=0.jpg'
+					},
+					{
+						image: 'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1391960522,3944688945&fm=15&gp=0.jpg'
+					},
+					{
+						image: 'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1391960522,3944688945&fm=15&gp=0.jpg'
+					},
+					{
+						image: 'https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1391960522,3944688945&fm=15&gp=0.jpg'
+					}
+				]
+			}
+		},
+		mounted() {
+			this.init()
+		},
+		methods: {
+			init() {
+				this.screenWidth = base.screenWidth()
+			}
+		}
+	}
 </script>
 
 <style lang="scss" scoped>
-.swiper-item-6 {
-  padding: 5px 10px;
-  position: relative;
-  border-radius: 10px;
-  // background-image: linear-gradient(to right, #F62E1B, #D42965);
-}
-.swiper-item-6-show{
-	border-radius: 10px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 170px;
-	background-color: #00C5DC;
-	z-index: -1;
-	&-image{
-		height: 170px;
+	.swiper-item-6 {
+		padding: 0 28rpx;
+		position: relative;
+		border-radius: 5px;
+		// background-image: linear-gradient(to right, #F62E1B, #D42965);
 	}
-}
-.swiper-item-6-cont-ul {
-  border-radius: 10px;
-  z-index: 2;
-}
-.swiper-item-6-image {
-  height: 155px;
-  //border-radius: 5px;
-}
+
+	swiper{
+		height: 288rpx;
+		border-radius: 5px;
+	}
+	
+	// 想改小圆点变大，改不了
+	// .uni-swiper-dot{
+	// 	width: 8rpx !important;
+	// 	height: 8rpx !important;
+	// }
+	.uni-swiper-wrapper{
+		border-radius: 5px !important;
+	}
+	.swiper-item-6-show {
+		//border-radius: 4rpx;
+		position: absolute;
+		left: 0;
+		height: 288rpx;
+		//background-color: #00C5DC;
+		// background-color: #c91230;
+		z-index: -1;
+
+		&-image {
+			height: 318rpx;
+		}
+	}
+
+	.swiper-item-6-cont-ul {
+		border-radius: 8px !important;
+		z-index: 2;
+	}
+
+	.swiper-item-6-image {
+		height: 288rpx;
+		// border-radius: 5px;
+	}
 </style>

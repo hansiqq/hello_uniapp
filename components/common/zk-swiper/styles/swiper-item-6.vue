@@ -1,6 +1,7 @@
 <template>
   <view class="swiper-item-6" :style="{ width: screenWidth + 'px;' }">
     <view class="swiper-item-6-cont">
+		hhhhhhhhhhhhhhhhh
       <swiper class="swiper-item-6-cont-ul" :autoplay="true" :circular="true" :indicator-dots="true" indicator-active-color="#c91230" indicator-color="#ebedf0" :style="{ height: 160 + 'px' }">
         <swiper-item v-for="(item, index) in swiperList" :key="index">
           <view :title="item.name" @click="goLinks(item.url.value)">
@@ -49,13 +50,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-// @media screen and (max-width: 350px) {
-//     .swiper-item-6 {
-//         position: relative;
-// 		top: -10px;
-//     }
-// }
 
 .swiper-item-6 {
   height: 288rpx;

@@ -1,14 +1,14 @@
 <template>
   <view class="zk-list">
-    <view class="zk-list-list zk-list-list-border" :style="{ width: sreeWidth - 40 + 'px' }" @click="linkTo">
+    <view class="zk-list-list zk-list-list-border" :style="{ width: 692 + 'rpx' }" @click="linkTo">
       <text class="zk-list-list-left">圈落</text>
-      <text class="zk-list-list-cneter" :style="{ width: sreeWidth - 180 + 'px' }">这里是社交内容发送话题fsdf推送</text>
+      <text class="zk-list-list-cneter" :style="{ width: 268 + 'rpx' }">这里是社交内容发送话题fsdf推送</text>
       <text class="zk-list-list-right">1.2万围观</text>
     </view>
-    <view class="zk-list-list" :style="{ width: sreeWidth - 40 + 'px' }">
+    <view class="zk-list-list" :style="{ width: 692 + 'rpx' }">
       <text class="zk-list-list-left">热点</text>
-      <view class="zk-list-list-cneter-cont" :style="{ width: sreeWidth - 180 + 'px' }">
-        <text class="zk-list-list-cneter" :style="{ width: sreeWidth - 250 + 'px' }">这里是社交内容发送话题fsdf推送</text>
+      <view class="zk-list-list-cneter-cont" :style="{ width: 552 + 'rpx' }">
+        <text class="zk-list-list-cneter" :style="{ width: 268 + 'rpx' }">这里是社交内容发送话题fsdf推送</text>
         <text class="zk-list-list-center-view">直播</text>
       </view>
       <text class="zk-list-list-right">1.2万围观</text>
@@ -40,35 +40,35 @@ export default {
 
 <style lang="scss" scoped>
 .zk-list {
-  height: 100px;
+  height: 200rpx;
   background-color: #e62419;
-  margin: 10px;
-  padding: 0 10px;
+  margin: 28rpx;
+  padding: 0 20rpx;
   border-radius: 5px;
-  box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.1);
+  // box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.1);
   background-image: url("http://img.baoduoduo.club/home/listbg.png");
   background-repeat: no-repeat;
-  background-size: 100% 100px;
+  background-size: 100% 200rpx;
 }
 .zk-list-list {
-  height: 50px;
+  height: 100rpx;
   flex-direction: row;
   align-items: center;
 }
 .zk-list-list-border {
-  border-bottom-width: 1px;
+  // border-bottom-width: 1px;
   border-bottom-color: #eb4b30;
 }
 
 .zk-list-list-left {
-  width: 50px;
-  font-size: 14px;
+  width: 100rpx;
+  font-size: 28rpx;
   font-weight: 800;
   color: #ffd870;
-  padding-left: 5px;
+  // padding-left: 10rpx;
 }
 .zk-list-list-cneter {
-  font-size: 14px;
+  font-size: 28rpx;
   color: #fff997;
   overflow: hidden;
   /* #ifdef APP-PLUS-NVUE */
@@ -87,22 +87,22 @@ export default {
   justify-content: space-between;
 }
 .zk-list-list-center-view {
-  width: 40px;
-  height: 20px;
-  line-height: 20px;
+  width: 80rpx;
+  height: 40rpx;
+  line-height: 40rpx;
   text-align: center;
   color: #e62419;
-  font-size: 12px;
-  border-radius: 20px;
+  font-size: 24rpx;
+  border-radius: 40rpx;
   background-color: #ffffa0;
   /* background-image: linear-gradient(45deg, #F42C1C, #FE7610); */
 }
 .zk-list-list-right {
-  width: 80px;
-  height: 40px;
-  line-height: 40px;
+  width: 160rpx;
+  height: 80rpx;
+  line-height: 80rpx;
   text-align: right;
   color: #fefb9e;
-  font-size: 14px;
+  font-size: 26rpx;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<view class="grid-item-3" v-if="async">
 		<view class="grid-item-3-cont">
-			<view class="grid-item-3-ul" :style="{ width: screenWidth - 20 + 'px;' }">
+			<view class="grid-item-3-ul" :style="{ width: 750 - 750*20/screenWidth + 'px;' }">
 				<view class="grid-item-3-list" @click="linkTo(item)" v-for="(item, index) in gridList" :key="index" :style="{ width: (screenWidth - 20) / 5 + 'px' }">
 					<image :src="item.image" alt="" class="grid-item-3-image" />
 					<text class="grid-item-3-test">{{ item.link.name }}</text>
@@ -49,25 +49,25 @@
 	.grid-item-3-ul {
 		flex-direction: row;
 		flex-wrap: wrap;
-		padding-left: 7px;
+		padding-left: 10rpx;
 	}
 
 	.grid-item-3-list {
-		height: 90px;
+		height: 180rpx;
 		justify-content: center;
 		align-items: center;
 	}
 
 	.grid-item-3-image {
-		width: 44px;
-		height: 44px;
+		width: 88rpx;
+		height: 88rpx;
 		font-size: 0;
 		//border-radius: 50%;
 	}
 
 	.grid-item-3-test {
-		font-size: 13px;
-		line-height: 30px;
+		font-size: 26rpx;
+		line-height: 60rpx;
 		color: #ffffff;
 	}
 </style>
